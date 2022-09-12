@@ -1,0 +1,37 @@
+---
+title: "Comparing Datasets"
+author: "Sofia Bliss-Carrascoas"
+date: "9/12/2022"
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
+  chunk_output_type: console
+---
+```{r load packages, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(knitr)
+```
+
+TESTING THE R-VERSION COMPARED TO ORIGINAL VERSION
+Loading R-version:
+
+```{r v0 all unsorted, message=FALSE, warning=FALSE}
+v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
+```
+
+```{r}
+v1_all_us_polclaims <- read_csv("allUS_politicalV1.csv")
+```
+
+```{r}
+v2_5parties <- v1_all_us_polclaims %>%
+  filter(claimant_party == "Republican"|
+           claimant_party == "Democratic"| 
+         claimant_party == "Independent"|
+         claimant_party == "Libertarian"| 
+         claimant_party == "unknown_affiliation")
+```
+
+Loading Grace Original Version
+
