@@ -1,6 +1,6 @@
 ---
 title: "Comparing Datasets"
-author: "Sofia Bliss-Carrascoas"
+author: "Sofia Bliss-Carrascosa"
 date: "9/12/2022"
 output:
   pdf_document: default
@@ -13,8 +13,8 @@ library(tidyverse)
 library(knitr)
 ```
 
-TESTING THE R-VERSION COMPARED TO ORIGINAL VERSION
-Loading R-version:
+V2: TESTING THE R-VERSION COMPARED TO ORIGINAL VERSION
+Loading R-version
 
 ```{r v0 all unsorted, message=FALSE, warning=FALSE}
 v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
@@ -55,14 +55,65 @@ dim(grace_v2)
 
 Data counts work out!
 
-DEDUPED VERSION
+```{r}
+v2_5parties_2 <- v2_5parties %>%
+  filter(publisher.site == "factcheck.org"|
+           publisher.site == "politifact.com"| 
+         publisher.site == "nytimes.com"|
+         publisher.site == "washingtonpost.com")
+
+v2_5parties_2 %>%
+  group_by(publisher.site) %>%
+  count()
+
+gracev2_2 <- grace_v2 %>%
+  filter(publisher.site == "factcheck.org"|
+           publisher.site == "politifact.com"| 
+         publisher.site == "nytimes.com"|
+         publisher.site == "washingtonpost.com")
+
+gracev2_2 %>%
+  group_by(publisher.site) %>%
+  count()
+```
+
+```{r}
+anti_join(v2_5parties_2, gracev2_2, by = "claimant") %>%
+  select(claimant) %>%
+  print()
+```
+
+
+V3: TESTING THE R-VERSION COMPARED TO ORIGINAL VERSION
+Loading R-version
 
 ```{r}
 v3_deduped <- v2_5parties %>%
   select(url:claimant_party) %>%
   distinct()
+
 v3_deduped %>%
   count(publisher.site) %>%
   kable(caption = "All Claims in 5 Parties
         Sorted by Publisher")
+
+dim(v3_deduped)
 ```
+
+Loading Grace version
+```{r, warning=FALSE, message=FALSE}
+grace_v3 <- read_csv("gracededupeddata.csv")
+
+grace_v3 %>%
+  count(publisher.site) %>%
+  kable(caption = "All Claims in 5 Parties
+        Sorted by Publisher")
+
+dim(grace_v3)
+```
+
+
+Data Counts are not the same: why?
+
+
+

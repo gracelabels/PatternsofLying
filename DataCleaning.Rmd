@@ -38,19 +38,20 @@ Next, we tried to categorize human claimants as politicians or non-politicians. 
 Additionally, once the code deduced that a claimant was a politician, it scanned their Wikipedia infobox for reference to their party affiliation, recording it in our dataset. If there was no Wikipedia article about a human claimant, as was occasionally the case for unsuccessful candidates for local office, the data pipeline tried to find a corresponding page for the claimant on Ballotpedia, an online encyclopedia of American politics. If it found one, it searched the page for the same markers looked for on Wikipedia pages, and similarly tried to identify the claimant's party affiliation. When the process above had been completed for each claimant, data collection was finished, and we filtered out all claims in the dataset whose claimants weren’t labeled as human politicians. Following data collection, we undertook some light data cleaning. Namely, if we found that a claimant had been affiliated with several political parties, we gave them a party label corresponding to the party they'd identified with when they'd made the claim. In a small number of cases, our code categorized a claimant as a politician but failed to infer their party; those claimants’ politician status and party ID were manually reviewed and edited at a later stage but were labelled as unknown_affiliation for the time being. The resulting dataset was of only claims made by politicians and political figures in the US with corresponding parties labeled.
 ```{r}
 v1_all_us_polclaims <- read_csv("allUS_politicalV1.csv")
+
 v1_all_us_polclaims %>%
   count() %>%
   kable(caption = "All Politician Claims (post-filter)")
+
 v1_all_us_polclaims %>% 
   count(publisher.site) %>%
   kable(caption = "All Politician Claims (post-filter)
         Sorted by Publisher")
+
 v1_all_us_polclaims %>% 
  count(claimant_party) %>%
  kable(caption = "All Politician Claims (post-filter)
         Sorted by Party")
-
-
 ```
 At this stage we noticed that several of the claimant's were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
 
@@ -62,26 +63,32 @@ v2_5parties <- v1_all_us_polclaims %>%
          claimant_party == "Independent"|
          claimant_party == "Libertarian"| 
          claimant_party == "unknown_affiliation")
+
 v2_5parties %>%
   count() %>%
   kable(caption = "All Claims in 5 Parties")
+
 v2_5parties %>%
   count(publisher.site) %>%
   kable(caption = "All Claims in 5 Parties
         Sorted by Publisher")
+
 v2_5parties %>%
   count(claimant_party) %>%
   kable(caption = "All Claims in 5 Parties
         Sorted by Party")
 ```
 
+
 ```{r}
 v3_deduped <- v2_5parties %>%
   select(url:claimant_party) %>%
   distinct()
+
 v3_deduped %>%
   group_by(publisher.site) %>%
   count()
 ```
 
 
+ 
