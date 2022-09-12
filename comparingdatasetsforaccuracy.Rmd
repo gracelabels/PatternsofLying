@@ -20,18 +20,49 @@ Loading R-version:
 v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
 ```
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 v1_all_us_polclaims <- read_csv("allUS_politicalV1.csv")
 ```
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 v2_5parties <- v1_all_us_polclaims %>%
   filter(claimant_party == "Republican"|
            claimant_party == "Democratic"| 
          claimant_party == "Independent"|
          claimant_party == "Libertarian"| 
          claimant_party == "unknown_affiliation")
+
+v2_5parties %>%
+  count(publisher.site) %>%
+  kable(caption = "All Claims in 5 Parties
+        Sorted by Publisher")
+
+dim(v2_5parties)
 ```
 
 Loading Grace Original Version
 
+```{r, warning=FALSE, message=FALSE}
+grace_v2 <- read_csv("gracesoriginaldata.csv")
+
+grace_v2 %>%
+  count(publisher.site) %>%
+  kable(caption = "All Claims in 5 Parties
+        Sorted by Publisher")
+
+dim(grace_v2)
+```
+
+Data counts work out!
+
+DEDUPED VERSION
+
+```{r}
+v3_deduped <- v2_5parties %>%
+  select(url:claimant_party) %>%
+  distinct()
+v3_deduped %>%
+  count(publisher.site) %>%
+  kable(caption = "All Claims in 5 Parties
+        Sorted by Publisher")
+```
