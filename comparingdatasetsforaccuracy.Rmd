@@ -21,7 +21,7 @@ v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-v1_all_us_polclaims <- read_csv("allUS_politicalV1.csv")
+v1_all_us_polclaims <- read_csv("allUS_polclaimsV1_sheets.csv")
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -78,8 +78,7 @@ gracev2_2 %>%
 ```
 
 ```{r}
-anti_join(v2_5parties_2, gracev2_2, by = "claimant") %>%
-  select(claimant) %>%
+anti_join(gracev2_2, v2_5parties_2, by = "claimant") %>%
   print()
 ```
 
