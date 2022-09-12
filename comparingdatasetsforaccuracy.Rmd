@@ -77,11 +77,6 @@ gracev2_2 %>%
   count()
 ```
 
-```{r}
-anti_join(gracev2_2, v2_5parties_2, by = "claimant") %>%
-  print()
-```
-
 
 V3: TESTING THE R-VERSION COMPARED TO ORIGINAL VERSION
 Loading R-version
