@@ -20,11 +20,11 @@ Loading R-version
 v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r load og v1, warning=FALSE, message=FALSE}
 v1_all_us_polclaims <- read_csv("all_us_pol_claims_updated_sep15.csv")
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r create r v2, warning=FALSE, message=FALSE}
 v2_5parties <- v1_all_us_polclaims %>%
   filter(claimant_party == "Republican"|
            claimant_party == "Democratic"| 
@@ -42,7 +42,7 @@ dim(v2_5parties)
 
 Loading Grace Original Version
 
-```{r, warning=FALSE, message=FALSE}
+```{r load grace v2, warning=FALSE, message=FALSE}
 grace_v2 <- read_csv("grace_v2_CSVversion.csv")
 
 grace_v2 %>%
@@ -54,7 +54,7 @@ dim(grace_v2)
 ```
 
 Data counts work out!
-```{r}
+```{r antijoin v2s, warning=FALSE, message=FALSE}
 anti_join(v2_5parties, grace_v2)
 ```
 ALL MATCH!! WOOT!!
@@ -62,7 +62,7 @@ ALL MATCH!! WOOT!!
 V3: TESTING THE R-VERSION COMPARED TO ORIGINAL VERSION
 Loading R-version
 
-```{r}
+```{r create r v3}
 v3_deduped <- v2_5parties %>%
   distinct(url, text, .keep_all = TRUE)
 
@@ -75,7 +75,7 @@ dim(v3_deduped)
 ```
 
 Loading Grace version
-```{r, warning=FALSE, message=FALSE}
+```{r load grace v3, warning=FALSE, message=FALSE}
 grace_v3 <- read_csv("grace_v3_deduped_CSVversion.csv")
 
 grace_v3 %>%
@@ -86,12 +86,16 @@ grace_v3 %>%
 dim(grace_v3)
 ```
 
-
 Data Counts are not the same: why?
 
-```{r}
+```{r antijoin v3s, warning=FALSE, message=FALSE}
 anti_join(v3_deduped, grace_v3)
 ```
 
+```{r table of dupes, warning=FALSE, message=FALSE}
+identified_dupes <- anti_join(v2_5parties, v3_deduped)
+
+dim(identified_dupes)
+```
 
 
