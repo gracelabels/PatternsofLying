@@ -43,7 +43,7 @@ dim(v2_5parties)
 Loading Grace Original Version
 
 ```{r, warning=FALSE, message=FALSE}
-grace_v2 <- read_csv("gracesoriginaldata.csv")
+grace_v2 <- read_csv("grace_v2_CSVversion.csv")
 
 grace_v2 %>%
   count(publisher.site) %>%
@@ -55,17 +55,9 @@ dim(grace_v2)
 
 Data counts work out!
 ```{r}
-weird_titles <- anti_join(v2_5parties, grace_v2, by = c("title")) %>%
-  select(title, ...1)
-print(weird_titles)
-weird_text <- anti_join(v2_5parties, grace_v2, by = c("text")) %>%
-  select(text, ...1)
-print(weird_text)
-weird_textualRating <- anti_join(v2_5parties, grace_v2, by = c("textualRating")) %>%
-  select(textualRating, ...1)
-print(weird_textualRating)
+anti_join(v2_5parties, grace_v2)
 ```
-
+ALL MATCH!! WOOT!!
 
 V3: TESTING THE R-VERSION COMPARED TO ORIGINAL VERSION
 Loading R-version
