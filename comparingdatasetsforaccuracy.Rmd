@@ -21,7 +21,7 @@ v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
 ```
 
 ```{r, warning=FALSE, message=FALSE}
-v1_all_us_polclaims <- read_csv("allUS_polclaimsV1_sheets.csv")
+v1_all_us_polclaims <- read_csv("all_us_pol_claims_updated_sep15.csv")
 ```
 
 ```{r, warning=FALSE, message=FALSE}
@@ -54,27 +54,16 @@ dim(grace_v2)
 ```
 
 Data counts work out!
-
 ```{r}
-v2_5parties_2 <- v2_5parties %>%
-  filter(publisher.site == "factcheck.org"|
-           publisher.site == "politifact.com"| 
-         publisher.site == "nytimes.com"|
-         publisher.site == "washingtonpost.com")
-
-v2_5parties_2 %>%
-  group_by(publisher.site) %>%
-  count()
-
-gracev2_2 <- grace_v2 %>%
-  filter(publisher.site == "factcheck.org"|
-           publisher.site == "politifact.com"| 
-         publisher.site == "nytimes.com"|
-         publisher.site == "washingtonpost.com")
-
-gracev2_2 %>%
-  group_by(publisher.site) %>%
-  count()
+weird_titles <- anti_join(v2_5parties, grace_v2, by = c("title")) %>%
+  select(title, ...1)
+print(weird_titles)
+weird_text <- anti_join(v2_5parties, grace_v2, by = c("text")) %>%
+  select(text, ...1)
+print(weird_text)
+weird_textualRating <- anti_join(v2_5parties, grace_v2, by = c("textualRating")) %>%
+  select(textualRating, ...1)
+print(weird_textualRating)
 ```
 
 
