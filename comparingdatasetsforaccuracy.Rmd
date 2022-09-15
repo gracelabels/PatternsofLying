@@ -64,7 +64,7 @@ Loading R-version
 
 ```{r}
 v3_deduped <- v2_5parties %>%
-  distinct(url, text, title, .keep_all = TRUE)
+  distinct(url, text, .keep_all = TRUE)
 
 v3_deduped %>%
   count(publisher.site) %>%
@@ -76,7 +76,7 @@ dim(v3_deduped)
 
 Loading Grace version
 ```{r, warning=FALSE, message=FALSE}
-grace_v3 <- read_csv("gracededupeddata.csv")
+grace_v3 <- read_csv("grace_v3_deduped_CSVversion.csv")
 
 grace_v3 %>%
   count(publisher.site) %>%

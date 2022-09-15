@@ -37,7 +37,7 @@ Next, we tried to categorize human claimants as politicians or non-politicians. 
 
 Additionally, once the code deduced that a claimant was a politician, it scanned their Wikipedia infobox for reference to their party affiliation, recording it in our dataset. If there was no Wikipedia article about a human claimant, as was occasionally the case for unsuccessful candidates for local office, the data pipeline tried to find a corresponding page for the claimant on Ballotpedia, an online encyclopedia of American politics. If it found one, it searched the page for the same markers looked for on Wikipedia pages, and similarly tried to identify the claimant's party affiliation. When the process above had been completed for each claimant, data collection was finished, and we filtered out all claims in the dataset whose claimants weren’t labeled as human politicians. Following data collection, we undertook some light data cleaning. Namely, if we found that a claimant had been affiliated with several political parties, we gave them a party label corresponding to the party they'd identified with when they'd made the claim. In a small number of cases, our code categorized a claimant as a politician but failed to infer their party; those claimants’ politician status and party ID were manually reviewed and edited at a later stage but were labelled as unknown_affiliation for the time being. The resulting dataset was of only claims made by politicians and political figures in the US with corresponding parties labeled.
 ```{r}
-v1_all_us_polclaims <- read_csv("allUS_polclaimsV1_sheets.csv")
+v1_all_us_polclaims <- read_csv("all_us_pol_claims_updated_sep15.csv")
 
 v1_all_us_polclaims %>%
   count() %>%
@@ -82,12 +82,13 @@ v2_5parties %>%
 
 ```{r}
 v3_deduped <- v2_5parties %>%
-  select(url:claimant_party) %>%
-  distinct()
+  distinct(url, text, .keep_all = TRUE)
 
 v3_deduped %>%
   group_by(publisher.site) %>%
   count()
+
+dim(v3_deduped)
 ```
 
 
