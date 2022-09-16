@@ -33,7 +33,7 @@ v0_all_us_unsorted %>%
 
 ```
 
-### Version 1 - Only Political Figures 
+### Version 1 - Only Political Figures
 
 "We built a small data pipeline that tried to identify, for each claim, whether its uterrer was a person and, if they were, whether they met our definition of a politician. A politician, we decided, was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency.
 
@@ -63,7 +63,7 @@ v1_all_us_polclaims %>%
 
 ```
 
-### Version 2 - 5 Parties 
+### Version 2 - 5 Parties
 
 At this stage we noticed that several of the claimant's were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown\_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
 
@@ -106,6 +106,55 @@ v3_deduped <- v2_5parties %>%
 ```{r display v3 results, message=FALSE, warning=FALSE}
 
 v3_deduped %>%
+  count() %>%
+  kable(caption = "All Claims in 5 Parties - Deduped")
+
+v3_deduped %>%
+  count(publisher.site) %>%
+  kable(caption = "All Claims in 5 Parties - Deduped and
+        Sorted by Publisher")
+
+v3_deduped %>%
+  count(claimant_party) %>%
+  kable(caption = "All Claims in 5 Parties - Deduped and
+        Sorted by Party")
+
+```
+
+### Version 4 - Dejunked 
+
+For a final clean up before sorting by publisher and removing Trump, a member of our research team **manually identified 23 false positive rows** that either listed multiple claimants or had a false positive non-human claimant (e.g. \"Donald Trump\'s campaign\"). Those 23 claims were manually removed.
+
+```{r manual removal for v4}
+v4_dejunked <- v3_deduped %>%
+  filter(claimant != "Donald Trump For Prison") %>%
+  filter(claimant !=  "Lauren Boebert; Rudy Giuliani") %>%
+  filter(claimant != "Rick Scott's Starbuck's heckler") %>%
+  filter(claimant != "Americans United for Change") %>%
+  filter(claimant !=  "Consumers for Smart Solar") %>%
+  filter(claimant !=  "Greg Gianforte's campaign") %>%
+  filter(claimant !=  "Vietnam Veterans Against John McCain") %>%
+  filter(claimant != "President Trump's lawyers") %>%
+  filter(claimant !=    "Robin Vos and Scott Fitzgerald") %>%
+  filter(claimant !=  "Robin Vos; Scott Fitzgerald") %>%
+  filter(claimant !=  "Donald Trump 2020 Voters") %>%
+  filter(claimant !=  "Michael Bloomberg; Joe Biden; Hillary Clinton; Adam Schiff") %>%
+  filter(claimant !=  "Donald Trump and Mike Pence") %>%
+  filter(claimant !=  "Bill DeBlasio and Brian Kemp") %>%
+  filter(claimant !=  "John Roberts; Fox News correspondent") %>%
+  filter(claimant !=  "The Trump campaign") %>%
+  filter(claimant !=  "Sen. Ted Cruz (R-Texas) and Rep. Mark Meadows (R-N.C.)") %>%
+  filter(claimant !=  "Keith Ellison spokesman") %>%
+  filter(claimant !=  "Donald Trump ad") %>%
+  filter(claimant !=  "Kamala Harris for the People") %>%
+  filter(claimant !=  "Don Bolduc campaign") %>%
+  filter(claimant !=  "Donald Trump campaign") %>%
+  filter(claimant !=  "Joe Biden campaign")
+
+```
+
+```{r}
+v4_dejunked %>%
   count() %>%
   kable(caption = "All Claims in 5 Parties - Deduped")
 
