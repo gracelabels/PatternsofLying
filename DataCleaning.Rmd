@@ -8,15 +8,15 @@ output:
 editor_options:
   chunk_output_type: console
 ---
+
 ```{r load packages, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(knitr)
 ```
 
-The dataset was pulled by Joel Luther. The dataset includes all entries from
-Claim Review that were published by sources based in the US. 14 unique 
-fact-checking publishers were included.  Included entries were those in
-which the reviewDate was between Jan 1st, 2016 and June 30th, 2021. 
+## Version 0 - All Unsorted Data
+
+The dataset was pulled by Joel Luther. The dataset includes all entries from Claim Review that were published by sources based in the US. 14 unique fact-checking publishers were included. Included entries were those in which the reviewDate was between Jan 1st, 2016 and June 30th, 2021.
 
 ```{r v0 all unsorted, message=FALSE, warning=FALSE}
 v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
@@ -29,13 +29,16 @@ v0_all_us_unsorted %>%
         Sorted by Publisher")
 ```
 
-"We built a small data pipeline that tried to identify, for each claim, whether its uterrer was a person and, if they were, whether they met our definition of a politician. A politician, we decided, was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency. 
+### Version 1 - Only Political Figures 
 
-We identified human claimants by feeding claimant names in our dataset through an entity recognition API. Given text like ""The Sierra Club"" or ""Bill Murray"", the API tried to detect what it referred to -- e.g. a person or an organization -- letting us label claimants as human. 
+"We built a small data pipeline that tried to identify, for each claim, whether its uterrer was a person and, if they were, whether they met our definition of a politician. A politician, we decided, was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency.
 
-Next, we tried to categorize human claimants as politicians or non-politicians. To do so, we fed claimants’  names through a Wikipedia API. If a given claimant had a Wikipedia article about them, our code checked whether the article contained any ""politician indicators"". For example, if the infobox in an article about a claimant said they’d worked as a politician or political operative, we accepted that as fact and marked them as a politician. Likewise, if in the first few paragraphs of the Wikipedia article, text matched certain keywords (e.g. in a single sentence, the article mentioned its subject ""ran"" in an ""election"" or ""work""ed in the ""White House""), the code inferred that they, too, were a politician.
+We identified human claimants by feeding claimant names in our dataset through an entity recognition API. Given text like ""The Sierra Club"" or ""Bill Murray"", the API tried to detect what it referred to -- e.g. a person or an organization -- letting us label claimants as human.
 
-Additionally, once the code deduced that a claimant was a politician, it scanned their Wikipedia infobox for reference to their party affiliation, recording it in our dataset. If there was no Wikipedia article about a human claimant, as was occasionally the case for unsuccessful candidates for local office, the data pipeline tried to find a corresponding page for the claimant on Ballotpedia, an online encyclopedia of American politics. If it found one, it searched the page for the same markers looked for on Wikipedia pages, and similarly tried to identify the claimant's party affiliation. When the process above had been completed for each claimant, data collection was finished, and we filtered out all claims in the dataset whose claimants weren’t labeled as human politicians. Following data collection, we undertook some light data cleaning. Namely, if we found that a claimant had been affiliated with several political parties, we gave them a party label corresponding to the party they'd identified with when they'd made the claim. In a small number of cases, our code categorized a claimant as a politician but failed to infer their party; those claimants’ politician status and party ID were manually reviewed and edited at a later stage but were labelled as unknown_affiliation for the time being. The resulting dataset was of only claims made by politicians and political figures in the US with corresponding parties labeled.
+Next, we tried to categorize human claimants as politicians or non-politicians. To do so, we fed claimants' names through a Wikipedia API. If a given claimant had a Wikipedia article about them, our code checked whether the article contained any ""politician indicators"". For example, if the infobox in an article about a claimant said they'd worked as a politician or political operative, we accepted that as fact and marked them as a politician. Likewise, if in the first few paragraphs of the Wikipedia article, text matched certain keywords (e.g. in a single sentence, the article mentioned its subject""ran"" in an ""election"" or ""work""ed in the""White House""), the code inferred that they, too, were a politician.
+
+Additionally, once the code deduced that a claimant was a politician, it scanned their Wikipedia infobox for reference to their party affiliation, recording it in our dataset. If there was no Wikipedia article about a human claimant, as was occasionally the case for unsuccessful candidates for local office, the data pipeline tried to find a corresponding page for the claimant on Ballotpedia, an online encyclopedia of American politics. If it found one, it searched the page for the same markers looked for on Wikipedia pages, and similarly tried to identify the claimant's party affiliation. When the process above had been completed for each claimant, data collection was finished, and we filtered out all claims in the dataset whose claimants weren't labeled as human politicians. Following data collection, we undertook some light data cleaning. Namely, if we found that a claimant had been affiliated with several political parties, we gave them a party label corresponding to the party they'd identified with when they'd made the claim. In a small number of cases, our code categorized a claimant as a politician but failed to infer their party; those claimants' politician status and party ID were manually reviewed and edited at a later stage but were labelled as unknown_affiliation for the time being. The resulting dataset was of only claims made by politicians and political figures in the US with corresponding parties labeled.
+
 ```{r}
 v1_all_us_polclaims <- read_csv("all_us_pol_claims_updated_sep15.csv")
 
@@ -54,10 +57,9 @@ v1_all_us_polclaims %>%
         Sorted by Party")
 ```
 
-##VERSION 2 ONLY POLITICIANS
+### Version 2 - 5 Parties 
 
-At this stage we noticed that several of the claimant's were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
-
+At this stage we noticed that several of the claimant's were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown\_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
 
 ```{r}
 v2_5parties <- v1_all_us_polclaims %>%
@@ -82,12 +84,9 @@ v2_5parties %>%
         Sorted by Party")
 ```
 
-##VERSION 3 DEDUPED
+### Version 3 - Deduped
 
-At this step we filtered out duplicate claims. These were claims in which both 
-the url and and text (previously thought title but it wasnt) of the claim were 
-identical. The first appearance of each claim remained in the dataset, other 
-were removed. This resulted in a database of 7,360 unique claims. 
+At this step we filtered out duplicate claims. These were claims in which both the url and and text (previously thought title but it wasnt) of the claim were identical. The first appearance of each claim remained in the dataset, other were removed. This resulted in a database of 7,360 unique claims.
 
 ```{r}
 v3_deduped <- v2_5parties %>%
@@ -111,7 +110,3 @@ v3_deduped %>%
 
 
 ```
-
-
-
- 
