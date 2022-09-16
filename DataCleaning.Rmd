@@ -53,6 +53,9 @@ v1_all_us_polclaims %>%
  kable(caption = "All Politician Claims (post-filter)
         Sorted by Party")
 ```
+
+##VERSION 2 ONLY POLITICIANS
+
 At this stage we noticed that several of the claimant's were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
 
 
@@ -79,17 +82,36 @@ v2_5parties %>%
         Sorted by Party")
 ```
 
+##VERSION 3 DEDUPED
+
+At this step we filtered out duplicate claims. These were claims in which both 
+the url and and text (previously thought title but it wasnt) of the claim were 
+identical. The first appearance of each claim remained in the dataset, other 
+were removed. This resulted in a database of 7,360 unique claims. 
 
 ```{r}
 v3_deduped <- v2_5parties %>%
   distinct(url, text, .keep_all = TRUE)
+```
+
+```{r}
+v3_deduped %>%
+  count() %>%
+  kable(caption = "All Claims in 5 Parties - Deduped")
 
 v3_deduped %>%
-  group_by(publisher.site) %>%
-  count()
+  count(publisher.site) %>%
+  kable(caption = "All Claims in 5 Parties - Deduped and
+        Sorted by Publisher")
 
-dim(v3_deduped)
+v3_deduped %>%
+  count(claimant_party) %>%
+  kable(caption = "All Claims in 5 Parties - Deduped and
+        Sorted by Party")
+
+
 ```
+
 
 
  
