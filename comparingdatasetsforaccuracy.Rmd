@@ -109,3 +109,20 @@ grace_v4 <- read_csv("grace_v4_dejunkedCSVversion.csv")
 manual_removes <- anti_join(v3_deduped, grace_v4)
 ```
 
+
+CREATING V5 code
+
+```{r}
+pf_v5 <- grace_v4 %>%
+  filter(publisher.site == "politifact.com")
+
+wapo_v5 <- grace_v4 %>%
+  filter(publisher.site == "washingtonpost.com")
+
+fc_v5 <- grace_v4 %>%
+  filter(publisher.site == "factcheck.org")
+
+nyt_v5 <- grace_v4 %>%
+  filter(publisher.site == "nytimes.com")
+```
+
