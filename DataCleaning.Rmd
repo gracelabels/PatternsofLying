@@ -149,7 +149,7 @@ v4_dejunked <- v3_deduped %>%
   filter(claimant !=  "Kamala Harris for the People") %>%
   filter(claimant !=  "Don Bolduc campaign") %>%
   filter(claimant !=  "Donald Trump campaign") %>%
-  filter(claimant !=  "Joe Biden campaign")
+  filter(claimant !=  "Joe Biden campaign") 
 
 ```
 
