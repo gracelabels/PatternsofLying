@@ -101,12 +101,13 @@ dim(identified_dupes)
 LOADING V4 -- Manual removal by ASA
 
 ```{r load gracev4, warning=FALSE, message=FALSE}
-grace_v4 <- read_csv("grace_v4_dejunkedCSVversion.csv")
+grace_v4 <- read_csv("grace_V4_dejunkedCSVversion.csv")
 ```
 
 
 ```{r identifying manual removal, warning=FALSE, message=FALSE}
 manual_removes <- anti_join(v3_deduped, grace_v4)
+print(manual_removes)
 ```
 
 
