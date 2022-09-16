@@ -188,6 +188,43 @@ v5_nyt <- v4_dejunked %>%
   filter(publisher.site == "nytimes.com")
 ```
 
+```{r v5 tables}
+v5_pf %>%
+  count() %>%
+  kable(caption = "Politifact - All Claims in 5 Parties")
+
+v5_pf %>%
+  count(claimant_party) %>%
+  kable(caption = "Politifact - All Claims in 5 Parties - 
+        Sorted by Party")
+v5_wapo %>%
+  count() %>%
+  kable(caption = "Washington Post - All Claims in 5 Parties")
+
+v5_wapo %>%
+  count(claimant_party) %>%
+  kable(caption = "Washington Post - All Claims in 5 Parties - 
+        Sorted by Party")
+
+v5_fc %>%
+  count() %>%
+  kable(caption = "FactCheck.Org - All Claims in 5 Parties")
+
+v5_fc %>%
+  count(claimant_party) %>%
+  kable(caption = "FactCheck.Org - All Claims in 5 Parties - 
+        Sorted by Party")
+v5_nyt %>%
+  count() %>%
+  kable(caption = "New York Times - All Claims in 5 Parties") 
+
+v5_nyt %>%
+  count(claimant_party) %>%
+  kable(caption = "New York Times - All Claims in 5 Parties -  
+        Sorted by Party")
+
+```
+
 
 ### Version 6 - Removing Trump
 
@@ -237,5 +274,41 @@ v6_nyt <- v5_nyt %>%
   filter(claimant != "Donald Trump") %>%
   filter(claimant != "President Donald J. Trump")
 
+```
+
+```{r}
+v6_pf %>%
+  count() %>%
+  kable(caption = "Politifact - Without Trump")
+
+v6_pf %>%
+  count(claimant_party) %>%
+  kable(caption = "Politifact - Without Trump - 
+        Sorted by Party")
+v6_wapo %>%
+  count() %>%
+  kable(caption = "Washington Post - Without Trump")
+
+v6_wapo %>%
+  count(claimant_party) %>%
+  kable(caption = "Washington Post - Without Trump - 
+        Sorted by Party")
+
+v6_fc %>%
+  count() %>%
+  kable(caption = "FactCheck.Org - Without Trump")
+
+v6_fc %>%
+  count(claimant_party) %>%
+  kable(caption = "FactCheck.Org - Without Trump - 
+        Sorted by Party")
+v6_nyt %>%
+  count() %>%
+  kable(caption = "New York Times - Without Trump") 
+
+v6_nyt %>%
+  count(claimant_party) %>%
+  kable(caption = "New York Times - Without Trump -  
+        Sorted by Party")
 ```
 
