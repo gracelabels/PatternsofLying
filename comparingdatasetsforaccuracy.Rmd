@@ -143,16 +143,31 @@ v4_dejunked <- v3_deduped %>%
 CREATING V5 code
 
 ```{r}
-pf_v5 <- v4_dejunked %>%
+v5_pf <- v4_dejunked %>%
   filter(publisher.site == "politifact.com")
 
-wapo_v5 <- v4_dejunked %>%
+v5_wapo <- v4_dejunked %>%
   filter(publisher.site == "washingtonpost.com")
 
-fc_v5 <- v4_dejunked %>%
+v5_fc <- v4_dejunked %>%
   filter(publisher.site == "factcheck.org")
 
-nyt_v5 <- v4_dejunked %>%
+v5_nyt <- v4_dejunked %>%
   filter(publisher.site == "nytimes.com")
+```
+
+V6: step 1 Testing for Trumps
+
+```{r}
+elim_trump <- v4_dejunked %>%
+  filter(publisher.site == "politifact.com" |
+           publisher.site ==  "washingtonpost.com" |
+           publisher.site == "factcheck.org" |
+           publisher.site == "nytimes.com")
+
+elim_trump %>%
+  filter(grepl('Trump|trump', claimant)) %>%
+  group_by(claimant) %>%
+  count()
 ```
 

@@ -125,7 +125,7 @@ v3_deduped %>%
 
 For a final clean up before sorting by publisher and removing Trump, a member of our research team **manually identified 23 false positive rows** that either listed multiple claimants or had a false positive non-human claimant (e.g. \"Donald Trump\'s campaign\"). Those 23 claims were manually removed.
 
-```{r manual removal for v4}
+```{r manual removal for v4, message=FALSE, warning=FALSE}
 v4_dejunked <- v3_deduped %>%
   filter(claimant != "Donald Trump For Prison") %>%
   filter(claimant !=  "Lauren Boebert; Rudy Giuliani") %>%
@@ -153,7 +153,7 @@ v4_dejunked <- v3_deduped %>%
 
 ```
 
-```{r tables for v4}
+```{r tables for v4, message=FALSE, warning=FALSE}
 v4_dejunked %>%
   count() %>%
   kable(caption = "All Claims in 5 Parties - Deduped and Dejunked")
@@ -170,18 +170,72 @@ v4_dejunked %>%
 
 ```
 
-Version 5 - Split into Publisher data
+### Version 5 - Split into Publisher data
 
-```{r}
-pf_v5 <- v4_dejunked %>%
+At this point we began looking at the makeup of each publisher individually. Based on the number of total fact checks, we selected four publishers to analyze in the next step: PolitiFact, The Washington Post, FactCheck.Org, and The New York Times. This resulted in four individual datasets, one per publisher, each denoted as v5.
+
+```{r create v5, message=FALSE, warning=FALSE}
+v5_pf <- v4_dejunked %>%
   filter(publisher.site == "politifact.com")
 
-wapo_v5 <- v4_dejunked %>%
+v5_wapo <- v4_dejunked %>%
   filter(publisher.site == "washingtonpost.com")
 
-fc_v5 <- v4_dejunked %>%
+v5_fc <- v4_dejunked %>%
   filter(publisher.site == "factcheck.org")
 
-nyt_v5 <- v4_dejunked %>%
+v5_nyt <- v4_dejunked %>%
   filter(publisher.site == "nytimes.com")
 ```
+
+
+### Version 6 - Removing Trump
+
+We made the decision to remove Donald Trump entirely from this dataset. To do so, we first identified all the different iterations of his name within the `claimant` column. We could not simply remove all claimants whose names included Trump, because under our definitions, his daughter Ivanka Trump was a politician. The code determining these iterations is shown below.
+
+```{r find trump names, message=FALSE, warning=FALSE}
+
+elim_trump <- v4_dejunked %>%
+  filter(publisher.site == "politifact.com" |
+           publisher.site ==  "washingtonpost.com" |
+           publisher.site == "factcheck.org" |
+           publisher.site == "nytimes.com")
+
+elim_trump %>%
+  filter(grepl('Trump|trump', claimant)) %>%
+  group_by(claimant) %>%
+  count() %>%
+  kable(caption = "Names including 'Trump'")
+
+```
+
+With these four versions of Trump's name, we manually removed them from each V5 dataset. This created our V6 dataset without Trump for each publisher.
+
+```{r create v6, message=FALSE, warning=FALSE}
+
+v6_pf <- v5_pf %>%
+  filter(claimant != "Donald J. Trump") %>%
+  filter(claimant !=  "Donald trump") %>%
+  filter(claimant != "Donald Trump") %>%
+  filter(claimant != "President Donald J. Trump")
+
+v6_wapo <- v5_wapo %>%
+  filter(claimant != "Donald J. Trump") %>%
+  filter(claimant !=  "Donald trump") %>%
+  filter(claimant != "Donald Trump") %>%
+  filter(claimant != "President Donald J. Trump")
+
+v6_fc <- v5_fc %>%
+  filter(claimant != "Donald J. Trump") %>%
+  filter(claimant !=  "Donald trump") %>%
+  filter(claimant != "Donald Trump") %>%
+  filter(claimant != "President Donald J. Trump")
+
+v6_nyt <- v5_nyt %>%
+  filter(claimant != "Donald J. Trump") %>%
+  filter(claimant !=  "Donald trump") %>%
+  filter(claimant != "Donald Trump") %>%
+  filter(claimant != "President Donald J. Trump")
+
+```
+
