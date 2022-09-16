@@ -110,20 +110,49 @@ manual_removes <- anti_join(v3_deduped, grace_v4)
 print(manual_removes)
 ```
 
+MANUALLY CREATING V5
+
+```{r manual removal for v4}
+v4_dejunked <- v3_deduped %>%
+  filter(claimant != "Donald Trump For Prison") %>%
+  filter(claimant !=  "Lauren Boebert; Rudy Giuliani") %>%
+  filter(claimant != "Rick Scott's Starbuck's heckler") %>%
+  filter(claimant != "Americans United for Change") %>%
+  filter(claimant !=  "Consumers for Smart Solar") %>%
+  filter(claimant !=  "Greg Gianforte's campaign") %>%
+  filter(claimant !=  "Vietnam Veterans Against John McCain") %>%
+  filter(claimant != "President Trump's lawyers") %>%
+  filter(claimant !=    "Robin Vos and Scott Fitzgerald") %>%
+  filter(claimant !=  "Robin Vos; Scott Fitzgerald") %>%
+  filter(claimant !=  "Donald Trump 2020 Voters") %>%
+  filter(claimant !=  "Michael Bloomberg; Joe Biden; Hillary Clinton; Adam Schiff") %>%
+  filter(claimant !=  "Donald Trump and Mike Pence") %>%
+  filter(claimant !=  "Bill DeBlasio and Brian Kemp") %>%
+  filter(claimant !=  "John Roberts; Fox News correspondent") %>%
+  filter(claimant !=  "The Trump campaign") %>%
+  filter(claimant !=  "Sen. Ted Cruz (R-Texas) and Rep. Mark Meadows (R-N.C.)") %>%
+  filter(claimant !=  "Keith Ellison spokesman") %>%
+  filter(claimant !=  "Donald Trump ad") %>%
+  filter(claimant !=  "Kamala Harris for the People") %>%
+  filter(claimant !=  "Don Bolduc campaign") %>%
+  filter(claimant !=  "Donald Trump campaign") %>%
+  filter(claimant !=  "Joe Biden campaign") 
+
+```
 
 CREATING V5 code
 
 ```{r}
-pf_v5 <- grace_v4 %>%
+pf_v5 <- v4_dejunked %>%
   filter(publisher.site == "politifact.com")
 
-wapo_v5 <- grace_v4 %>%
+wapo_v5 <- v4_dejunked %>%
   filter(publisher.site == "washingtonpost.com")
 
-fc_v5 <- grace_v4 %>%
+fc_v5 <- v4_dejunked %>%
   filter(publisher.site == "factcheck.org")
 
-nyt_v5 <- grace_v4 %>%
+nyt_v5 <- v4_dejunked %>%
   filter(publisher.site == "nytimes.com")
 ```
 

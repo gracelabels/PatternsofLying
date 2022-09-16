@@ -153,19 +153,35 @@ v4_dejunked <- v3_deduped %>%
 
 ```
 
-```{r}
+```{r tables for v4}
 v4_dejunked %>%
   count() %>%
-  kable(caption = "All Claims in 5 Parties - Deduped")
+  kable(caption = "All Claims in 5 Parties - Deduped and Dejunked")
 
-v3_deduped %>%
+v4_dejunked%>%
   count(publisher.site) %>%
-  kable(caption = "All Claims in 5 Parties - Deduped and
+  kable(caption = "All Claims in 5 Parties - Deduped and Dejunked
         Sorted by Publisher")
 
-v3_deduped %>%
+v4_dejunked %>%
   count(claimant_party) %>%
-  kable(caption = "All Claims in 5 Parties - Deduped and
+  kable(caption = "All Claims in 5 Parties - Deduped and Dejunked
         Sorted by Party")
 
+```
+
+Version 5 - Split into Publisher data
+
+```{r}
+pf_v5 <- v4_dejunked %>%
+  filter(publisher.site == "politifact.com")
+
+wapo_v5 <- v4_dejunked %>%
+  filter(publisher.site == "washingtonpost.com")
+
+fc_v5 <- v4_dejunked %>%
+  filter(publisher.site == "factcheck.org")
+
+nyt_v5 <- v4_dejunked %>%
+  filter(publisher.site == "nytimes.com")
 ```
