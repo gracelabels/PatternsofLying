@@ -130,28 +130,28 @@ For a final clean up before sorting by publisher and removing Trump, a member of
 ```{r manual removal for v4, message=FALSE, warning=FALSE, echo=FALSE}
 v4_dejunked <- v3_deduped %>%
   filter(claimant != "Donald Trump For Prison") %>%
-  filter(claimant !=  "Lauren Boebert; Rudy Giuliani") %>%
+  filter(claimant != "Lauren Boebert; Rudy Giuliani") %>%
   filter(claimant != "Rick Scott's Starbuck's heckler") %>%
   filter(claimant != "Americans United for Change") %>%
-  filter(claimant !=  "Consumers for Smart Solar") %>%
-  filter(claimant !=  "Greg Gianforte's campaign") %>%
-  filter(claimant !=  "Vietnam Veterans Against John McCain") %>%
+  filter(claimant != "Consumers for Smart Solar") %>%
+  filter(claimant != "Greg Gianforte's campaign") %>%
+  filter(claimant != "Vietnam Veterans Against John McCain") %>%
   filter(claimant != "President Trump's lawyers") %>%
-  filter(claimant !=    "Robin Vos and Scott Fitzgerald") %>%
-  filter(claimant !=  "Robin Vos; Scott Fitzgerald") %>%
-  filter(claimant !=  "Donald Trump 2020 Voters") %>%
-  filter(claimant !=  "Michael Bloomberg; Joe Biden; Hillary Clinton; Adam Schiff") %>%
-  filter(claimant !=  "Donald Trump and Mike Pence") %>%
-  filter(claimant !=  "Bill DeBlasio and Brian Kemp") %>%
-  filter(claimant !=  "John Roberts; Fox News correspondent") %>%
-  filter(claimant !=  "The Trump campaign") %>%
-  filter(claimant !=  "Sen. Ted Cruz (R-Texas) and Rep. Mark Meadows (R-N.C.)") %>%
-  filter(claimant !=  "Keith Ellison spokesman") %>%
-  filter(claimant !=  "Donald Trump ad") %>%
-  filter(claimant !=  "Kamala Harris for the People") %>%
-  filter(claimant !=  "Don Bolduc campaign") %>%
-  filter(claimant !=  "Donald Trump campaign") %>%
-  filter(claimant !=  "Joe Biden campaign") 
+  filter(claimant != "Robin Vos and Scott Fitzgerald") %>%
+  filter(claimant != "Robin Vos; Scott Fitzgerald") %>%
+  filter(claimant != "Donald Trump 2020 Voters") %>%
+  filter(claimant != "Michael Bloomberg; Joe Biden; Hillary Clinton; Adam Schiff") %>%
+  filter(claimant != "Donald Trump and Mike Pence") %>%
+  filter(claimant != "Bill DeBlasio and Brian Kemp") %>%
+  filter(claimant != "John Roberts; Fox News correspondent") %>%
+  filter(claimant != "The Trump campaign") %>%
+  filter(claimant != "Sen. Ted Cruz (R-Texas) and Rep. Mark Meadows (R-N.C.)") %>%
+  filter(claimant != "Keith Ellison spokesman") %>%
+  filter(claimant != "Donald Trump ad") %>%
+  filter(claimant != "Kamala Harris for the People") %>%
+  filter(claimant != "Don Bolduc campaign") %>%
+  filter(claimant != "Donald Trump campaign") %>%
+  filter(claimant != "Joe Biden campaign") 
 
 ```
 
@@ -327,3 +327,115 @@ This was done by pulling the claims labeled unknown_affiliation for each publish
 For all those assigned a party, the cell to the left denotes why and provides a link to the source used to make that determination. If someone changed parties, the claim date was noted.
 
 NOTE: If a claimant served in an administration and spoke on behalf of that administration or politician, they were considered a political figure and assigned the affiliation of the administration or politician they served/spoke on behalf of. This applied to appointed cabinet members, political officials, and lawyers representing politicians. Political commentators, activists, and celebrities were removed and not considered political figures
+
+```{r v7 substitutions}
+v7_fc <- v6_fc %>%
+  filter(claimant != "Hal Turner") %>%
+  filter(claimant != "Sean P. Conley")
+v7_fc$claimant_party[v7_fc$claimant == "Brett Giroir"] <- "Republican"
+v7_fc$claimant_party[v7_fc$claimant == "Dr. Deborah Birx"] <- "Republican"
+v7_fc$claimant_party[v7_fc$claimant == "John Kelly"] <- "Republican"
+v7_fc$claimant_party[v7_fc$claimant == "Kevin K. McAleenan"] <- "Republican"
+v7_fc$claimant_party[v7_fc$claimant == "Kirstjen Nielsen"] <- "Republican"
+v7_fc$claimant_party[v7_fc$claimant == "Loretta Lynch"] <- "Democratic"
+v7_fc$claimant_party[v7_fc$claimant == "Sidney Powell"] <- "Republican"
+v7_fc$claimant_party[v7_fc$claimant == "Steve Cortes"] <- "Republican"
+
+v7_fc %>%
+  count(claimant_party) %>%
+  kable(caption = "Factcheck.org by Claimant Party, 
+        without Unknown Affiliation")
+
+v7_nyt <- v6_nyt
+v7_nyt$claimant_party[v7_nyt$claimant == "Sidney Powell"] <- "Republican"
+v7_nyt$claimant_party[v7_nyt$claimant == "Jesse Binnall"] <- "Republican"
+
+v7_nyt %>%
+  count(claimant_party) %>%
+  kable(caption = "New York Times by Claimant Party, 
+        without Unknown Affiliation")
+
+v7_pf <- v6_pf %>%
+  filter(claimant != "Ashley Smith") %>%
+  filter(claimant != "Bill Maher") %>%
+  filter(claimant != "Bono") %>%
+  filter(claimant != "Brit Hume") %>%
+  filter(claimant != "Charles Ramsey") %>%
+  filter(claimant != "Clay Aiken") %>%
+  filter(claimant != "Daniel Kelly") %>%
+  filter(claimant != "David Martin") %>%
+  filter(claimant != "Edward Flynn") %>%
+  filter(claimant != "Erin Burnett") %>%
+  filter(claimant != "Giffords") %>%
+  filter(claimant != "Hal Turner") %>%
+  filter(claimant != "J. Christian Adams") %>%
+  filter(claimant != "Jake Tapper") %>%
+  filter(claimant != "James Hauser") %>%
+  filter(claimant != "John Patrick") %>%
+  filter(claimant != "Kevin Downing") %>%
+  filter(claimant != "Lawrence O'Donnell") %>%
+  filter(claimant != "Lisa Moore") %>%
+  filter(claimant != "Maria Bartiromo") %>%
+  filter(claimant != "Mark Levin") %>%
+  filter(claimant != "Michael Screnock") %>%
+  filter(claimant != "Mike Crute") %>%
+  filter(claimant != "Nicholas Burns") %>%
+  filter(claimant != "Ray Cross") %>%
+  filter(claimant != "Robert Sanborn") %>%
+  filter(claimant != "Shelley Grogan")
+v7_pf$claimant_party[v7_pf$claimant == "Alejandro Mayorkas"] <- "Democratic"
+v7_pf$claimant_party[v7_pf$claimant == "Alexander Strenger"] <- "Independent"
+v7_pf$claimant_party[v7_pf$claimant == "Beth Parlato"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Bob Donovan"] <- "Independent"
+v7_pf$claimant_party[v7_pf$claimant == "Bob Spindell"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Brett Giroir"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Brett McGurk"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Charles Francis"] <- "Independent"
+v7_pf$claimant_party[v7_pf$claimant == "Chris Meagher"] <- "Democratic"
+v7_pf$claimant_party[v7_pf$claimant == "George Papadopoulos"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "H.R. McMaster"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Jeffrey Zients"] <- "Democratic"
+v7_pf$claimant_party[v7_pf$claimant == "Jesse Kremer"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "John Kelly"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "John Kirby"] <- "Democratic"
+v7_pf$claimant_party[v7_pf$claimant == "Kirstjen Nielsen"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Loretta Lynch"] <- "Democratic"
+v7_pf$claimant_party[v7_pf$claimant == "Louis Marinelli"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Lowell Holtz"] <- "Independent"
+###THIS IS A DUPLICATE CLAIM
+v7_pf$claimant_party[v7_pf$claimant == "Marc Butler"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Michael Long"] <- "Independent"
+v7_pf$claimant_party[v7_pf$claimant == "Mike Collier"] <- "Democratic"
+v7_pf$claimant_party[v7_pf$claimant == "Nate McMurray"] <- "Democratic"
+v7_pf$claimant_party[v7_pf$claimant == "Paul Maner"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Ryan Frazier"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Scott Dawson"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Scott Jones"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Sidney Powell"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "State representatives"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Steve Cortes"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "Todd Wilcox"] <- "Republican"
+v7_pf$claimant_party[v7_pf$claimant == "William Taylor"] <- "Independent"
+
+v7_pf %>%
+  count(claimant_party) %>%
+  kable(caption = "PolitiFact by Claimant Party, 
+        without Unknown Affiliation")
+
+v7_wapo <- v6_wapo %>%
+  filter(claimant != "Anthony Fauci") %>%
+  filter(claimant != "Jim Acosta")
+v7_wapo$claimant_party[v7_wapo$claimant == "Charmaine Yoest"] <- "Republican"
+v7_wapo$claimant_party[v7_wapo$claimant == "H.R. McMaster"] <- "Republican"
+v7_wapo$claimant_party[v7_wapo$claimant == "Jim Mattis"] <- "Republican"
+v7_wapo$claimant_party[v7_wapo$claimant == "Kirstjen Nielsen"] <- "Republican"
+v7_wapo$claimant_party[v7_wapo$claimant == "Loretta Lynch"] <- "Democratic"
+v7_wapo$claimant_party[v7_wapo$claimant == "Steve Cortes"] <- "Republican"
+v7_wapo$claimant_party[v7_wapo$claimant == "Vanita Gupta"] <- "Democratic"
+
+v7_wapo %>%
+  count(claimant_party) %>%
+  kable(caption = "Washington Post by Claimant Party, 
+        without Unknown Affiliation")
+```
+
