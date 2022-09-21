@@ -9,7 +9,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r load packages, warning=FALSE, message=FALSE}
+```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
 library(tidyverse)
 library(knitr)
 ```
@@ -33,6 +33,8 @@ v0_all_us_unsorted %>%
 
 ```
 
+ NEED ASA TO EXPLAIN HOW TO GO FROM VERSION 0 to 1. Politician sort 
+ 
 ### Version 1 - Only Political Figures
 
 "We built a small data pipeline that tried to identify, for each claim, whether its uterrer was a person and, if they were, whether they met our definition of a politician. A politician, we decided, was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency.
@@ -43,7 +45,7 @@ Next, we tried to categorize human claimants as politicians or non-politicians. 
 
 Additionally, once the code deduced that a claimant was a politician, it scanned their Wikipedia infobox for reference to their party affiliation, recording it in our dataset. If there was no Wikipedia article about a human claimant, as was occasionally the case for unsuccessful candidates for local office, the data pipeline tried to find a corresponding page for the claimant on Ballotpedia, an online encyclopedia of American politics. If it found one, it searched the page for the same markers looked for on Wikipedia pages, and similarly tried to identify the claimant's party affiliation. When the process above had been completed for each claimant, data collection was finished, and we filtered out all claims in the dataset whose claimants weren't labeled as human politicians. Following data collection, we undertook some light data cleaning. Namely, if we found that a claimant had been affiliated with several political parties, we gave them a party label corresponding to the party they'd identified with when they'd made the claim. In a small number of cases, our code categorized a claimant as a politician but failed to infer their party; those claimants' politician status and party ID were manually reviewed and edited at a later stage but were labelled as unknown_affiliation for the time being. The resulting dataset was of only claims made by politicians and political figures in the US with corresponding parties labeled.
 
-```{r pull v1 data, message=FALSE, warning=FALSE}
+```{r pull v1 data, message=FALSE, warning=FALSE, echo=FALSE}
 
 v1_all_us_polclaims <- read_csv("all_us_pol_claims_updated_sep15.csv")
 
@@ -67,7 +69,7 @@ v1_all_us_polclaims %>%
 
 At this stage we noticed that several of the claimant's were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown\_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
 
-```{r create v2, message=FALSE, warning=FALSE}
+```{r create v2, message=FALSE, warning=FALSE, echo=FALSE}
 
 v2_5parties <- v1_all_us_polclaims %>%
   filter(claimant_party == "Republican"|
@@ -96,14 +98,14 @@ v2_5parties %>%
 
 At this step we filtered out duplicate claims. These were claims in which both the url and and text (previously thought title but it wasnt) of the claim were identical. The first appearance of each claim remained in the dataset, other were removed. This resulted in a database of 7,360 unique claims.
 
-```{r dedupe for v3, message=FALSE, warning=FALSE}
+```{r dedupe for v3, message=FALSE, warning=FALSE, echo=FALSE}
 
 v3_deduped <- v2_5parties %>%
   distinct(url, text, .keep_all = TRUE)
 
 ```
 
-```{r display v3 results, message=FALSE, warning=FALSE}
+```{r display v3 results, message=FALSE, warning=FALSE, echo=FALSE}
 
 v3_deduped %>%
   count() %>%
@@ -125,7 +127,7 @@ v3_deduped %>%
 
 For a final clean up before sorting by publisher and removing Trump, a member of our research team **manually identified 23 false positive rows** that either listed multiple claimants or had a false positive non-human claimant (e.g. \"Donald Trump\'s campaign\"). Those 23 claims were manually removed.
 
-```{r manual removal for v4, message=FALSE, warning=FALSE}
+```{r manual removal for v4, message=FALSE, warning=FALSE, echo=FALSE}
 v4_dejunked <- v3_deduped %>%
   filter(claimant != "Donald Trump For Prison") %>%
   filter(claimant !=  "Lauren Boebert; Rudy Giuliani") %>%
@@ -153,7 +155,7 @@ v4_dejunked <- v3_deduped %>%
 
 ```
 
-```{r tables for v4, message=FALSE, warning=FALSE}
+```{r tables for v4, message=FALSE, warning=FALSE, echo=FALSE}
 v4_dejunked %>%
   count() %>%
   kable(caption = "All Claims in 5 Parties - Deduped and Dejunked")
@@ -174,7 +176,7 @@ v4_dejunked %>%
 
 At this point we began looking at the makeup of each publisher individually. Based on the number of total fact checks, we selected four publishers to analyze in the next step: PolitiFact, The Washington Post, FactCheck.Org, and The New York Times. This resulted in four individual datasets, one per publisher, each denoted as v5.
 
-```{r create v5, message=FALSE, warning=FALSE}
+```{r create v5, message=FALSE, warning=FALSE, echo=FALSE}
 v5_pf <- v4_dejunked %>%
   filter(publisher.site == "politifact.com")
 
@@ -188,7 +190,7 @@ v5_nyt <- v4_dejunked %>%
   filter(publisher.site == "nytimes.com")
 ```
 
-```{r v5 tables}
+```{r v5 tables, message=FALSE, warning=FALSE, echo=FALSE }
 v5_pf %>%
   count() %>%
   kable(caption = "Politifact - All Claims in 5 Parties")
@@ -230,7 +232,7 @@ v5_nyt %>%
 
 We made the decision to remove Donald Trump entirely from this dataset. To do so, we first identified all the different iterations of his name within the `claimant` column. We could not simply remove all claimants whose names included Trump, because under our definitions, his daughter Ivanka Trump was a politician. The code determining these iterations is shown below.
 
-```{r find trump names, message=FALSE, warning=FALSE}
+```{r find trump names, message=FALSE, warning=FALSE, echo=FALSE}
 
 elim_trump <- v4_dejunked %>%
   filter(publisher.site == "politifact.com" |
@@ -248,7 +250,7 @@ elim_trump %>%
 
 With these four versions of Trump's name, we manually removed them from each V5 dataset. This created our V6 dataset without Trump for each publisher.
 
-```{r create v6, message=FALSE, warning=FALSE}
+```{r create v6, message=FALSE, warning=FALSE, echo=FALSE}
 
 v6_pf <- v5_pf %>%
   filter(claimant != "Donald J. Trump") %>%
@@ -276,7 +278,7 @@ v6_nyt <- v5_nyt %>%
 
 ```
 
-```{r}
+```{r v6 tables, message=FALSE, warning=FALSE, echo=FALSE }
 v6_pf %>%
   count() %>%
   kable(caption = "Politifact - Without Trump")
