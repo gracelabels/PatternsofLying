@@ -33,8 +33,8 @@ v0_all_us_unsorted %>%
 
 ```
 
- NEED ASA TO EXPLAIN HOW TO GO FROM VERSION 0 to 1. Politician sort 
- 
+NEED ASA TO EXPLAIN HOW TO GO FROM VERSION 0 to 1. Politician sort
+
 ### Version 1 - Only Political Figures
 
 "We built a small data pipeline that tried to identify, for each claim, whether its uterrer was a person and, if they were, whether they met our definition of a politician. A politician, we decided, was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency.
@@ -123,9 +123,9 @@ v3_deduped %>%
 
 ```
 
-### Version 4 - Dejunked 
+### Version 4 - Dejunked
 
-For a final clean up before sorting by publisher and removing Trump, a member of our research team **manually identified 23 false positive rows** that either listed multiple claimants or had a false positive non-human claimant (e.g. \"Donald Trump\'s campaign\"). Those 23 claims were manually removed.
+For a final clean up before sorting by publisher and removing Trump, a member of our research team **manually identified 23 false positive rows** that either listed multiple claimants or had a false positive non-human claimant (e.g. "Donald Trump's campaign"). Those 23 claims were manually removed.
 
 ```{r manual removal for v4, message=FALSE, warning=FALSE, echo=FALSE}
 v4_dejunked <- v3_deduped %>%
@@ -171,6 +171,8 @@ v4_dejunked %>%
         Sorted by Party")
 
 ```
+
+At this stage, the dataset of 7,337 claims had been cleaned of irrelevant and redundant data removed. The dataset that remains consists of claims that were made by U.S. political figures, and fact-checked by one of 13 U.S based publishers. At this stage, we began working with each publisher dataset separately. Only four publishers at this stage had enough claims to move forward: FactCheck.Org, The New Your Times, PolitiFact, and The Washington Post. Go to the next sheet for our next step.
 
 ### Version 5 - Split into Publisher data
 
@@ -226,7 +228,6 @@ v5_nyt %>%
         Sorted by Party")
 
 ```
-
 
 ### Version 6 - Removing Trump
 
@@ -314,3 +315,15 @@ v6_nyt %>%
         Sorted by Party")
 ```
 
+### Version 7 - Sorting Unknown Affiliation
+
+After we had the data divided into its smaller publisher sub-sets, and removed Trump from the data, our next step was to address anomalies in the claimant_party section. The code that was used to assign party affiliations scraped Wikipedia data and Ballotpedia for politicians and party affiliations. For about 100 different claims, the claimant was identified as a political figure but a party could not be found. They were labeled unknown_affiliation. We did not make an attempt to sort these previously, because there were simply too many. However, at this stage we have narrowed down to the data we plan to use. Therefore our next step was to manually assign party affiliations to the unknown_affiliation claims.
+
+This was done by pulling the claims labeled unknown_affiliation for each publisher. Only the fields using the name of the claimant, and occasionally the url for the fact-check itself if ambiguous, claimants were either
+
+1. Assigned a party (Democrat, Republican, Independent, Libertarian)
+2. Marked to be removed from the dataset because they were not a political figure.
+
+For all those assigned a party, the cell to the left denotes why and provides a link to the source used to make that determination. If someone changed parties, the claim date was noted.
+
+NOTE: If a claimant served in an administration and spoke on behalf of that administration or politician, they were considered a political figure and assigned the affiliation of the administration or politician they served/spoke on behalf of. This applied to appointed cabinet members, political officials, and lawyers representing politicians. Political commentators, activists, and celebrities were removed and not considered political figures
