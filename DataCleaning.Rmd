@@ -279,7 +279,7 @@ v6_nyt <- v5_nyt %>%
 
 ```
 
-```{r v6 tables, message=FALSE, warning=FALSE, echo=FALSE }
+```{r v6 tables, message=FALSE, warning=FALSE, echo=FALSE}
 v6_pf %>%
   count() %>%
   kable(caption = "Politifact - Without Trump")
@@ -328,7 +328,7 @@ For all those assigned a party, the cell to the left denotes why and provides a 
 
 NOTE: If a claimant served in an administration and spoke on behalf of that administration or politician, they were considered a political figure and assigned the affiliation of the administration or politician they served/spoke on behalf of. This applied to appointed cabinet members, political officials, and lawyers representing politicians. Political commentators, activists, and celebrities were removed and not considered political figures
 
-```{r v7 substitutions}
+```{r v7 substitutions, message=FALSE, warning=FALSE, echo=FALSE}
 v7_fc <- v6_fc %>%
   filter(claimant != "Hal Turner") %>%
   filter(claimant != "Sean P. Conley")
@@ -438,4 +438,42 @@ v7_wapo %>%
   kable(caption = "Washington Post by Claimant Party, 
         without Unknown Affiliation")
 ```
+
+
+### Version 8 - Removing Libertarian and Independents
+
+```{r v8, message=FALSE, warning=FALSE, echo=FALSE}
+v8_fc <- v7_fc %>%
+  filter(claimant_party == "Democratic" |
+           claimant_party == "Republican")
+
+v8_fc %>%
+  count(claimant_party) %>%
+  kable(caption = "Factcheck.org by Claimant Party")
+
+v8_nyt <- v7_nyt %>%
+  filter(claimant_party == "Democratic" |
+           claimant_party == "Republican")
+
+v8_nyt %>%
+  count(claimant_party) %>%
+  kable(caption = "New York Times by Claimant Party")
+
+v8_pf <- v7_pf %>%
+  filter(claimant_party == "Democratic" |
+           claimant_party == "Republican")
+
+v8_pf %>%
+  count(claimant_party) %>%
+  kable(caption = "PolitiFact by Claimant Party")
+
+v8_wapo <- v7_wapo %>%
+  filter(claimant_party == "Democratic" |
+           claimant_party == "Republican")
+
+v8_wapo %>%
+  count(claimant_party) %>%
+  kable(caption = "Washington Post by Claimant Party")
+```
+
 
