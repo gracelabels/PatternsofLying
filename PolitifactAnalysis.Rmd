@@ -86,7 +86,7 @@ v9_pf %>%
   kable(caption = "PF Claims with Truth-O-Meter Ratings")
 ```
 
-```{r}
+```{r pf people, warning=FALSE, message=FALSE, echo = FALSE}
 v9_pf %>%
   group_by(claimant) %>%
   count() %>%
