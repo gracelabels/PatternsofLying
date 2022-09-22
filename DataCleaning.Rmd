@@ -321,14 +321,48 @@ After we had the data divided into its smaller publisher sub-sets, and removed T
 
 This was done by pulling the claims labeled unknown_affiliation for each publisher. Only the fields using the name of the claimant, and occasionally the url for the fact-check itself if ambiguous, claimants were either
 
-1. Assigned a party (Democrat, Republican, Independent, Libertarian)
-2. Marked to be removed from the dataset because they were not a political figure.
-
-For all those assigned a party, the cell to the left denotes why and provides a link to the source used to make that determination. If someone changed parties, the claim date was noted.
+1.  Assigned a party (Democrat, Republican, Independent, Libertarian)
+2.  Marked to be removed from the dataset because they were not a political figure.
 
 NOTE: If a claimant served in an administration and spoke on behalf of that administration or politician, they were considered a political figure and assigned the affiliation of the administration or politician they served/spoke on behalf of. This applied to appointed cabinet members, political officials, and lawyers representing politicians. Political commentators, activists, and celebrities were removed and not considered political figures
 
-```{r v7 substitutions, message=FALSE, warning=FALSE, echo=FALSE}
+If you are reproducing this, these steps may not be relevant to you. Our filtering algorithim was unable to assign these political figures accurately despite many of them having political affiliations based on our definition. We are providing this information for the sake of transparency and to exemplify how one might manually sort the unknown_affiliations.
+
+#### FactCheck.Org unknown affiliation review
+
+First we reviewed the unknown_affiliation claims from the FactCheck.Org database.
+
+There were 14 claims and 10 unique claimants. After a manual review, the following were assigned Republican affiliation:
+
+Brett Giroir who [Served as Assistant Secretary of Health](https://en.wikipedia.org/wiki/Brett_Giroir) in the Trump Admin (2 claims)
+
+Dr. Deborah Birx who [served in the Trump Admin](served in the Trump Admin)(1 claim)
+
+John Kelly, [Former Chief of Staff in Trump Admin](https://en.wikipedia.org/wiki/John_F._Kelly) (1 claim)
+
+Kevin K. McAleenan,  [Sec. of Homeland Sec. Trump Admin](https://en.wikipedia.org/wiki/Kevin_McAleenan) (1 claim)
+
+Kirstjen Nielsen, [Homeland Security Sec. Trump Admin](https://en.wikipedia.org/wiki/Kirstjen_Nielsen) (4 claims)
+
+Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (1 claim)
+
+Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio) (1 claim) 
+
+**11 total claims were assigned a Republican affiliation.**
+
+One claimant was assigned a Democratic affiliation.
+
+Loretta Lynch, Attorney General for Obama (1 claim)
+
+**1 claim was assigned a Democratic affiliation.**
+
+**2 claimants were removed for not being political figures**
+
+Hal Turner, commentator, Not a political figure (1 claim) 
+
+Sean P. Conley, Presidential physician, Not a political figure (1 claim) 
+
+```{r v7 substitutions FC, message=FALSE, warning=FALSE, echo=FALSE}
 v7_fc <- v6_fc %>%
   filter(claimant != "Hal Turner") %>%
   filter(claimant != "Sean P. Conley")
@@ -345,7 +379,17 @@ v7_fc %>%
   count(claimant_party) %>%
   kable(caption = "Factcheck.org by Claimant Party, 
         without Unknown Affiliation")
+```
 
+#### New York Times unknown affiliation review
+
+**Next we reviewed the unknown_affiliation claims for the New York Times database.** There were 2 unique claimants and 2 claims, both of which were assigned Republican Affiliation. 
+
+Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (1 claim)
+
+Jesse Binnall, [Lawyer representing President Donald Trump ](https://ballotpedia.org/Jesse_Binnall)(1 claims) \
+
+```{r v7 substitutions NYT, message=FALSE, warning=FALSE, echo=FALSE}
 v7_nyt <- v6_nyt
 v7_nyt$claimant_party[v7_nyt$claimant == "Sidney Powell"] <- "Republican"
 v7_nyt$claimant_party[v7_nyt$claimant == "Jesse Binnall"] <- "Republican"
@@ -354,7 +398,68 @@ v7_nyt %>%
   count(claimant_party) %>%
   kable(caption = "New York Times by Claimant Party, 
         without Unknown Affiliation")
+```
 
+#### PolitiFact unknown affiliation review
+
+Next we reviewed unknown\_ affiliation claims for the PolitiFact database. There were 59 unique claimants and 72 claims.\
+**25 Republican claims were assigned**
+
+Beth Parlato, [NY Republican Political candidate](https://ballotpedia.org/Beth_Parlato) (1 claim) 
+
+Bob Spindell, [Republican member of WI elections commission](https://wisconsinexaminer.com/brief/spindell-reappointed-to-wisconsin-elections-commission/) (1 claim) 
+
+Brett Giroir, [Served as Assistant Secretary of Health in the Trump Admin](https://en.wikipedia.org/wiki/Brett_Giroir) (2 claims) 
+
+Brett McGurk, [National Security positions with Bush, trump, and Obama](https://en.wikipedia.org/wiki/Brett_McGurk) (1 claim) 
+
+George Papadopoulos, [Served on trump campaign and Congressional candidate ](https://en.wikipedia.org/wiki/George_Papadopoulos)(1 claim) 
+
+H.R. McMaster, [National Security Advisor in Trump Admin](https://en.wikipedia.org/wiki/H._R._McMaster) (1 claim) 
+
+Jesse Kremer, [Republican WI legislator](https://ballotpedia.org/Jesse_Kremer) (1 claim)
+
+John Kelly,  [Former Chief of Staff in Trump Admin](https://en.wikipedia.org/wiki/John_F._Kelly) (3 claims)
+
+Kirstjen Nielsen, [Homeland Security Sec. Trump Admin](https://en.wikipedia.org/wiki/Kirstjen_Nielsen) (1 claim)
+
+Louis Marinelli, [California Political Candidate](https://en.wikipedia.org/wiki/Louis_J._Marinelli#The_President_of_California_Act) (1 claim) 
+
+Marc Butler, [New York Republican](https://en.wikipedia.org/wiki/Marc_W._Butler) (1 claim) 
+
+Paul Maner, [Georgia Republican Candidate](https://ballotpedia.org/Paul_Maner) (1 claim) 
+
+Ryan Frazier, [Colorado Republican candidate](https://ballotpedia.org/Ryan_Frazier) (1 claim) 
+
+Scott Dawson, [Alabama Republican Candidate](https://ballotpedia.org/Scott_Dawson_(Alabama)) (1 claim) 
+
+Scott Jones, [Republican congressional candidate](https://www.politifact.com/factchecks/2016/oct/17/scott-jones/scott-jones-falsely-claims-judges-ruled-allegation/) (3 claims) 
+
+Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (2 claims)
+
+Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio) (1 claim) 
+
+State Representatives, l[ink lists Wisconsin Assembly Republicans](https://www.politifact.com/factchecks/2019/mar/13/wisconsin-assembly-republicans/republicans-botch-claim-comparing-tuition-immigran/)) (1 claim) 
+
+Todd Wilcox, [Florida Republican Candidate](https://ballotpedia.org/Todd_Wilcox_(Florida)) (1 claim)\
+
+**7 Democratic claims were assigned** 
+
+Alejandro Mayorkas, [Biden Sec. of Homeland Security](https://www.dhs.gov/person/alejandro-mayorkas) (1 claim) 
+
+Chris Meagher, [Dep. Press Sec. for Biden Admin](https://en.wikipedia.org/wiki/Chris_Meagher) (1 claim) 
+
+Jeffery Zients, [Coronavirus Response Coordinator for Biden](https://en.wikipedia.org/wiki/Jeffrey_Zients) (1 claim) 
+
+John Kirby, [Dept of defense Obama/Biden](https://en.wikipedia.org/wiki/John_Kirby_(admiral)), (1 claim) 
+
+Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Loretta_Lynch) (1 claim) 
+
+Mike Collier, [Dem. Texas Lieutenant Gov. candidate](https://ballotpedia.org/Mike_Collier_(Texas)) (1 claim) 
+
+Nate McMurray, [NY Democratic politician](https://ballotpedia.org/Nate_McMurray) (1 claim) \
+
+```{r v7 substitutions PF, message=FALSE, warning=FALSE, echo=FALSE}
 v7_pf <- v6_pf %>%
   filter(claimant != "Ashley Smith") %>%
   filter(claimant != "Bill Maher") %>%
@@ -421,7 +526,9 @@ v7_pf %>%
   count(claimant_party) %>%
   kable(caption = "PolitiFact by Claimant Party, 
         without Unknown Affiliation")
+```
 
+```{r v7 substitutions WP, message=FALSE, warning=FALSE, echo=FALSE}
 v7_wapo <- v6_wapo %>%
   filter(claimant != "Anthony Fauci") %>%
   filter(claimant != "Jim Acosta")
@@ -438,7 +545,6 @@ v7_wapo %>%
   kable(caption = "Washington Post by Claimant Party, 
         without Unknown Affiliation")
 ```
-
 
 ### Version 8 - Removing Libertarian and Independents
 
@@ -475,5 +581,3 @@ v8_wapo %>%
   count(claimant_party) %>%
   kable(caption = "Washington Post by Claimant Party")
 ```
-
-
