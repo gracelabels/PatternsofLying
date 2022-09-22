@@ -581,3 +581,11 @@ v8_wapo %>%
   count(claimant_party) %>%
   kable(caption = "Washington Post by Claimant Party")
 ```
+
+```{r}
+write_csv(v8_fc, file = "v8fc.csv")
+write_csv(v8_nyt, file = "v8nyt.csv")
+write_csv(v8_pf, file = "v8pf.csv")
+write_csv(v8_wapo, file = "v8wapo.csv")
+```
+
