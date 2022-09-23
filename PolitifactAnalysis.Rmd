@@ -93,5 +93,45 @@ v9_pf %>%
   arrange(desc(n))
 ```
 
+```{r}
+v10_pf <- v9_pf
+
+v10_pf$claimant[v10_pf$claimant == ""] <- ""
+v10_pf$claimant[v10_pf$claimant == "Andrew M. Cuomo"] <- "Andrew Cuomo"
+v10_pf$claimant[v10_pf$claimant == "U.S. Rep. Ann Kirkpatrick"] <- "Ann Kirkpatrick"
+v10_pf$claimant[v10_pf$claimant == "Charles Schumer"] <- "Chuck Schumer"
+v10_pf$claimant[v10_pf$claimant == "U.S. Sen. Charles Schumer"] <- "Chuck Schumer"
+v10_pf$claimant[v10_pf$claimant == "Edward J. Markey"] <- "Ed Markey"
+v10_pf$claimant[v10_pf$claimant == "Edward Markey"] <- "Ed Markey"
+v10_pf$claimant[v10_pf$claimant == "Gordon Hintz; D-Oshkosh;"] <- "Gordon Hintz"
+v10_pf$claimant[v10_pf$claimant == "Gov. Rick Scott"] <- "Rick Scott"
+v10_pf$claimant[v10_pf$claimant == "Sen. Rick Scott"] <- "Rick Scott"
+v10_pf$claimant[v10_pf$claimant == "Greg Abbot"] <- "Greg Abbott"
+v10_pf$claimant[v10_pf$claimant == "J.B. Pritzker"] <- "J. B. Pritzker"
+v10_pf$claimant[v10_pf$claimant == "JB Pritzker"] <- "J. B. Pritzker"
+v10_pf$claimant[v10_pf$claimant == "Janel Brandtjen;"] <- "Janel Brandtjen"
+v10_pf$claimant[v10_pf$claimant == "Julián Castro"] <- "Julian Castro"
+v10_pf$claimant[v10_pf$claimant == "Rev. Mark Harris"] <- "Mark Harris"
+v10_pf$claimant[v10_pf$claimant == "Mark Pocan;"] <- "Mark Pocan"
+v10_pf$claimant[v10_pf$claimant == "Mike Bloomberg"] <- "Michael Bloomberg"
+v10_pf$claimant[v10_pf$claimant == "Michael Kearns"] <- "Michael P. Kearns"
+v10_pf$claimant[v10_pf$claimant == "Nancy Pelosi; D-Calif."] <- "Nancy Pelosi"
+v10_pf$claimant[v10_pf$claimant == "Nicholas Langworthy"] <- "Nick Langworthy"
+v10_pf$claimant[v10_pf$claimant == "Rep. Tom Reed"] <- "Tom Reed"
+v10_pf$claimant[v10_pf$claimant == "Sen. Roy Blunt"] <- "Roy Blunt"
+v10_pf$claimant[v10_pf$claimant == "Sen. Sherrod Brown"] <- "Sherrod Brown"
+v10_pf$claimant[v10_pf$claimant == "Terry McAuliffe; D"] <- "Terry McAuliffe"
+v10_pf$claimant[v10_pf$claimant == "Thomas Perez"] <- "Tom Perez"
+v10_pf$claimant[v10_pf$claimant == "Rep. Chris Collins"] <- "Chris Collins"
+v10_pf$claimant[v10_pf$claimant == "Beto O’Rourke"] <- "Beto O'Rourke"
+```
+
+```{r}
+v10_pf %>%
+  group_by(claimant) %>%
+  count() %>%
+  arrange(desc(n))
+```
+
 
 
