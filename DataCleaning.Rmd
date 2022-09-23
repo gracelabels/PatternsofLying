@@ -336,7 +336,7 @@ There were 14 claims and 10 unique claimants. After a manual review, the followi
 
 Brett Giroir who [Served as Assistant Secretary of Health](https://en.wikipedia.org/wiki/Brett_Giroir) in the Trump Admin (2 claims)
 
-Dr. Deborah Birx who [served in the Trump Admin](served in the Trump Admin)(1 claim)
+Dr. Deborah Birx who [served in the Trump Admin](served%20in%20the%20Trump%20Admin)(1 claim)
 
 John Kelly, [Former Chief of Staff in Trump Admin](https://en.wikipedia.org/wiki/John_F._Kelly) (1 claim)
 
@@ -387,7 +387,7 @@ v7_fc %>%
 
 Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (1 claim)
 
-Jesse Binnall, [Lawyer representing President Donald Trump ](https://ballotpedia.org/Jesse_Binnall)(1 claims) \
+Jesse Binnall, [Lawyer representing President Donald Trump](https://ballotpedia.org/Jesse_Binnall)(1 claims) \
 
 ```{r v7 substitutions NYT, message=FALSE, warning=FALSE, echo=FALSE}
 v7_nyt <- v6_nyt
@@ -413,7 +413,7 @@ Brett Giroir, [Served as Assistant Secretary of Health in the Trump Admin](https
 
 Brett McGurk, [National Security positions with Bush, trump, and Obama](https://en.wikipedia.org/wiki/Brett_McGurk) (1 claim) 
 
-George Papadopoulos, [Served on trump campaign and Congressional candidate ](https://en.wikipedia.org/wiki/George_Papadopoulos)(1 claim) 
+George Papadopoulos, [Served on trump campaign and Congressional candidate](https://en.wikipedia.org/wiki/George_Papadopoulos)(1 claim) 
 
 H.R. McMaster, [National Security Advisor in Trump Admin](https://en.wikipedia.org/wiki/H._R._McMaster) (1 claim) 
 
@@ -588,4 +588,3 @@ write_csv(v8_nyt, file = "v8nyt.csv")
 write_csv(v8_pf, file = "v8pf.csv")
 write_csv(v8_wapo, file = "v8wapo.csv")
 ```
-
