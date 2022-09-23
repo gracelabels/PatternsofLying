@@ -152,7 +152,7 @@ Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Ri
 
 Later on during tagging we identified three more claimants (Pat Robertson, Juan Williams, and Evan Smith) and 1 claim that was mislabeled (The claim said it was Maxine Waters but the link said it was bloggers) that were not political figures. For ease we have removed them here. 6 more claims were removed.
 
-```{r}
+```{r create v11, warning=FALSE, message=FALSE, echo = FALSE}
 v11_pf <- v10_pf %>%
   filter(claimant != "Tucker Carlson",
            claimant != "Laura Ingraham",
@@ -168,10 +168,18 @@ v11_pf <- v10_pf %>%
 
 Below are the counts for the final dataset used for tagging.
 
-```{r}
+```{r v11table, warning=FALSE, message=FALSE, echo = FALSE}
 v11_pf %>%
   group_by(claimant_party, textualRating) %>%
   count() %>%
   pivot_wider(names_from = claimant_party, id_cols = textualRating, values_from = n) %>%
   kable(caption = "Claim Rating by Party for Final Dataset")
 ```
+
+### Tagged Claims
+
+```{r createmetadata, warning=FALSE, message=FALSE, echo = FALSE}
+taggedclaims <- read_csv("taggedclaims.csv")
+```
+
+
