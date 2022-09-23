@@ -181,6 +181,8 @@ v11_pf %>%
 taggedclaims <- read_csv("tagged_claims_limited.csv")
 
 pf_final <- left_join(v11_pf, taggedclaims)
-check <- anti_join(taggedclaims, v11_pf, by = "title")
+
+
+
 
 ```
