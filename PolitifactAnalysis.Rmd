@@ -107,7 +107,6 @@ This processed combined several names making the list 25 names shorter.
 ```{r condense claimant names, warning=FALSE, message=FALSE, echo = FALSE}
 v10_pf <- v9_pf
 
-v10_pf$claimant[v10_pf$claimant == ""] <- ""
 v10_pf$claimant[v10_pf$claimant == "Andrew M. Cuomo"] <- "Andrew Cuomo"
 v10_pf$claimant[v10_pf$claimant == "U.S. Rep. Ann Kirkpatrick"] <- "Ann Kirkpatrick"
 v10_pf$claimant[v10_pf$claimant == "Charles Schumer"] <- "Chuck Schumer"
@@ -143,3 +142,27 @@ v10_pf %>%
   count() %>%
   arrange(desc(n))
 ```
+
+```{r}
+v11_pf <- v10_pf %>%
+  filter(claimant != "Tucker Carlson",
+           claimant != "Laura Ingraham",
+           claimant != "Jacob Wohl",
+           claimant != "State representatives",
+           claimant != "Reagan was Right",
+           claimant != "Marco Rubio's heckler",
+           claimant != "Pat Robertson",
+           claimant != "Evan Smith",
+           claimant != "Juan Williams") %>%
+  filter(...1 != 3120)
+```
+
+```{r}
+v11_pf %>%
+  group_by(claimant_party, textualRating) %>%
+  count() %>%
+  pivot_wider(names_from = claimant_party, id_cols = textualRating, values_from = n) %>%
+  kable(caption = "Claim Rating by Party for Final Dataset")
+```
+
+
