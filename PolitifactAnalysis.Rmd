@@ -18,31 +18,34 @@ library(knitr)
 v8_pf <- read_csv("v8pf.csv")
 ```
 
-"At this part of the process, we have sorted out all claims that do not fit our criteria of claims by U.S politician from out 4 publisher datasets. We have also eliminated Independent and Libertarian claims. Now within each publisher we zoom into the field textualRating. This denotes the rating that the claim was given by the fact-checker. Some have standardized scales with ranking others do not. For this step we have defined the existing rating scale, seen how many fit into that scale, and how many anomaly claims remain. 
+### Version 8 - Removal of PolitiFact anomalous claims
+
+"At this part of the process, we have sorted out all claims that do not fit our criteria of claims by U.S politician from out 4 publisher datasets. We have also eliminated Independent and Libertarian claims. Now within each publisher we zoom into the field textualRating. This denotes the rating that the claim was given by the fact-checker. Some have standardized scales with ranking others do not. For this step we have defined the existing rating scale, seen how many fit into that scale, and how many anomaly claims remain.
 
 For PolitiFact, they have an established 6 tier rating scale called the Truth-O-Meter in which claims are assigned one of the following ratings. The scale goes from more true to less true. This information was pulled from PolitiFact's website
 
 "The goal of the Truth-O-Meter is to reflect the relative accuracy of a statement. The meter has six ratings, in decreasing level of truthfulness:"
 
-TRUE – The statement is accurate and there’s nothing significant missing.
+**TRUE** -- The statement is accurate and there's nothing significant missing.
 
-MOSTLY TRUE – The statement is accurate but needs clarification or additional information.
+**MOSTLY TRUE** -- The statement is accurate but needs clarification or additional information.
 
-HALF TRUE – The statement is partially accurate but leaves out important details or takes things out of context.
+**HALF TRUE** -- The statement is partially accurate but leaves out important details or takes things out of context.
 
-MOSTLY FALSE – The statement contains an element of truth but ignores critical facts that would give a different impression.
+**MOSTLY FALSE** -- The statement contains an element of truth but ignores critical facts that would give a different impression.
 
-FALSE – The statement is not accurate.
+**FALSE** -- The statement is not accurate.
 
-PANTS ON FIRE – The statement is not accurate and makes a ridiculous claim.
+**PANTS ON FIRE** -- The statement is not accurate and makes a ridiculous claim.
 
 The burden of proof is on the speaker, and we rate statements based on the information known at the time the statement is made.
 
-Below is a breakdown of all the ratings in PF textualRating. There are 
+Below is a breakdown of all the ratings in PF textualRating. There are
 
 2,527 Normal claims (those rated with on of the 6 standardized ratings)
 
-354 Anomalous claims (those with a non-standardized text based rating) "
+354 Anomalous claims (those with a non-standardized text based rating)
+
 ```{r orig text ratings, warning=FALSE, message=FALSE, echo = FALSE}
 v8_pf %>%
   group_by(textualRating) %>%
@@ -51,9 +54,7 @@ v8_pf %>%
   kable(caption = "Textual Ratings")
 ```
 
-When we reviewed the list of anomaly claims, we noticed that all came from PolitiFact articles. PolitiFact values their Truth-O-Meter ratings and use them only when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not evidence to do a full scale fact-check the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since PF did not feel comfortable enough to deliver a full Truth-O-Meter rating neither did we and all claims that were not given on the 6 standard ratings in textualRating were removed from the dataset. 
-
-The new dataset was called pf_noanomaly
+When we reviewed the list of anomaly claims, we noticed that all came from PolitiFact articles. PolitiFact values their Truth-O-Meter ratings and use them only when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not evidence to do a full scale fact-check the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since PF did not feel comfortable enough to deliver a full Truth-O-Meter rating neither did we and all claims that were not given on the 6 standard ratings in textualRating were removed from the dataset.
 
 ```{r use pF ratings, warning=FALSE, message=FALSE, echo = FALSE}
 v9_pf <- v8_pf %>%
@@ -86,6 +87,8 @@ v9_pf %>%
   kable(caption = "PF Claims with Truth-O-Meter Ratings")
 ```
 
+After this removal we began looking closely at the remaining claimant names. Version 8 had 723 unique claimant names.
+
 ```{r pf people, warning=FALSE, message=FALSE, echo = FALSE}
 v9_pf %>%
   group_by(claimant) %>%
@@ -93,7 +96,15 @@ v9_pf %>%
   arrange(desc(n))
 ```
 
-```{r}
+### Version 10 - Condensing claimant names
+
+At this stage we noticed that some claimants were listed under several separate names referring to the same person. Like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this repetition so that we could see the true \# of claims made by each claimant.
+
+This processed combined several names making the list 25 names shorter.
+
+698 unique claimants remain.
+
+```{r condense claimant names, warning=FALSE, message=FALSE, echo = FALSE}
 v10_pf <- v9_pf
 
 v10_pf$claimant[v10_pf$claimant == ""] <- ""
@@ -126,12 +137,9 @@ v10_pf$claimant[v10_pf$claimant == "Rep. Chris Collins"] <- "Chris Collins"
 v10_pf$claimant[v10_pf$claimant == "Beto O’Rourke"] <- "Beto O'Rourke"
 ```
 
-```{r}
+```{r v10 table, warning=FALSE, message=FALSE, echo = FALSE}
 v10_pf %>%
   group_by(claimant) %>%
   count() %>%
   arrange(desc(n))
 ```
-
-
-
