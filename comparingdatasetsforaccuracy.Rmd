@@ -171,3 +171,15 @@ elim_trump %>%
   count()
 ```
 
+```{r}
+canonical <- read_csv("canonical_names.csv")
+canonical$claimant <- canonical$claimant_canonical_name
+originalnamespf <- read_csv("original name.csv")
+```
+
+```{r}
+differences <- anti_join(originalnamespf, canonical, by = "claimant")
+
+differences2 <- anti_join(canonical, originalnamespf, by = "claimant")
+```
+
