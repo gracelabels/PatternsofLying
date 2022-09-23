@@ -143,6 +143,15 @@ v10_pf %>%
   arrange(desc(n))
 ```
 
+### Version 11 -- Final Claimant Cleaning  
+
+During this process we also noticed that some claimants, who did not fit our defintion of politician, had slipped through the cracks in our code. To try and ensure that we had only the data we desired in our dataset, we ran the list of claimant names through a stricter version of the politician filter.
+58 names were marked as potentially non-politicial figures. Each name was manually reviewed and we identified 6 names that did not belong in the dataset.
+
+Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Right, Marco Rubio's heckler. 21 claims were removed as a result.
+
+Later on during tagging we identified three more claimants (Pat Robertson, Juan Williams, and Evan Smith) and 1 claim that was mislabeled (The claim said it was Maxine Waters but the link said it was bloggers) that were not political figures. For ease we have removed them here. 6 more claims were removed.
+
 ```{r}
 v11_pf <- v10_pf %>%
   filter(claimant != "Tucker Carlson",
@@ -157,6 +166,8 @@ v11_pf <- v10_pf %>%
   filter(...1 != 3120)
 ```
 
+Below are the counts for the final dataset used for tagging.
+
 ```{r}
 v11_pf %>%
   group_by(claimant_party, textualRating) %>%
@@ -164,5 +175,3 @@ v11_pf %>%
   pivot_wider(names_from = claimant_party, id_cols = textualRating, values_from = n) %>%
   kable(caption = "Claim Rating by Party for Final Dataset")
 ```
-
-
