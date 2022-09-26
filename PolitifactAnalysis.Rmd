@@ -134,6 +134,8 @@ v10_pf$claimant[v10_pf$claimant == "Terry McAuliffe; D"] <- "Terry McAuliffe"
 v10_pf$claimant[v10_pf$claimant == "Thomas Perez"] <- "Tom Perez"
 v10_pf$claimant[v10_pf$claimant == "Rep. Chris Collins"] <- "Chris Collins"
 v10_pf$claimant[v10_pf$claimant == "Beto O’Rourke"] <- "Beto O'Rourke"
+v10_pf$claimant[v10_pf$claimant == "Thom TIllis"] <- "Thom Tillis"
+v10_pf$claimant[v10_pf$claimant == "David R. Lewis"] <- "David Lewis"
 ```
 
 ```{r v10 table, warning=FALSE, message=FALSE, echo = FALSE}
