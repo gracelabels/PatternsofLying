@@ -179,16 +179,15 @@ v11_pf %>%
 ```
 
 ```{r date error fixed}
-v11_pf$claimDate[v11_pf$claimDate == "2106-11-08"] <- "2016-11-08"
+v11_pf$claimDate[v11_pf$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
 ```
 
 ### Tagged Claims
 
 ```{r createmetadata, warning=FALSE, message=FALSE, echo = FALSE}
 taggedclaims <- read_csv("tagged_claims_limited.csv")
-```
 
-```{r}
-v11_pf$claimDate[v11_pf$claimDate == "2106-11-08"] <- "2016-11-08"
+pf_final <- left_join(v11_pf, taggedclaims, by = c("...1", "url", "languageCode", "publisher.name",
+"publisher.site", "reviewDate", "text", "claimDate", "claimant_party"))
 ```
 
