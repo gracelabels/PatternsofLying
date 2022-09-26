@@ -186,3 +186,8 @@ pf_final <- left_join(v11_pf, taggedclaims)
 
 
 ```
+
+```{r}
+write_csv(v10_pf, file = "v10_pf")
+```
+
