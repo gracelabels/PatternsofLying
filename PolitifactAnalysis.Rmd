@@ -134,7 +134,8 @@ v10_pf$claimant[v10_pf$claimant == "Terry McAuliffe; D"] <- "Terry McAuliffe"
 v10_pf$claimant[v10_pf$claimant == "Thomas Perez"] <- "Tom Perez"
 v10_pf$claimant[v10_pf$claimant == "Rep. Chris Collins"] <- "Chris Collins"
 v10_pf$claimant[v10_pf$claimant == "Beto O’Rourke"] <- "Beto O'Rourke"
-v10_pf$claimant[v10_pf$claimant == "Thom TIllis"] <- "Thom Tillis"
+v10_pf$claimant[v10_pf$claimant == "Thom TIllis"] <- "Thom Tillis" 
+v10_pf$claimant[v10_pf$claimant == "Thom TIllis"] <- "Thom Tillis" 
 v10_pf$claimant[v10_pf$claimant == "David R. Lewis"] <- "David Lewis"
 ```
 
@@ -177,19 +178,17 @@ v11_pf %>%
   kable(caption = "Claim Rating by Party for Final Dataset")
 ```
 
+```{r date error fixed}
+v11_pf$claimDate[v11_pf$claimDate == "2106-11-08"] <- "2016-11-08"
+```
+
 ### Tagged Claims
 
 ```{r createmetadata, warning=FALSE, message=FALSE, echo = FALSE}
 taggedclaims <- read_csv("tagged_claims_limited.csv")
-
-pf_final <- left_join(v11_pf, taggedclaims)
-
-
-
-
 ```
 
 ```{r}
-write_csv(v10_pf, file = "v10_pf")
+v11_pf$claimDate[v11_pf$claimDate == "2106-11-08"] <- "2016-11-08"
 ```
 

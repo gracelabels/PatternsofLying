@@ -183,3 +183,16 @@ differences <- anti_join(originalnamespf, canonical, by = "claimant")
 differences2 <- anti_join(canonical, originalnamespf, by = "claimant")
 ```
 
+```{r}
+
+
+taggedclaims <- read_csv("tagged_claims_limited.csv")
+
+v11_mini <- v11_pf %>%
+  filter(textualRating == "False"| textualRating == "Mostly False"| textualRating == "Pants on Fire")
+          
+         
+anti_join(v11_mini, taggedclaims, by = c("...1", "url", "title", "languageCode", "publisher.name",
+"publisher.site", "reviewDate", "text", "claimDate", "claimant_party"))
+```
+
