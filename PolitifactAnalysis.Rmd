@@ -191,3 +191,13 @@ pf_final <- left_join(v11_pf, taggedclaims, by = c("...1", "url", "languageCode"
 "publisher.site", "reviewDate", "text", "claimDate", "claimant_party"))
 ```
 
+```{r}
+pf_final <- pf_final %>%
+  select(-title.y, -textualRating.y, -claimant.y)
+pf_final$title <- pf_final$title.x
+pf_final$textualRating <- pf_final$textualRating.x
+pf_final$claimant <- pf_final$claimant.x
+pf_final <- pf_final %>%
+  select(-title.x, -textualRating.x, -claimant.x)
+```
+
