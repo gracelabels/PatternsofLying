@@ -178,7 +178,7 @@ v11_pf %>%
   kable(caption = "Claim Rating by Party for Final Dataset")
 ```
 
-```{r date error fixed}
+```{r date error fixed,  warning=FALSE, message=FALSE, echo = FALSE}
 v11_pf$claimDate[v11_pf$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
 ```
 
@@ -191,7 +191,7 @@ pf_final <- left_join(v11_pf, taggedclaims, by = c("...1", "url", "languageCode"
 "publisher.site", "reviewDate", "text", "claimDate", "claimant_party"))
 ```
 
-```{r}
+```{r rename columns, warning=FALSE, message=FALSE, echo = FALSE}
 pf_final <- pf_final %>%
   select(-title.y, -textualRating.y, -claimant.y)
 pf_final$title <- pf_final$title.x
@@ -203,7 +203,7 @@ pf_final <- pf_final %>%
 
 ### Manual Removal of Duplicate Claims
 
-```{r}
+```{r finddupes, warning=FALSE, message=FALSE, echo = FALSE}
 pf_final %>%
   group_by(text) %>%
   count() %>%
@@ -212,7 +212,7 @@ pf_final %>%
   kable(caption = "Remaining Duplicates Identified during Tagging")
 ```
 
-```{r}
+```{r finaldedupe, warning=FALSE, message=FALSE, echo = FALSE}
 pf_final_dedupe <- pf_final %>%
   filter(...1 != 3254, 
          ...1 != 7377,
