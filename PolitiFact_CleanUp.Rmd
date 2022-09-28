@@ -1,5 +1,5 @@
 ---
-title: "PolitiFact Analysis"
+title: "PolitiFact Clean Up"
 author: "Grace Abels"
 date: "4/19/2022"
 output:
@@ -200,4 +200,52 @@ pf_final$claimant <- pf_final$claimant.x
 pf_final <- pf_final %>%
   select(-title.x, -textualRating.x, -claimant.x)
 ```
+
+### Manual Removal of Duplicate Claims
+
+```{r}
+pf_final %>%
+  group_by(text) %>%
+  count() %>%
+  filter(n > 1) %>%
+  arrange(desc(n)) %>%
+  kable(caption = "Remaining Duplicates Identified during Tagging")
+```
+
+```{r}
+pf_final_dedupe <- pf_final %>%
+  filter(...1 != 3254, 
+         ...1 != 7377,
+         ...1 != 7378,
+         ...1 != 4553,
+         ...1 != 4552,
+         ...1 != 5740,
+         ...1 != 7580,
+         ...1 != 7581,
+         ...1 != 7229,
+         ...1 != 4176,
+         ...1 != 4177,
+         ...1 != 3425,
+         ...1 != 1927,
+         ...1 != 2627,
+         ...1 != 4737,
+         ...1 != 4738,
+         ...1 != 7622,
+         ...1 != 6597,
+         ...1 != 7291,
+         ...1 != 7292,
+         ...1 != 460,
+         ...1 != 3991,
+         ...1 != 7088,
+         ...1 != 7089,
+         ...1 != 3313,
+         ...1 != 6408,
+         ...1 != 6409,
+         ...1 != 7402,
+         ...1 != 3383,
+         ...1 != 3382,
+         ...1 != 3381)
+```
+
+
 
