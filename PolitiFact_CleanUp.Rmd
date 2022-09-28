@@ -262,6 +262,9 @@ loc_of_lie$claimDate[loc_of_lie$claimDate == (as.Date("2106-11-08"))] <- as.Date
 
 ```{r}
 pf_mega_location <- left_join(pf_mega_nodupes, loc_of_lie, by = c("...1", "url", "languageCode", "publisher.name", "publisher.site", "text", "claimDate", "claimant_party"))
+pf_mega_location$title <- pf_mega_location$title.x
+pf_mega_location <- pf_mega_location %>%
+  select(-title.x, -title.y)
 
 write_csv(pf_mega_location, file = "pf_mega_location.csv")
 ```
