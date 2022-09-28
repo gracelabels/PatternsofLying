@@ -19,8 +19,9 @@ pf_mega <- read_csv("pf_mega_location.csv")
 ```
 
 ```{r}
-# pf_mega %>%
-#   filter(`Government Operations` == TRUE, claimant_party == "Democratic") %>%
-#   sort(title, partial = NULL)
+pf_mega %>%
+  filter(`Government Operations` == TRUE, claimant_party == "Democratic") %>%
+  select(title)
+
 ```
 
