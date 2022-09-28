@@ -1,0 +1,26 @@
+---
+title: "PolitiFact Analysis"
+author: "Sofia Bliss-Carrascoas"
+date: "9/28/2022"
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
+library(tidyverse)
+library(knitr)
+```
+
+```{r}
+pf_mega <- read_csv("pf_mega_location.csv")
+```
+
+```{r}
+# pf_mega %>%
+#   filter(`Government Operations` == TRUE, claimant_party == "Democratic") %>%
+#   sort(title, partial = NULL)
+```
+
