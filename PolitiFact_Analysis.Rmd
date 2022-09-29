@@ -6,7 +6,7 @@ output:
   pdf_document: default
   html_document: default
 editor_options:
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
@@ -16,12 +16,79 @@ library(knitr)
 
 ```{r}
 pf_mega <- read_csv("pf_mega_location.csv")
+
+truenesscolors = c("#FF0000", "#FF872C", "#FAB733", "#FDE64B", "#ACB334", "#69B34C")
+
+pf_mega$textualRating <- factor(pf_mega$textualRating, 
+                              levels = c("Pants on Fire", 
+                                         "False", 
+                                         "Mostly False", 
+                                         "Half True", 
+                                         "Mostly True", 
+                                         "True"))
+```
+
+```{r}
+pf_mega$`Government Operations`[pf_mega$...1 == "3990"] <- "TRUE"
+```
+
+```{r}
+ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
+ geom_bar(position = "fill") +
+  scale_fill_manual( values = c("blue2", "red3")) +
+  labs(title = "Ratings Proportions by Party",
+       x = "Rating",
+       y = "Proportion",
+       fill = "Party of Claimant")
+
+ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
+ geom_bar() +
+  scale_fill_manual(values = c("blue2", "red3")) +
+  labs(title = "Ratings Counts by Party",
+       x = "Rating",
+       y = "Total Claims",
+       fill = "Party of Claimant")
+```
+
+```{r}
+ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
+         geom_bar(position = "fill") +
+  labs(title = "Percentage Rating by Party",
+       x = "Claims by Party",
+       fill = "Rating", y = "Percentage") +
+  scale_fill_manual(values = truenesscolors)
 ```
 
 ```{r}
 pf_mega %>%
-  filter(`Government Operations` == TRUE, claimant_party == "Democratic") %>%
-  select(title)
-
+  count(claimant_party, textualRating) %>%
+  pivot_wider(id_cols = c(claimant_party,
+                          textualRating),
+              names_from = textualRating,
+              values_from = n,
+              values_fill = 0) %>%
+  kable(caption = "Fact-checks per rating by Party")
 ```
+
+```{r}
+binarytest <- pf_mega %>%
+  mutate(Fear = case_when(Fear == TRUE ~ 1,
+                          Fear == FALSE ~ 0)) %>%
+  mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+  mutate(`Self/Personal Record` = case_when(`Self/Personal Record` == TRUE ~ 1, 
+                                            `Self/Personal Record` == FALSE ~ 0)) %>%
+  mutate(`Opponent/Opponent's Record` = case_when(`Opponent/Opponent's Record` == TRUE ~ 1, 
+                                                  `Opponent/Opponent's Record` == FALSE ~ 0)) %>%
+  select(Fear, Legislation, `Self/Personal Record`, `Opponent/Opponent's Record`, claimant_party) %>%
+  filter(!is.na(Fear)) 
+
+macro_tibble <- binarytest %>%
+  group_by(claimant_party) %>%
+  summarize(Fear = sum(Fear), Legislation = sum(Legislation), "Self/Personal Record" = sum(`Self/Personal Record`), "Opponent/Opponent's Record" = sum(`Opponent/Opponent's Record`))
+
+macro_tibble <- t(macro_tibble)
+```
+
+
 
