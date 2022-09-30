@@ -22,7 +22,7 @@ loc_tags$textualRating <- factor(loc_tags$textualRating,
                                          "Mostly True", 
                                          "True"))
 
-truenesscolors = c("#69B34C", "#ACB334", "#FDE64B", "#FAB733", "#FF872C", "#FF0000")
+truenesscolors = c("#FF0000", "#FF872C", "#FAB733", "#FDE64B", "#ACB334", "#69B34C")
 ```
 
 Data: The data used in this analysis is the compilation of claims fact checked by PolitiFact made by Republican or Democratic political figures between Jan 1st 2016 and June 30th 2021, excluding all statements made by Donald Trump.
