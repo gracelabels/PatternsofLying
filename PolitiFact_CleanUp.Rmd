@@ -266,6 +266,8 @@ pf_mega_location$title <- pf_mega_location$title.x
 pf_mega_location <- pf_mega_location %>%
   select(-title.x, -title.y)
 
+pf_mega_location$text[pf_mega_location$...1 == 2766] <- "The Trans-Pacific trade deal could cost America 448,000 more jobs."
+
 write_csv(pf_mega_location, file = "pf_mega_location.csv")
 ```
 
