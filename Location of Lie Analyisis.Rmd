@@ -1,0 +1,649 @@
+---
+title: "Location of the Lie EDA"
+author: "Sofia Bliss-Carrascosa"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+```{r loadpackages, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(knitr)
+```
+
+```{r echo = FALSE}
+loc_tags <- read.csv("pf_mega_location.csv")
+
+loc_tags$textualRating <- factor(loc_tags$textualRating, 
+                              levels = c("Pants on Fire", 
+                                         "False", 
+                                         "Mostly False", 
+                                         "Half True", 
+                                         "Mostly True", 
+                                         "True"))
+
+truenesscolors = c("#69B34C", "#ACB334", "#FDE64B", "#FAB733", "#FF872C", "#FF0000")
+```
+
+Data: The data used in this analysis is the compilation of claims fact checked by PolitiFact made by Republican or Democratic political figures between Jan 1st 2016 and June 30th 2021, excluding all statements made by Donald Trump.
+
+Exploratory Data Analysis
+
+```{r, echo = FALSE}
+loc_tags %>%
+  group_by(location) %>%
+  summarise(count = n(), percentage = (n()*100)/nrow(loc_tags)) %>%
+  arrange(desc(count)) %>%
+  kable(caption = "Distribution of All Claims by Location", digits = 1)
+```
+
+The three largest categories of claims, in the PolitiFact database, are Speech/Remarks, TV Appearance, and Social Media. The smallest categories were Public Event, Advertisement, and Interview.
+
+```{r, echo = FALSE, fig.height = 3}
+loc_relevel <- loc_tags %>%
+  mutate(location = fct_relevel(location, c("Speech/Remarks",
+                                            "Debate",
+                                            "Written Statement",
+                                            "Social Media",
+                                            "Public Event",
+                                            "TV Appearance",
+                                            "Interview",
+                                            "Advertisement")))
+loc_relevel %>%
+  ggplot(aes(x = location, fill = textualRating)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Location",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings by Location"
+  ) +
+  scale_fill_manual(values = truenesscolors) +
+  theme(axis.text.x = element_text(size = 5))  
+```
+
+```{r, echo = FALSE}
+all_loc_count <- loc_tags %>%
+  group_by(location) %>%
+  summarize(count = n()) %>%
+  pull(count)
+
+all_ad <- loc_tags %>%
+  filter(location == "Advertisement") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[1])
+all_ad$location <- "Advertisement"
+
+all_deb <- loc_tags %>%
+  filter(location == "Debate") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[2])
+all_deb$location <- "Debate"
+
+all_int <- loc_tags %>%
+  filter(location == "Interview") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[3])
+all_int$location <- "Interview"
+
+all_pub <- loc_tags %>%
+  filter(location == "Public Event") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[4])
+all_pub$location <- "Public Event"
+
+all_soc <- loc_tags %>%
+  filter(location == "Social Media") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[5])
+all_soc$location <- "Social Media"
+
+all_spe <- loc_tags %>%
+  filter(location == "Speech/Remarks") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[6])
+all_spe$location <- "Speech/Remarks"
+
+all_tv <- loc_tags %>%
+  filter(location == "TV Appearance") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[7])
+all_tv$location <- "TV Appearance"
+
+all_wri <- loc_tags %>%
+  filter(location == "Written Statement") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (n()*100)/all_loc_count[8])
+all_wri$location <- "Written Statement"
+
+all_loc <- rbind(all_ad, all_deb, all_int, all_pub, all_soc, all_spe, all_tv, all_wri)
+all_loc %>%
+  pivot_wider(names_from = textualRating, values_from = percentage) %>%
+  kable(caption = "Proportion of Ratings in Percent, by Location", digits = 1)
+```
+
+The highest proportion of True-ish (True, Mostly True, Half True) claims are made in Speech/Remarks (62.4%). The lowest proportion of True-ish claims are made in Advertisements (44.2%). The highest proportion of Pants on Fire claims appear in Interviews (8.7%). The highest proportion of True statements are made at Public Events (18.8%).
+
+```{r, echo = FALSE}
+loc_tags %>%
+  group_by(claimant_party) %>%
+  summarise(count = n(), percentage = (100*count)/nrow(loc_tags)) %>%
+  kable(caption = "Claims Count by Party", digits = 2)
+```
+
+As we know, there are approximately 100 more claims made by Democrats versus Republicans. Given the overall size of the dataset, though, I can say they are about equivalent, as the ratio of Democrat's claims to Republican's is $1.09:1$.
+
+```{r, echo = FALSE, fig.height = 4}
+loc_tags %>%
+  ggplot(aes(x = claimant_party, fill = textualRating)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Claimant Party",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings by Political Party"
+  ) +
+  scale_fill_manual(values = truenesscolors)
+```
+
+```{r, echo = FALSE, message = FALSE}
+loc_tags %>%
+  group_by(location, claimant_party) %>%
+  summarise(count = n()) %>%
+  pivot_wider(names_from = location, values_from = count) %>%
+  kable(caption = "Distribution of Claims by Party and Location")
+```
+
+Comparing the ratio of claim counts by Party and Location, Interview, Advertisement, and Social Media have nearly a $1:1$ ratio of Democratic to Republican claims. Public Event has the most egregious difference, with a ratio of $2.48:1$ Democratic to Republican claims. Debate, Speech/Remarks, TV Appearance, and Written Statements have no greater than a $1.5:1$ ratio.
+
+Some of these differences, namely the $1.5:1$ ratio of Democratic to Republican claims in the Debate category may be attributable to the omission of Trump from the dataset, as all of Clinton's claims from their 2016 debates are included, but his are not.
+
+```{r, echo = FALSE, fig.height= 9}
+loc_relevel %>%
+  ggplot(aes(x = claimant_party, fill = textualRating)) +
+  geom_bar(position = "fill") +
+  facet_wrap(~ location, ncol = 2) +
+  labs(
+    x = "Claimant Party",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings by Political Party and Location"
+  ) +
+  scale_fill_manual(values = truenesscolors)
+```
+\newpage
+
+Social Media
+
+```{r, echo = FALSE}
+loc_tags %>%
+  filter(location == "Social Media") %>%
+  group_by(location.extra) %>%
+  summarise(count = n()) %>%
+  kable(caption = "Distribution of Claims by Social Media App")
+```
+
+Seeing that the vast majority of claims originate on Twitter and Facebook, lets center in on those.
+
+```{r, echo = FALSE, fig.height = 4}
+loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter" | location.extra == "Facebook") %>%
+  ggplot(aes(x = location.extra, fill = textualRating)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Social Media Platform",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings by Platform"
+  ) +
+  scale_fill_manual(values = truenesscolors)
+```
+
+```{r, echo = FALSE}
+social <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter" | location.extra == "Facebook") %>%
+  group_by(location.extra) %>%
+  summarize(count = n()) %>%
+  pull(count)
+
+social_fac <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Facebook") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/social[1])
+social_fac$platform <- "Facebook"
+
+social_twit <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/social[2])
+social_twit$platform <- "Twitter"
+
+social_prop <- rbind(social_fac, social_twit)
+social_prop %>%
+  pivot_wider(names_from = textualRating, values_from = percentage) %>%
+  kable(caption = "Percentage of Ratings by Platform", digits = 1)
+```
+
+This data appears to indicate that Facebook has a higher proportion of falsehoods than Twitter, among all checked statements on PolitiFact. Of all statements on Facebook, 50.1% of statements were found to be Mostly False, False, or Pants on Fire, compared to 39.7% of the same on Twitter. Twitter also had a higher proportion of True statements checked, 16.4% to Facebook's 12.9%, about 1.27x higher. There are 2.08x as many Pants on Fire claims on Facebook when compared to Twitter.
+
+```{r, echo = FALSE, fig.height = 4}
+loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter") %>%
+  ggplot(aes(x = claimant_party, fill = textualRating)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Political Party",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings on Twitter by Party"
+  ) +
+  scale_fill_manual(values = truenesscolors)
+
+loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter") %>%
+  group_by(claimant_party) %>%
+  summarise(count = n()) %>%
+  pivot_wider(names_from = claimant_party, values_from = count) %>%
+  kable(caption = "Twitter Claims by Party")
+```
+
+```{r, echo = FALSE}
+twit_claims <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter") %>%
+  group_by(claimant_party) %>%
+  summarise(count = n()) %>%
+  pull(count)
+
+twit_dems <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarise(percentage = (100*n())/twit_claims[1])
+twit_dems$party <- "Democratic"
+
+twit_reps <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarise(percentage = (100*n())/twit_claims[2])
+twit_reps$party <- "Republican"
+
+twit_props <- rbind(twit_dems, twit_reps)
+twit_props %>%
+  pivot_wider(names_from = textualRating, values_from = percentage) %>%
+  kable(caption = "Percentage of Claims by Rating and Party",
+        digits = 1)
+
+twit_dems_count <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarise(count = n())
+twit_dems_count$party <- "Democratic"
+
+twit_reps_count <- loc_tags %>%
+  filter(location == "Social Media",
+         location.extra == "Twitter",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarise(count = n())
+twit_reps_count$party <- "Republican"
+
+twit_count <- rbind(twit_dems_count, twit_reps_count)
+twit_count %>%
+  pivot_wider(names_from = textualRating, values_from = count, values_fill = 0) %>%
+  kable(caption = "Count of Claims by Rating and Party",
+        digits = 1)
+```
+
+\newpage
+
+TV Appearance
+
+```{r, echo = FALSE}
+loc_tags %>%
+  filter(location == "TV Appearance") %>%
+  group_by(location.extra) %>%
+  summarise(count = n()) %>%
+  kable(caption = "Distribution of TV Appearances")
+```
+
+To continue analytics, we will focus on all TV channels on which at least 30 claims were made. This leaves: ABC, CBS, CNN, FOX, MSNBC, NBC, and the Regional Station tag.
+
+```{r, echo = FALSE, fig.height = 4}
+tv_cleaned <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "FOX" | 
+           location.extra == "ABC" |
+           location.extra == "CBS" |
+           location.extra == "CNN" | 
+           location.extra == "MSNBC" | 
+           location.extra == "NBC" | 
+           location.extra == "Regional Station")
+
+tv_relevel <- tv_cleaned %>%
+  mutate(location.extra = fct_relevel(location.extra, c("CBS",
+                                                        "MSNBC",
+                                                        "CNN",
+                                                        "Regional Station",
+                                                        "NBC",
+                                                        "ABC",
+                                                        "FOX")))
+tv_relevel %>%
+  ggplot(aes(x = location.extra, fill = textualRating)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "TV Channel",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings by TV Channel"
+  ) +
+  scale_fill_manual(values = truenesscolors)
+```
+
+```{r, echo = FALSE, message = FALSE}
+tv_totals <- tv_cleaned %>%
+  group_by(location.extra) %>%
+  summarize(count = n()) %>%
+  pull(count)
+
+abc_prop <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "ABC") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals[1])
+abc_prop$channel <- "ABC"
+
+cbs_prop <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "CBS") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals[2])
+cbs_prop$channel <- "CBS"
+
+cnn_prop <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "CNN") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals[3])
+cnn_prop$channel <- "CNN"
+
+fox_prop <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "FOX") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals[4])
+fox_prop$channel <- "FOX"
+
+msnbc_prop <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "MSNBC") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals[5])
+msnbc_prop$channel <- "MSNBC"
+
+nbc_prop <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "NBC") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals[6])
+nbc_prop$channel <- "NBC"
+  
+rs_prop <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "Regional Station") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals[7])
+rs_prop$channel <- "Regional Station"
+
+tv_props <- rbind(abc_prop, cbs_prop, cnn_prop, fox_prop, msnbc_prop, nbc_prop, rs_prop)
+
+tv_props %>%
+  pivot_wider(names_from = textualRating, values_from = percentage) %>%
+  kable(caption = "Claim Rating Proportions by TV Channel", digits = 1)
+```
+
+Basing trueness on Half True, Mostly True, and True statements, the descending order of trueness by TV Channel goes as follows: CBS (62.8%), MSNBC (61.6% True-ish), CNN (57.4% True-ish), Regional Stations (56.2% True-ish), NBC (45.2% True-ish), ABC (42.6% True-ish and finally FOX (38.9% True-ish).
+
+Among the major national news channels, CNN, MSNBC, and NBC had nearly identical proportions of Pants on Fire claims, 0.059, 0.050, and 0.055 respectively.
+
+```{r, echo = FALSE, fig.height = 8}
+tv_relevel %>%
+  ggplot(aes(x = claimant_party, fill = textualRating)) +
+  geom_bar(position = "fill") +
+  facet_wrap(~ location.extra, ncol = 2) +
+  labs(
+    x = "Claimant Party",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings by Political Party and TV Channel"
+  ) +
+  scale_fill_manual(values = truenesscolors)
+```
+
+```{r, echo = FALSE, message = FALSE}
+abc_count <- loc_tags %>%
+   filter(location == "TV Appearance",
+         location.extra == "ABC") %>%
+  group_by(claimant_party, textualRating) %>%
+  summarize(count = n())
+abc_count$channel <- "ABC"
+
+cbs_count <- loc_tags %>%
+   filter(location == "TV Appearance",
+         location.extra == "CBS") %>%
+  group_by(claimant_party, textualRating) %>%
+  summarize(count = n()) 
+cbs_count$channel <- "CBS"
+
+cnn_count <- loc_tags %>%
+   filter(location == "TV Appearance",
+         location.extra == "CNN") %>%
+  group_by(claimant_party, textualRating) %>%
+  summarize(count = n())
+cnn_count$channel <- "CNN"
+
+fox_count <- loc_tags %>%
+   filter(location == "TV Appearance",
+         location.extra == "FOX") %>%
+  group_by(claimant_party, textualRating) %>%
+  summarize(count = n())
+fox_count$channel <- "FOX"
+
+msnbc_count <- loc_tags %>%
+   filter(location == "TV Appearance",
+         location.extra == "MSNBC") %>%
+  group_by(claimant_party, textualRating) %>%
+  summarize(count = n())
+msnbc_count$channel <- "MSNBC"
+
+nbc_count <- loc_tags %>%
+   filter(location == "TV Appearance",
+         location.extra == "NBC") %>%
+  group_by(claimant_party, textualRating) %>%
+  summarize(count = n())
+nbc_count$channel <- "NBC"
+
+reg_count <- loc_tags %>%
+   filter(location == "TV Appearance",
+         location.extra == "Regional Station") %>%
+  group_by(claimant_party, textualRating) %>%
+  summarize(count = n()) 
+reg_count$channel <- "Regional Station"
+
+count <- rbind(abc_count, 
+               cbs_count, 
+               cnn_count, 
+               fox_count, 
+               msnbc_count, 
+               nbc_count, 
+               reg_count) %>%
+  mutate(party = claimant_party) %>%
+  ungroup() %>%
+  select(-1)
+
+count %>%
+  pivot_wider(names_from = textualRating, values_from = count, values_fill = 0) %>%
+  kable(caption = "Claim Count by Party and TV Channel")
+```
+
+```{r, echo = FALSE, message = FALSE}
+tv_totals_dems <- tv_cleaned %>%
+  filter(claimant_party == "Democratic") %>%
+  group_by(location.extra) %>%
+  summarize(count = n()) %>%
+  pull(count)
+
+abc_prop_dems <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "ABC",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_dems[1])
+abc_prop_dems$channel <- "ABC"
+abc_prop_dems$party <- "Democratic"
+
+cbs_prop_dems <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "CBS",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_dems[2])
+cbs_prop_dems$channel <- "CBS"
+cbs_prop_dems$party <- "Democratic"
+
+cnn_prop_dems <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "CNN",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_dems[3])
+cnn_prop_dems$channel <- "CNN"
+cnn_prop_dems$party <- "Democratic"
+
+fox_prop_dems <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "FOX",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_dems[4])
+fox_prop_dems$channel <- "FOX"
+fox_prop_dems$party <- "Democratic"
+
+msnbc_prop_dems <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "MSNBC",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_dems[5])
+msnbc_prop_dems$channel <- "MSNBC"
+msnbc_prop_dems$party <- "Democratic"
+
+nbc_prop_dems <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "NBC",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_dems[6])
+nbc_prop_dems$channel <- "NBC"
+nbc_prop_dems$party <- "Democratic"
+  
+rs_prop_dems <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "Regional Station",
+         claimant_party == "Democratic") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_dems[7])
+rs_prop_dems$channel <- "Regional Station"
+rs_prop_dems$party <- "Democratic"
+
+tv_props_dems <- rbind(abc_prop_dems, cbs_prop_dems, cnn_prop_dems, fox_prop_dems, msnbc_prop_dems, nbc_prop_dems, rs_prop_dems)
+
+tv_totals_reps <- tv_cleaned %>%
+  filter(claimant_party == "Republican") %>%
+  group_by(location.extra) %>%
+  summarize(count = n()) %>%
+  pull(count)
+
+abc_prop_reps <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "ABC",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_reps[1])
+abc_prop_reps$channel <- "ABC"
+abc_prop_reps$party <- "Republican"
+
+cbs_prop_reps <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "CBS",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_reps[2])
+cbs_prop_reps$channel <- "CBS"
+cbs_prop_reps$party <- "Republican"
+
+cnn_prop_reps <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "CNN",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_reps[3])
+cnn_prop_reps$channel <- "CNN"
+cnn_prop_reps$party <- "Republican"
+
+fox_prop_reps <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "FOX",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_reps[4])
+fox_prop_reps$channel <- "FOX"
+fox_prop_reps$party <- "Republican"
+
+msnbc_prop_reps <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "MSNBC",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_reps[5])
+msnbc_prop_reps$channel <- "MSNBC"
+msnbc_prop_reps$party <- "Republican"
+
+nbc_prop_reps <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "NBC",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_reps[6])
+nbc_prop_reps$channel <- "NBC"
+nbc_prop_reps$party <- "Republican"
+  
+rs_prop_reps <- loc_tags %>%
+  filter(location == "TV Appearance",
+         location.extra == "Regional Station",
+         claimant_party == "Republican") %>%
+  group_by(textualRating) %>%
+  summarize(percentage = (100*n())/tv_totals_reps[7])
+rs_prop_reps$channel <- "Regional Station"
+rs_prop_reps$party <- "Republican"
+
+tv_props_reps <- rbind(abc_prop_reps, cbs_prop_reps, cnn_prop_reps, fox_prop_reps, msnbc_prop_reps, nbc_prop_reps, rs_prop_reps)
+
+tv_props_byparty <- rbind(tv_props_dems, tv_props_reps)
+
+tv_props_byparty %>%
+  arrange(channel) %>%
+  pivot_wider(names_from = textualRating, values_from = percentage, values_fill = 0) %>%
+  kable(caption = "Claim Rating Proportions by Party and TV Channel", digits = 1)
+```
