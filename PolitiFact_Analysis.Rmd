@@ -14,7 +14,7 @@ library(tidyverse)
 library(knitr)
 ```
 
-```{r}
+```{r color scale and ordering, warning=FALSE, message=FALSE, echo = FALSE }
 pf_mega <- read_csv("pf_mega_location.csv")
 
 truenesscolors = c("#FF0000", "#FF872C", "#FAB733", "#FDE64B", "#ACB334", "#69B34C")
@@ -28,11 +28,11 @@ pf_mega$textualRating <- factor(pf_mega$textualRating,
                                          "True"))
 ```
 
-```{r}
+```{r fix tagging error,  warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega$`Government Operations`[pf_mega$...1 == "3990"] <- "TRUE"
 ```
 
-```{r}
+```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
  geom_bar(position = "fill") +
   scale_fill_manual( values = c("blue2", "red3")) +
@@ -50,7 +50,7 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
        fill = "Party of Claimant")
 ```
 
-```{r}
+```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
          geom_bar(position = "fill") +
   labs(title = "Percentage Rating by Party",
@@ -59,18 +59,18 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
   scale_fill_manual(values = truenesscolors)
 ```
 
-```{r}
-pf_mega %>%
-  count(claimant_party, textualRating) %>%
-  pivot_wider(id_cols = c(claimant_party,
-                          textualRating),
-              names_from = textualRating,
-              values_from = n,
-              values_fill = 0) %>%
-  kable(caption = "Fact-checks per rating by Party")
+```{r pivot table,  warning=FALSE, message=FALSE, echo = FALSE}
+#pf_mega %>%
+  #count(claimant_party, textualRating) %>%
+  #pivot_wider(id_cols = c(claimant_party,
+                         # textualRating),
+              #names_from = textualRating,
+             # values_from = n,
+              #values_fill = 0)%>%
+  #kable(caption = "Fact-checks per rating by Party")
 ```
 
-```{r}
+```{r, subject tag table,  warning=FALSE, message=FALSE, echo = FALSE}
 binarytest <- pf_mega %>%
   mutate(Fear = case_when(Fear == TRUE ~ 1,
                           Fear == FALSE ~ 0)) %>%
