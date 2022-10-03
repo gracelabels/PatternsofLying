@@ -16,9 +16,9 @@ library(knitr)
 
 ## Version 0 - All Unsorted Data
 
-The dataset was pulled by Joel Luther. The dataset includes all entries from Claim Review that were published by sources based in the US. 14 unique fact-checking publishers were included. Included entries were those in which the reviewDate was between Jan 1st, 2016 and June 30th, 2021.
+The version 0 dataset was pulled by Joel Luther. The dataset includes all entries from Claim Review that were published by sources based in the US (and in English). 14 unique fact-checking publishers were included. Included entries were those in which the reviewDate was between Jan 1st, 2016 and June 30th, 2021.
 
-```{r v0 all unsorted, message=FALSE, warning=FALSE}
+```{r v0 all unsorted, message=FALSE, warning=FALSE, echo = FALSE}
 
 v0_all_us_unsorted <- read_csv("allUS_unsorted.csv")
 
@@ -33,11 +33,9 @@ v0_all_us_unsorted %>%
 
 ```
 
-NEED ASA TO EXPLAIN HOW TO GO FROM VERSION 0 to 1. Politician sort
-
 ### Version 1 - Only Political Figures
 
-"We built a small data pipeline that tried to identify, for each claim, whether its uterrer was a person and, if they were, whether they met our definition of a politician. A politician, we decided, was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency.
+According to Asa Royal, we built a small data pipeline that tried to identify, for each claim, whether its uterrer was a person and, if they were, whether they met our definition of a politician. A politician, under our definition, was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency.
 
 We identified human claimants by feeding claimant names in our dataset through an entity recognition API. Given text like ""The Sierra Club"" or ""Bill Murray"", the API tried to detect what it referred to -- e.g. a person or an organization -- letting us label claimants as human.
 
@@ -67,7 +65,7 @@ v1_all_us_polclaims %>%
 
 ### Version 2 - 5 Parties
 
-At this stage we noticed that several of the claimant's were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown\_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
+At this stage we noticed that several of the claimants were assigned non-US political parties suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown\_ affiliation were left unsorted. We addressed these once we had narrowed down to our smallest size datasets as to minimize hand sorting.
 
 ```{r create v2, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -96,7 +94,9 @@ v2_5parties %>%
 
 ### Version 3 - Deduped
 
-At this step we filtered out duplicate claims. These were claims in which both the url and and text (previously thought title but it wasnt) of the claim were identical. The first appearance of each claim remained in the dataset, other were removed. This resulted in a database of 7,360 unique claims.
+At this step we filtered out duplicate claims. These were claims in which both the url and and text of the claim were identical. The first appearance of each claim remained in the dataset, other were removed. This resulted in a database of 7,360 unique claims.\
+\
+*Note: Later on in our subject tagging we uncovered more duplicates that had identical text, but had been republished by a website under a different url. For transparency about our data cleaning process we are following our original steps and will remove those duplicates later.*
 
 ```{r dedupe for v3, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -172,11 +172,11 @@ v4_dejunked %>%
 
 ```
 
-At this stage, the dataset of 7,337 claims had been cleaned of irrelevant and redundant data removed. The dataset that remains consists of claims that were made by U.S. political figures, and fact-checked by one of 13 U.S based publishers. At this stage, we began working with each publisher dataset separately. Only four publishers at this stage had enough claims to move forward: FactCheck.Org, The New Your Times, PolitiFact, and The Washington Post. Go to the next sheet for our next step.
+At this stage, the dataset of 7,337 claims had been cleaned of irrelevant and redundant data removed. The dataset that remains consists of claims that were made by U.S. political figures, and fact-checked by one of 13 U.S based publishers.
 
 ### Version 5 - Split into Publisher data
 
-At this point we began looking at the makeup of each publisher individually. Based on the number of total fact checks, we selected four publishers to analyze in the next step: PolitiFact, The Washington Post, FactCheck.Org, and The New York Times. This resulted in four individual datasets, one per publisher, each denoted as v5.
+At this stage, we began working with each publisher dataset separately. Only four publishers at this stage had enough claims to move forward: FactCheck.Org, The New York Times, PolitiFact, and The Washington Post. This resulted in four individual datasets, one per publisher.
 
 ```{r create v5, message=FALSE, warning=FALSE, echo=FALSE}
 v5_pf <- v4_dejunked %>%
@@ -231,7 +231,7 @@ v5_nyt %>%
 
 ### Version 6 - Removing Trump
 
-We made the decision to remove Donald Trump entirely from this dataset. To do so, we first identified all the different iterations of his name within the `claimant` column. We could not simply remove all claimants whose names included Trump, because under our definitions, his daughter Ivanka Trump was a politician. The code determining these iterations is shown below.
+We made the decision to remove Donald Trump entirely from this dataset. To do so, we first identified all the different iterations of his name within the `claimant` column. We could not simply remove all claimants whose names included Trump, because under our definitions, his daughter Ivanka Trump was a politician.
 
 ```{r find trump names, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -319,20 +319,30 @@ v6_nyt %>%
 
 After we had the data divided into its smaller publisher sub-sets, and removed Trump from the data, our next step was to address anomalies in the claimant_party section. The code that was used to assign party affiliations scraped Wikipedia data and Ballotpedia for politicians and party affiliations. For about 100 different claims, the claimant was identified as a political figure but a party could not be found. They were labeled unknown_affiliation. We did not make an attempt to sort these previously, because there were simply too many. However, at this stage we have narrowed down to the data we plan to use. Therefore our next step was to manually assign party affiliations to the unknown_affiliation claims.
 
-This was done by pulling the claims labeled unknown_affiliation for each publisher. Only the fields using the name of the claimant, and occasionally the url for the fact-check itself if ambiguous, claimants were either
+This was done by pulling the claims labeled unknown_affiliation for each publisher. Based on the name of the claimant and occasionally the url for the fact-check itself, claimants were either
 
 1.  Assigned a party (Democrat, Republican, Independent, Libertarian)
 2.  Marked to be removed from the dataset because they were not a political figure.
 
-NOTE: If a claimant served in an administration and spoke on behalf of that administration or politician, they were considered a political figure and assigned the affiliation of the administration or politician they served/spoke on behalf of. This applied to appointed cabinet members, political officials, and lawyers representing politicians. Political commentators, activists, and celebrities were removed and not considered political figures
+*NOTE: If a claimant served in an administration and spoke on behalf of that administration or politician, they were considered a political figure and assigned the affiliation of the administration or politician they served/spoke on behalf of. This applied to appointed cabinet members, political officials, and lawyers representing politicians. Political commentators, activists, and celebrities were removed and not considered political figures*
 
-If you are reproducing this, these steps may not be relevant to you. Our filtering algorithim was unable to assign these political figures accurately despite many of them having political affiliations based on our definition. We are providing this information for the sake of transparency and to exemplify how one might manually sort the unknown_affiliations.
+If you are reproducing this, these steps may not be relevant to you. Our filtering algorithm was unable to assign these political figures accurately despite many of them having political affiliations based on our definition. We are providing this information for the sake of transparency and to exemplify how one might manually sort the unknown_affiliations.
 
 #### FactCheck.Org unknown affiliation review
 
 First we reviewed the unknown_affiliation claims from the FactCheck.Org database.
 
-There were 14 claims and 10 unique claimants. After a manual review, the following were assigned Republican affiliation:
+```{r fc unknown_affilation table, message=FALSE, warning=FALSE,echo=FALSE}
+v6_fc %>%
+  filter(claimant_party == "unknown_affiliation") %>%
+  group_by(claimant) %>% 
+  count(sort = TRUE) %>%
+  kable(caption = "Unknown Affiliation Claimants to be Sorted - FactCheck.Org")
+```
+
+There were 14 claims and 10 unique claimants.
+
+After a manual review, the following claimants were assigned Republican affiliation:
 
 Brett Giroir who [Served as Assistant Secretary of Health](https://en.wikipedia.org/wiki/Brett_Giroir) in the Trump Admin (2 claims)
 
@@ -348,19 +358,17 @@ Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia
 
 Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio) (1 claim) 
 
-**11 total claims were assigned a Republican affiliation.**
-
 One claimant was assigned a Democratic affiliation.
 
-Loretta Lynch, Attorney General for Obama (1 claim)
+Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Loretta_Lynch) (1 claim)
 
-**1 claim was assigned a Democratic affiliation.**
+2 claimants were removed for not being political figures
 
-**2 claimants were removed for not being political figures**
+Hal Turner, [commentator](https://en.wikipedia.org/wiki/Hal_Turner), Not a political figure (1 claim) 
 
-Hal Turner, commentator, Not a political figure (1 claim) 
+Sean P. Conley, [Presidential physician](https://en.wikipedia.org/wiki/Sean_Conley), Not a political figure (1 claim) 
 
-Sean P. Conley, Presidential physician, Not a political figure (1 claim) 
+**In the end, 11 total claims were assigned a Republican affiliation, 1 claim was assigned a Democratic affiliation, and 2 claims were removed from the FactCheck.Org dataset.**
 
 ```{r v7 substitutions FC, message=FALSE, warning=FALSE, echo=FALSE}
 v7_fc <- v6_fc %>%
@@ -383,11 +391,21 @@ v7_fc %>%
 
 #### New York Times unknown affiliation review
 
-**Next we reviewed the unknown_affiliation claims for the New York Times database.** There were 2 unique claimants and 2 claims, both of which were assigned Republican Affiliation. 
+Next we reviewed the unknown_affiliation claims for the New York Times database.
+
+```{r}
+v6_nyt %>%
+  filter(claimant_party == "unknown_affiliation") %>%
+  group_by(claimant) %>% 
+  count(sort = TRUE) %>%
+  kable(caption = "Unknown Affiliation Claimants to be Sorted - New York Times")
+```
+
+There were 2 unique claimants and 2 claims, both of which were assigned Republican Affiliation. 
 
 Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (1 claim)
 
-Jesse Binnall, [Lawyer representing President Donald Trump](https://ballotpedia.org/Jesse_Binnall)(1 claims) \
+Jesse Binnall, [Lawyer representing President Donald Trump](https://ballotpedia.org/Jesse_Binnall) (1 claim) \
 
 ```{r v7 substitutions NYT, message=FALSE, warning=FALSE, echo=FALSE}
 v7_nyt <- v6_nyt
@@ -402,8 +420,17 @@ v7_nyt %>%
 
 #### PolitiFact unknown affiliation review
 
-Next we reviewed unknown\_ affiliation claims for the PolitiFact database. There were 59 unique claimants and 72 claims.\
-**25 Republican claims were assigned**
+Next we reviewed unknown\_ affiliation claims for the PolitiFact database. There were 59 unique claimants and 72 claims.
+
+```{r}
+v6_pf %>%
+  filter(claimant_party == "unknown_affiliation") %>%
+  group_by(claimant) %>% 
+  count(sort = TRUE) %>%
+  kable(caption = "Unknown Affiliation Claimants to be Sorted - PolitiFact")
+```
+
+The following claimants were assigned a Republican affiliation:
 
 Beth Parlato, [NY Republican Political candidate](https://ballotpedia.org/Beth_Parlato) (1 claim) 
 
@@ -443,7 +470,7 @@ State Representatives, l[ink lists Wisconsin Assembly Republicans](https://www.p
 
 Todd Wilcox, [Florida Republican Candidate](https://ballotpedia.org/Todd_Wilcox_(Florida)) (1 claim)\
 
-**7 Democratic claims were assigned** 
+The following claimants were assigned a Democratic affiliation:
 
 Alejandro Mayorkas, [Biden Sec. of Homeland Security](https://www.dhs.gov/person/alejandro-mayorkas) (1 claim) 
 
@@ -458,6 +485,28 @@ Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Lorett
 Mike Collier, [Dem. Texas Lieutenant Gov. candidate](https://ballotpedia.org/Mike_Collier_(Texas)) (1 claim) 
 
 Nate McMurray, [NY Democratic politician](https://ballotpedia.org/Nate_McMurray) (1 claim) \
+
+The following claimants were assigned an Independent affiliation:
+
+Alexander Strenger, [Ran for city council in Austin](https://ballotpedia.org/Alexander_Strenger) (1 claim) 
+
+Bob Donovan, [non-partisan Milwaukee Common Council member](https://ballotpedia.org/Robert_G._Donovan_(Wisconsin)) (1 claim) 
+
+Charles Francis, [Non-partisan Mayoral candidate](https://ballotpedia.org/Charles_Francis) (1 claim)
+
+Lowell Holtz, [Non-partisan WI candidate](https://ballotpedia.org/Lowell_Holtz) (1 claim)
+
+Michael Long, [New York State Conservative Party Chairman](https://www.politifact.com/personalities/michael-long/) (2 claims) 
+
+William Taylor, [Ambassador to Ukraine](https://www.politifact.com/personalities/william-taylor/), worked in both party administration (1 claim) 
+
+\
+
+**25 Republican claims were assigned**
+
+**7 Democratic claims were assigned** 
+
+7 Independent claims were assigned
 
 ```{r v7 substitutions PF, message=FALSE, warning=FALSE, echo=FALSE}
 v7_pf <- v6_pf %>%
