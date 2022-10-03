@@ -515,7 +515,6 @@ v7_pf <- v6_pf %>%
   filter(claimant != "Bono") %>%
   filter(claimant != "Brit Hume") %>%
   filter(claimant != "Charles Ramsey") %>%
-  filter(claimant != "Clay Aiken") %>%
   filter(claimant != "Daniel Kelly") %>%
   filter(claimant != "David Martin") %>%
   filter(claimant != "Edward Flynn") %>%
@@ -537,6 +536,7 @@ v7_pf <- v6_pf %>%
   filter(claimant != "Ray Cross") %>%
   filter(claimant != "Robert Sanborn") %>%
   filter(claimant != "Shelley Grogan")
+v7_pf$claimant_party[v7_pf$claimant == "Clay Aiken"] <- "Democratic"
 v7_pf$claimant_party[v7_pf$claimant == "Alejandro Mayorkas"] <- "Democratic"
 v7_pf$claimant_party[v7_pf$claimant == "Alexander Strenger"] <- "Independent"
 v7_pf$claimant_party[v7_pf$claimant == "Beth Parlato"] <- "Republican"
