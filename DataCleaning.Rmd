@@ -468,7 +468,7 @@ Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/stev
 
 State Representatives, l[ink lists Wisconsin Assembly Republicans](https://www.politifact.com/factchecks/2019/mar/13/wisconsin-assembly-republicans/republicans-botch-claim-comparing-tuition-immigran/)) (1 claim) 
 
-Todd Wilcox, [Florida Republican Candidate](https://ballotpedia.org/Todd_Wilcox_(Florida)) (1 claim)\
+Todd Wilcox, [Florida Republican Candidate](https://ballotpedia.org/Todd_Wilcox_(Florida)) (1 claim)
 
 The following claimants were assigned a Democratic affiliation:
 
@@ -484,7 +484,9 @@ Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Lorett
 
 Mike Collier, [Dem. Texas Lieutenant Gov. candidate](https://ballotpedia.org/Mike_Collier_(Texas)) (1 claim) 
 
-Nate McMurray, [NY Democratic politician](https://ballotpedia.org/Nate_McMurray) (1 claim) \
+Nate McMurray, [NY Democratic politician](https://ballotpedia.org/Nate_McMurray) (1 claim) 
+
+Clay Aiken, [NC Congressional Candidate](https://en.wikipedia.org/wiki/Clay_Aiken), (1 claim)\
 
 The following claimants were assigned an Independent affiliation:
 
@@ -494,7 +496,7 @@ Bob Donovan, [non-partisan Milwaukee Common Council member](https://ballotpedia.
 
 Charles Francis, [Non-partisan Mayoral candidate](https://ballotpedia.org/Charles_Francis) (1 claim)
 
-Lowell Holtz, [Non-partisan WI candidate](https://ballotpedia.org/Lowell_Holtz) (1 claim)
+Lowell Holtz, [Non-partisan WI candidate](https://ballotpedia.org/Lowell_Holtz) (2 claims)
 
 Michael Long, [New York State Conservative Party Chairman](https://www.politifact.com/personalities/michael-long/) (2 claims) 
 
@@ -504,9 +506,11 @@ William Taylor, [Ambassador to Ukraine](https://www.politifact.com/personalities
 
 **25 Republican claims were assigned**
 
-**7 Democratic claims were assigned** 
+**8 Democratic claims were assigned** 
 
-7 Independent claims were assigned
+8 Independent claims were assigned
+
+33 Removed
 
 ```{r v7 substitutions PF, message=FALSE, warning=FALSE, echo=FALSE}
 v7_pf <- v6_pf %>%
