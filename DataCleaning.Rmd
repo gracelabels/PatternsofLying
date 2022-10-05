@@ -502,15 +502,67 @@ Michael Long, [New York State Conservative Party Chairman](https://www.politifac
 
 William Taylor, [Ambassador to Ukraine](https://www.politifact.com/personalities/william-taylor/), worked in both party administration (1 claim) 
 
-\
+The following claimants were removed from the dataset:
+
+Ashley Smith, [civilian](http://www.politifact.com/factchecks/2017/aug/03/ashley-smith/ashley-smith-transgender-residents-1-300-greg-abbo/), not political figure based on PF (1 claim)
+
+Bill Maher, [political comedian](https://en.wikipedia.org/wiki/Bill_Maher), Not a political figure (1 claim) 
+
+Bono, [singer](https://en.wikipedia.org/wiki/Bono), not political figure (1 claim)
+
+Brit Hume, [journalist](https://en.wikipedia.org/wiki/Brit_Hume), not a political figure (1 claim) 
+
+Charles Ramsey, [police chief](https://www.politifact.com/factchecks/2016/jul/10/charles-ramsey/how-many-police-departments-are-us/), not a political figure (1 claim) 
+
+Daniel Kelly, [WI Supreme Court Justice](https://en.wikipedia.org/wiki/Daniel_Kelly_(Wisconsin_judge)), not a political figure (2 claims) 
+
+David Martin,[ CEO of M CAM Inc., ](https://www.wipo.int/meetings/en/2006/scp_of_ge_06/speakers/martin.html)Not a political figure (1 claim) 
+
+Edward Flynn, [Chief of Milwaukee Police dept.](https://en.wikipedia.org/wiki/Edward_A._Flynn), not a political figure (1 claim) 
+
+Erin Burnett, [Political commentator,](https://en.wikipedia.org/wiki/Erin_Burnett) Not a political figure (1 claim)
+
+Giffords, [Gun violence activist group](https://www.politifact.com/factchecks/2018/feb/22/giffords/florida-gov-rick-scott-made-it-illegal-doctors-tal/), not political figure (1 claim) 
+
+Hal Turner, [commentator,](https://en.wikipedia.org/wiki/Hal_Turner) Not a political figure (1 claim) 
+
+J. Christian Adams, [conservative activist](https://en.wikipedia.org/wiki/J._Christian_Adams), not a political figure (1 claim) 
+
+Jake Tapper, [journalist](https://en.wikipedia.org/wiki/Jake_Tapper), Not a political figure (3 claims) 
+
+James Hauser, [Not a political figure, only post](https://en.wikipedia.org/wiki/Jake_Tapper) (1 claim) 
+
+John Patrick, [President of the Texas AFL-CIO](https://www.politifact.com/personalities/john-patrick/), not a political figure (1 claim) 
+
+Kevin Downing, [Attorney to Paul Manafort](https://en.wikipedia.org/wiki/Kevin_M._Downing), not a political figure (1 claim) 
+
+Lawrence O'Donnell,[ MSNBC Host](https://www.msnbc.com/the-last-word), not a political figure (1 claim) 
+
+Lisa Moore, [English Professor](https://liberalarts.utexas.edu/english/faculty/moorell), not a political figure (1 claim) 
+
+Maria Bartiromo, [FOX news host](https://en.wikipedia.org/wiki/Maria_Bartiromo), not a political figure (2 claims) 
+
+Mark Levin,[ Talk show host](https://en.wikipedia.org/wiki/Mark_Levin), not a political figure (1 claim) 
+
+Michael Screnock, [WI Supreme Court Justice](https://www.politifact.com/personalities/michael-screnock/), not a political figure (1 claim)
+
+Mike Crute, [Radio show host](https://www.politifact.com/personalities/mike-crute/), not a political figure (1 claim)
+
+Nicholas Burns, [Former ambassador, not a political figure](https://en.wikipedia.org/wiki/R._Nicholas_Burns) (2 claims) 
+
+Ray Cross, [University President](https://ballotpedia.org/Ray_Cross), not a political figure (1 claim)
+
+Robert Sanborn, [Nonprofit president ](https://childrenatrisk.org/staff/dr-robert-sanborn/), not a political figure (1 claim) 
+
+Shelley Grogan, [WI Judge non-partisan](https://ballotpedia.org/Shelley_Grogan), not a political figure (1 claim) \
 
 **25 Republican claims were assigned**
 
 **8 Democratic claims were assigned** 
 
-8 Independent claims were assigned
+**8 Independent claims were assigned**
 
-33 Removed
+**31 claims were removed**
 
 ```{r v7 substitutions PF, message=FALSE, warning=FALSE, echo=FALSE}
 v7_pf <- v6_pf %>%

@@ -247,8 +247,6 @@ pf_mega_nodupes <- pf_mega_withdupes %>%
          ...1 != 3381)
 ```
 
-
-
 ```{r locoflie, warning=FALSE, message=FALSE, echo = FALSE}
 loc_of_lie <- read.csv("locationoflietagging.csv")
 loc_of_lie$...1 <- loc_of_lie$X.1
@@ -258,7 +256,6 @@ loc_of_lie <- loc_of_lie %>%
   mutate(claimDate = as.Date(claimDate))
 loc_of_lie$claimDate[loc_of_lie$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
 ```
-
 
 ```{r}
 pf_mega_location <- left_join(pf_mega_nodupes, loc_of_lie, by = c("...1", "url", "languageCode", "publisher.name", "publisher.site", "text", "claimDate", "claimant_party"))
@@ -270,6 +267,3 @@ pf_mega_location$text[pf_mega_location$...1 == 2766] <- "The Trans-Pacific trade
 
 write_csv(pf_mega_location, file = "pf_mega_location.csv")
 ```
-
-
-
