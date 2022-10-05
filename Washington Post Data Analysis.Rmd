@@ -14,3 +14,66 @@ library(tidyverse)
 library(knitr)
 ```
 
+```{r}
+v8_wapo <- read.csv("v8wapo-cleantextrating.csv")
+
+v8_wapo %>%
+  group_by(textualRating) %>%
+  count() %>%
+  arrange(desc(n))
+
+v8_wapo_cleantextRating <- v8_wapo %>%
+  filter(textualRating == "One Pinocchio" |
+           textualRating == "Two Pinocchios" |
+           textualRating == "Three Pinocchios" |
+           textualRating == "Four Pinocchios" |
+           textualRating == "Geppetto Checkmark" |
+           textualRating == "Needs context" |
+           textualRating == "Disputed" |
+           textualRating == "Misleading" |
+           textualRating == "No evidence" |
+           textualRating == "Lacks evidence" |
+           textualRating == "Study in Dispute")
+
+
+v8_wapo_cleantextRating$textualRating <- factor(v8_wapo_cleantextRating$textualRating, 
+                              levels = c("Geppetto Checkmark", 
+                                         "One Pinocchio", 
+                                         "Two Pinocchios", 
+                                         "Three Pinocchios", 
+                                         "Four Pinocchios", 
+                                         "Disputed",
+                                         "Study in Dispute",
+                                         "Misleading",
+                                         "Needs context",
+                                         "Lacks evidence",
+                                         "No evidence"))
+
+
+v8_wapo_cleantextRating %>%
+  group_by(textualRating) %>%
+  count() %>%
+  arrange(desc(n))
+```
+
+```{r}
+v8_wapo_cleantextRating %>%
+  group_by(claimant_party) %>%
+  count() %>%
+  kable(caption = "Claim Counts by Party")
+
+v8_wapo_cleantextRating %>%
+  group_by(textualRating) %>%
+  count() %>%
+  kable(caption = "Claim Counts by Rating")
+
+v8_wapo_cleantextRating %>%
+  group_by(claimant_party, textualRating) %>%
+  count() %>%
+  pivot_wider(id_cols = claimant_party, 
+              names_from = textualRating, 
+              values_from = n,
+              values_fill = 0) %>%
+  kable(caption = "Claim Counts by Party and Rating")
+```
+
