@@ -342,7 +342,7 @@ v6_fc %>%
 
 There were 14 claims and 10 unique claimants.
 
-After a manual review, the following claimants were assigned Republican affiliation:
+**After a manual review, the** **following claimants were assigned Republican affiliation:**
 
 Brett Giroir who [Served as Assistant Secretary of Health](https://en.wikipedia.org/wiki/Brett_Giroir) in the Trump Admin (2 claims)
 
@@ -358,11 +358,11 @@ Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia
 
 Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio) (1 claim) 
 
-One claimant was assigned a Democratic affiliation.
+**One claimant was assigned a Democratic affiliation:**
 
 Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Loretta_Lynch) (1 claim)
 
-2 claimants were removed for not being political figures
+**2 claimants were removed for not being political figures:**
 
 Hal Turner, [commentator](https://en.wikipedia.org/wiki/Hal_Turner), Not a political figure (1 claim) 
 
@@ -401,7 +401,7 @@ v6_nyt %>%
   kable(caption = "Unknown Affiliation Claimants to be Sorted - New York Times")
 ```
 
-There were 2 unique claimants and 2 claims, both of which were assigned Republican Affiliation. 
+**There were 2 unique claimants and 2 claims, both of which were assigned Republican affiliation:**
 
 Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (1 claim)
 
@@ -430,7 +430,7 @@ v6_pf %>%
   kable(caption = "Unknown Affiliation Claimants to be Sorted - PolitiFact")
 ```
 
-The following claimants were assigned a Republican affiliation:
+**The following claimants were assigned a Republican affiliation:**
 
 Beth Parlato, [NY Republican Political candidate](https://ballotpedia.org/Beth_Parlato) (1 claim) 
 
@@ -470,7 +470,7 @@ State Representatives, l[ink lists Wisconsin Assembly Republicans](https://www.p
 
 Todd Wilcox, [Florida Republican Candidate](https://ballotpedia.org/Todd_Wilcox_(Florida)) (1 claim)
 
-The following claimants were assigned a Democratic affiliation:
+**The following claimants were assigned a Democratic affiliation:**
 
 Alejandro Mayorkas, [Biden Sec. of Homeland Security](https://www.dhs.gov/person/alejandro-mayorkas) (1 claim) 
 
@@ -488,7 +488,7 @@ Nate McMurray, [NY Democratic politician](https://ballotpedia.org/Nate_McMurray)
 
 Clay Aiken, [NC Congressional Candidate](https://en.wikipedia.org/wiki/Clay_Aiken), (1 claim)\
 
-The following claimants were assigned an Independent affiliation:
+**The following claimants were assigned an Independent affiliation:**
 
 Alexander Strenger, [Ran for city council in Austin](https://ballotpedia.org/Alexander_Strenger) (1 claim) 
 
@@ -502,7 +502,7 @@ Michael Long, [New York State Conservative Party Chairman](https://www.politifac
 
 William Taylor, [Ambassador to Ukraine](https://www.politifact.com/personalities/william-taylor/), worked in both party administration (1 claim) 
 
-The following claimants were removed from the dataset:
+**The following claimants were removed from the dataset:**
 
 Ashley Smith, [civilian](http://www.politifact.com/factchecks/2017/aug/03/ashley-smith/ashley-smith-transgender-residents-1-300-greg-abbo/), not political figure based on PF (1 claim)
 
@@ -516,7 +516,7 @@ Charles Ramsey, [police chief](https://www.politifact.com/factchecks/2016/jul/10
 
 Daniel Kelly, [WI Supreme Court Justice](https://en.wikipedia.org/wiki/Daniel_Kelly_(Wisconsin_judge)), not a political figure (2 claims) 
 
-David Martin,[ CEO of M CAM Inc., ](https://www.wipo.int/meetings/en/2006/scp_of_ge_06/speakers/martin.html)Not a political figure (1 claim) 
+David Martin,[CEO of M CAM Inc.,](https://www.wipo.int/meetings/en/2006/scp_of_ge_06/speakers/martin.html)Not a political figure (1 claim) 
 
 Edward Flynn, [Chief of Milwaukee Police dept.](https://en.wikipedia.org/wiki/Edward_A._Flynn), not a political figure (1 claim) 
 
@@ -536,13 +536,13 @@ John Patrick, [President of the Texas AFL-CIO](https://www.politifact.com/person
 
 Kevin Downing, [Attorney to Paul Manafort](https://en.wikipedia.org/wiki/Kevin_M._Downing), not a political figure (1 claim) 
 
-Lawrence O'Donnell,[ MSNBC Host](https://www.msnbc.com/the-last-word), not a political figure (1 claim) 
+Lawrence O'Donnell,[MSNBC Host](https://www.msnbc.com/the-last-word), not a political figure (1 claim) 
 
 Lisa Moore, [English Professor](https://liberalarts.utexas.edu/english/faculty/moorell), not a political figure (1 claim) 
 
 Maria Bartiromo, [FOX news host](https://en.wikipedia.org/wiki/Maria_Bartiromo), not a political figure (2 claims) 
 
-Mark Levin,[ Talk show host](https://en.wikipedia.org/wiki/Mark_Levin), not a political figure (1 claim) 
+Mark Levin,[Talk show host](https://en.wikipedia.org/wiki/Mark_Levin), not a political figure (1 claim) 
 
 Michael Screnock, [WI Supreme Court Justice](https://www.politifact.com/personalities/michael-screnock/), not a political figure (1 claim)
 
@@ -552,9 +552,9 @@ Nicholas Burns, [Former ambassador, not a political figure](https://en.wikipedia
 
 Ray Cross, [University President](https://ballotpedia.org/Ray_Cross), not a political figure (1 claim)
 
-Robert Sanborn, [Nonprofit president ](https://childrenatrisk.org/staff/dr-robert-sanborn/), not a political figure (1 claim) 
+Robert Sanborn, [Nonprofit president](https://childrenatrisk.org/staff/dr-robert-sanborn/), not a political figure (1 claim) 
 
-Shelley Grogan, [WI Judge non-partisan](https://ballotpedia.org/Shelley_Grogan), not a political figure (1 claim) \
+Shelley Grogan, [WI Judge non-partisan](https://ballotpedia.org/Shelley_Grogan), not a political figure (1 claim)\
 
 **25 Republican claims were assigned**
 
