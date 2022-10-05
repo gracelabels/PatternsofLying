@@ -1,0 +1,16 @@
+---
+title: "Washington Post"
+author: "Sofia Bliss-Carrascosa"
+date: "10/05/2022"
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
+library(tidyverse)
+library(knitr)
+```
+
