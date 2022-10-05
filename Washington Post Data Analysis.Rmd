@@ -14,13 +14,8 @@ library(tidyverse)
 library(knitr)
 ```
 
-```{r}
+```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v8_wapo <- read.csv("v8wapo-cleantextrating.csv")
-
-v8_wapo %>%
-  group_by(textualRating) %>%
-  count() %>%
-  arrange(desc(n))
 
 v8_wapo_cleantextRating <- v8_wapo %>%
   filter(textualRating == "One Pinocchio" |
@@ -48,15 +43,9 @@ v8_wapo_cleantextRating$textualRating <- factor(v8_wapo_cleantextRating$textualR
                                          "Needs context",
                                          "Lacks evidence",
                                          "No evidence"))
-
-
-v8_wapo_cleantextRating %>%
-  group_by(textualRating) %>%
-  count() %>%
-  arrange(desc(n))
 ```
 
-```{r}
+```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v8_wapo_cleantextRating %>%
   group_by(claimant_party) %>%
   count() %>%
@@ -76,4 +65,32 @@ v8_wapo_cleantextRating %>%
               values_fill = 0) %>%
   kable(caption = "Claim Counts by Party and Rating")
 ```
+
+```{r, warning=FALSE, message=FALSE, echo = FALSE}
+v8_wapo_5scale <- v8_wapo_cleantextRating %>%
+  filter(textualRating == "One Pinocchio" |
+           textualRating == "Two Pinocchios" |
+           textualRating == "Three Pinocchios" |
+           textualRating == "Four Pinocchios" |
+           textualRating == "Geppetto Checkmark")
+
+v8_wapo_5scale %>%
+  ggplot(aes(x = textualRating, fill = claimant_party)) +
+  geom_bar(position = "fill") +
+  scale_fill_manual( values = c("blue2", "red3")) +
+  labs(title = "Rating Proportions by Party",
+       x = "Rating",
+       y = "Proportion",
+       fill = "Party of Claimant")
+
+v8_wapo_5scale %>%
+  ggplot(aes(x = textualRating, fill = claimant_party)) +
+  geom_bar() +
+  scale_fill_manual( values = c("blue2", "red3")) +
+  labs(title = "Rating Counts by Party",
+       x = "Rating",
+       y = "Counts",
+       fill = "Party of Claimant")
+```
+
 
