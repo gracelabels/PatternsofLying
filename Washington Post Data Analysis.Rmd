@@ -22,7 +22,7 @@ Claims marked:
 Wrong, Incorrect, False --> Four Pinocchios
 Mostly false, Spins or Twists facts, Exaggerated --> Three Pinocchios
 Half true, Not the whole story, Depends on the math, Cherry-picked number --> Two Pinocchios
-True, Correct, Accurate --> Gepetto Checkmark
+True, Correct, Accurate --> Geppetto Checkmark
 
 For the more unclear categories, we sent 61 claims for individual review. For the purpose of concision, we removed claims that were tagged with uncommon anomaly ratings (1-2 observations). We began this process with 60 textual ratings, having the goal of eventually reducing down to the 5 rating ranking system.
 
