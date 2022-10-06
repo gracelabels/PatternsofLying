@@ -393,7 +393,7 @@ v7_fc %>%
 
 Next we reviewed the unknown_affiliation claims for the New York Times database.
 
-```{r}
+```{r nyt unknown affiliation table, message=FALSE, warning=FALSE, echo=FALSE}
 v6_nyt %>%
   filter(claimant_party == "unknown_affiliation") %>%
   group_by(claimant) %>% 
@@ -422,7 +422,7 @@ v7_nyt %>%
 
 Next we reviewed unknown\_ affiliation claims for the PolitiFact database. There were 59 unique claimants and 72 claims.
 
-```{r}
+```{r pf unknown affiliation table, message=FALSE, warning=FALSE, echo=FALSE }
 v6_pf %>%
   filter(claimant_party == "unknown_affiliation") %>%
   group_by(claimant) %>% 
@@ -633,6 +633,48 @@ v7_pf %>%
         without Unknown Affiliation")
 ```
 
+#### The Washington Post unknown affiliation review
+
+Next we reviewed unknown\_ affiliation claims for the Washington Post database. There were 9 unique claimants and 12 claims.
+
+```{r wapo unknown affiliation table, message=FALSE, echo= FALSE, warning=FALSE}
+v6_wapo %>%
+  filter(claimant_party == "unknown_affiliation") %>%
+  group_by(claimant) %>% 
+  count(sort = TRUE) %>%
+  kable(caption = "Unknown Affiliation Claimants to be Sorted - The Washington Post")
+```
+
+**The following we assigned a Republican affiliation:**
+
+Charmaine Yoest, [Trump Admin appointee](https://en.wikipedia.org/wiki/Charmaine_Yoest), (1 claim)
+
+H.R. McMaster, [National Security Advisor in Trump Admin](https://en.wikipedia.org/wiki/H._R._McMaster), (1 claim)
+
+Jim Mattis, [Trump Sec. of Defense](https://en.wikipedia.org/wiki/Jim_Mattis), (1 claim)
+
+Kirstjen Nielsen, [Homeland Security Sec. Trump Admin](https://en.wikipedia.org/wiki/Kirstjen_Nielsen), (4 claims)
+
+Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio), (1 claim)
+
+**The following were assigned a Democratic affiliation:**
+
+Vanita Gupta, [Attorney Gen. office for Obama and Biden](https://en.wikipedia.org/wiki/Vanita_Gupta), (1 claim)
+
+Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Loretta_Lynch), (1 claim)
+
+**The following were removed for not being political figures:**
+
+Anthony Fauci, [not a political figure](https://en.wikipedia.org/wiki/Anthony_Fauci) (1 claim)
+
+Jim Acosta, [Political commentator](https://en.wikipedia.org/wiki/Jim_Acosta), not a political figure (1 claim)
+
+**8 claims were assigned a Republican affiliation**
+
+**2 claims were assigned a Democratic affiliation**
+
+**2 claims were removed**
+
 ```{r v7 substitutions WP, message=FALSE, warning=FALSE, echo=FALSE}
 v7_wapo <- v6_wapo %>%
   filter(claimant != "Anthony Fauci") %>%
@@ -652,6 +694,10 @@ v7_wapo %>%
 ```
 
 ### Version 8 - Removing Libertarian and Independents
+
+At this stage, it became clear that the Independent and Libertarian claims made up a very small part of each publisher data set.
+
+Given these categories are too small to draw statistically relevant conclusions from the data, and so as to not distract from the findings about two major US parties, claims with an Independent or Libertarian party affiliation were removed. Only Democratic and Republican claims remain in the datasets.
 
 ```{r v8, message=FALSE, warning=FALSE, echo=FALSE}
 v8_fc <- v7_fc %>%
@@ -687,7 +733,7 @@ v8_wapo %>%
   kable(caption = "Washington Post by Claimant Party")
 ```
 
-```{r}
+```{r write v8 csv, message=FALSE, warning=FALSE, echo=FALSE}
 write_csv(v8_fc, file = "v8fc.csv")
 write_csv(v8_nyt, file = "v8nyt.csv")
 write_csv(v8_pf, file = "v8pf.csv")
