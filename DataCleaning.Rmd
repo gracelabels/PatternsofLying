@@ -733,6 +733,16 @@ v8_wapo %>%
   kable(caption = "Washington Post by Claimant Party")
 ```
 
+At this stage we moved forward with data set specific cleaning. Each publisher had it own rating scale, rating quirks, and duplications that needed to be addressed. Also we decided not to move forward with analysis of FactCheck.Org and the Washington Post. To see futher data cleaning or to understand why we did not move forward with our analysis see the following documents in GitHub: \
+\
+PolitiFact_CleanUp
+
+Washington-Post-Data-Analysis
+
+FactCheck_CleanUp
+
+NewYorkTimes_CleanUp
+
 ```{r write v8 csv, message=FALSE, warning=FALSE, echo=FALSE}
 write_csv(v8_fc, file = "v8fc.csv")
 write_csv(v8_nyt, file = "v8nyt.csv")
