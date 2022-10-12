@@ -29,5 +29,14 @@ Exaggerates
 Distorts the Facts
 Cherry Picks
 
+391 claims were assigned one of FC's 10 standard ratings but 120 anomaly claims remained. 
+Below is a list of all the textual ratings assigned to claims 
+```{r fc textual ratings table}
+v8_fc %>%
+  group_by(textualRating) %>%
+  count() %>%
+  arrange(desc(n)) %>%
+  kable(caption = "Textual Ratings")
+```
 
-
+We decided not to proceed with analysis for the FactCheck.Org data. The large number of anamolous claims and unordered rating scale made assesment challenging. 

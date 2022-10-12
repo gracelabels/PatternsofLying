@@ -38,7 +38,7 @@ For PolitiFact, they have an established 6 tier rating scale called the Truth-O-
 
 **PANTS ON FIRE** -- The statement is not accurate and makes a ridiculous claim.
 
-The burden of proof is on the speaker, and we rate statements based on the information known at the time the statement is made.
+The burden of proof is on the speaker, and they rate statements based on the information known at the time the statement is made.
 
 Below is a breakdown of all the ratings in PF textualRating. There are
 
@@ -54,7 +54,7 @@ v8_pf %>%
   kable(caption = "Textual Ratings")
 ```
 
-When we reviewed the list of anomaly claims, we noticed that all came from PolitiFact articles. PolitiFact values their Truth-O-Meter ratings and use them only when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not evidence to do a full scale fact-check the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since PF did not feel comfortable enough to deliver a full Truth-O-Meter rating neither did we and all claims that were not given on the 6 standard ratings in textualRating were removed from the dataset.
+When we reviewed the list of anomaly claims, we noticed that all came from PolitiFact articles. PolitiFact values their Truth-O-Meter ratings and use them only when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not evidence to do a full scale fact-check the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since PF did not feel comfortable enough to deliver a full Truth-O-Meter rating neither did we and all claims that were not given one the 6 standard ratings in textualRating were removed from the dataset.
 
 ### Version 9 - Standardized Ratings Only
 
@@ -89,7 +89,7 @@ v9_pf %>%
   kable(caption = "PF Claims with Truth-O-Meter Ratings")
 ```
 
-After this removal we began looking closely at the remaining claimant names. Version 8 had 723 unique claimant names.
+After this removal we began looking closely at the remaining claimant names. Version 8 had 724 unique claimant names.
 
 ```{r pf people, warning=FALSE, message=FALSE, echo = FALSE}
 v9_pf %>%
@@ -102,7 +102,7 @@ v9_pf %>%
 
 At this stage we noticed that some claimants were listed under several separate names referring to the same person. Like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this repetition so that we could see the true \# of claims made by each claimant. To do so, we moved our data into a program called OpenRefine. Here, we clustered claimant names by similar terms to identify where repetition/multiple names for the same person occured. We used this to identify all duplicate forms of name and then recoded the data accordingly.
 
-This processed combined several names making the list 25 names shorter. 698 unique claimants remain.
+This processed combined several names making the list 27 names shorter. 697 unique claimants remain.
 
 ```{r condense claimant names, warning=FALSE, message=FALSE, echo = FALSE}
 v10_pf <- v9_pf
@@ -150,7 +150,7 @@ v10_pf %>%
 
 During this process we also noticed that some claimants, who did not fit our defintion of politician, had slipped through the cracks in our code. To try and ensure that we had only the data we desired in our dataset, we ran the list of claimant names through a stricter version of the politician filter. 58 names were marked as potentially non-politicial figures. Each name was manually reviewed and we identified 6 names that did not belong in the dataset.
 
-Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Right, Marco Rubio's heckler. 21 claims were removed as a result.
+Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Right, and Marco Rubio's heckler. 21 claims by these claimants were removed as a result.
 
 Later on during tagging we identified three more claimants (Pat Robertson, Juan Williams, and Evan Smith) and 1 claim that was mislabeled (The claim said it was Maxine Waters but the link said it was bloggers) that were not political figures. For ease we have removed them here. 6 more claims were removed.
 
@@ -186,9 +186,81 @@ v11_pf$claimDate[v11_pf$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-1
 
 ### Tagged Claims
 
-HOW WE TAGGED AND WHY
+To learn more about what politicians were lying about, we subject tagged each claim in the data set with relevant and comprehensive tags to categorize the topics of lies. \
+\
+We decided to only tag False(ish) claims - Mostly False, False, and Pants on Fire. Our study is about what politicians are lying about\-\-- not what they are telling the truth about. We acknowledge this choice could limit our inquiry, but since claims were going to be tagged manually we decide to limit to only what we needed tagged. At this point, there were was 1,085 False(ish) claims to be tagged.
 
-WHY WE JOINED BY JUST THESE VARIABLES
+```{r count of falseish pf, message=FALSE, warning=FALSE, echo=FALSE}
+v11_pf %>%
+  filter(textualRating == "False" |
+           textualRating == "Mostly False" | 
+           textualRating == "Pants on Fire") %>%
+  group_by(claimant_party, textualRating) %>%
+  count() %>%
+  pivot_wider(names_from = claimant_party, id_cols = textualRating, values_from = n) %>%
+  kable(caption = "False(ish) Claims to be Tagged")
+  
+
+```
+
+We then had to construct a method for tagging claims. We started, with Frank Baumagrtner's well established subject tags used for the [Comparative Agendas Project](https://www.comparativeagendas.net/pages/master-codebook). \
+\
+But since they were designed to tag policy and not politics, there were some missing categories that were politically relevant. To address those missing tags, our research team conducted a series of practice tagging sessions in which 100 randomly selected claims were subject tagged. Through this process we discovered which categories were missing allowed us to establish categories that best encompass the claims found in the dataset. The tagging system and tags themselves were built based on the data we were tagging. \
+\
+Each tag is defined by a list of topics that fall underneath that tag. These are buzzwords that may be seen in a claim, or general concepts (more niche than the overall tag) that can help a tagger tag the claims correctly. We tried to be comprehensive but acknowledge there may be some gaps in the definitions. \
+\
+Words in italics signify modifications/clarifications to the definition after tagging had begun. \
+\
+People may disagree with category grouping. We acknowledge the subjective nature of these categories.
+
+| **Subject**                                                      | **Or having to do with/associated with**                                                                                                                                                                                                  |
+|---------------------|-------------------------------------------------------------|
+| **National and State Macroeconomic Issues**                      | Interest Rates, Inflation, Monetary Policy, Gov. Debt, Economic Regulations, GDP                                                                                                                                                          |
+| **Economic Well-Being and Domestic Commerce**                    | Banking, Finance, Personal Wealth, Income, Economic Well-Being of Citizens, Poverty, Small Businesses, Stock Market                                                                                                                       |
+| **Labor and Employment**                                         | Unions, Labor Force, Unemployment, Jobs, Regulations in this Sphere, Workers Rights, Minimum Wage, Wages, Worker's Benefits                                                                                                               |
+| **Foreign Trade**                                                | Trade Deficits, Tariffs, Imports/Exports, GDP, Trade Deals, Exchange Rates, International Finance                                                                                                                                         |
+| **Taxes**                                                        | Anything to do with Taxes\-- Tax code, Raising/Lowering Taxes, New Taxes                                                                                                                                                                  |
+| **Government Operations**                                        | Gov. Bureaucracy, Legislative Bodies, Gov. Spending, Employees, Appointments, Contracts, Census, Domestic Inter/Intra Governmental Relations, Judiciary, Impeachment, Executive Orders                                                    |
+| **Defense/Military**                                             | Military, Military Spending, Armed Forces, Defense Contracts, Weapons, Military Bases, Intelligence, Combat/Wars, Veterans, Military Honors, Eligibility for Service, Cyber Security, National Security                                   |
+| **International Affairs and Foreign Aid**                        | Foreign Relations, Alliances, Diplomacy, Human Rights, Development, Embassies Anything International that is not economic                                                                                                                 |
+| **Voting/Elections**                                             | Voting Rights, Voter Suppression, Voting policy, Voting Patterns, Elections, Election Fraud, Election Policy, Gerrymandering, Not Campaigns and Campaign Finance                                                                          |
+| **Civil Rights Minority Issues and Civil Liberties**             | Issues of Civil Rights and Liberties\-- can include issues of Race, Sex, Gender, Religion, Freedom of Speech, Disability, Privacy, Age, Protest                                                                                           |
+| **Immigration and Refugee Issues**                               | Illegal/Legal Immigration, Border Policies/Issues, Immigration Policy, Rights of Illegal Immigrants, Visas, Citizenship, Refugees, Child Migrants, Border Patrol                                                                          |
+| **LGBTQ**                                                        | Sexual Orientation, Gender Presentation, Trans Rights, and Related Policy, Statistics, and Discrimination                                                                                                                                 |
+| **Race**                                                         | Racial Issues, Racial/Ethnic Discrimination, Racial Inequality, Bias, Representation                                                                                                                                                      |
+| **Religion**                                                     | Religion, Personal Faith, Religious Freedom, Discrimination based on Religion, Religion in Policy                                                                                                                                         |
+| **Women**                                                        | Women's Rights, Women's Issues, Gender Inequality, Women's Health, Sexism                                                                                                                                                                 |
+| **Health (non-care)**                                            | Health outside of Health Insurance, Anything related to human health and well-being, COVID-19, Mortality Rates, Drug Use/Abuse, Mental and Physical Illness, Health Policy                                                                |
+| **Social Welfare**                                               | Social Security, Medicare, Medicaid, Food Stamps. Unemployment Assistance, Disability Assistance, Gov. Programs serving groups in need, Childcare Services, Charities + Volunteer Organizations                                           |
+| **Education**                                                    | Education Policy, Funding, Private/Public School, Early Education, Curriculum, Higher Education, Student Loans, Admissions, Educational Access                                                                                            |
+| **Abortion**                                                     | Pro-Life, Pro-Choice, Fetus Facts, Planned Parenthood, Roe v. Wade, Abortion Clinics, Abortion Policy                                                                                                                                     |
+| **Healthcare**                                                   | Health Insurance, Medicare, Medicaid, Obamacare, Uninsured, Premiums, Cost of Healthcare, Pharmaceuticals, Cost of Medicine, Universal Public Health Care, Cost of Treatment, Wait Times, Death Panels, FDA                               |
+| **Agriculture**                                                  | Agricultural Subsidies, Animals, Farming, Crops, Agricultural Costs, Food Safety, Regulation, USDA/FDA (food), Wildlife                                                                                                                   |
+| **Environment**                                                  | Environmental Policy, Climate Change, Environmental Disasters, Drinking Water, Waste, Pollution, Recycling, Conservation, EPA, Weather                                                                                                    |
+| **Energy**                                                       | Electricity, Coal, Natural Gas, Oil, Nuclear Energy, Renewable Energy, Related Policy                                                                                                                                                     |
+| **Transportation**                                               | Air Travel, Trains, Highways, Infrastructure, Bridges, Public Transport                                                                                                                                                                   |
+| **Community Development and Housing**                            | Community and Urban Development, Housing, Homeless, City Planning, Population Change                                                                                                                                                      |
+| **Technology Science Space**                                     | Technology, Tech Policy, Space, Science, Research, Innovation                                                                                                                                                                             |
+| **Media and Communications**                                     | Social Media, News Media, Entertainment, Broadcast, Telecommunications, Media Policy, Related Policy                                                                                                                                      |
+| **Law and Crime and Policing**                                   | Crime, Criminal Justice System, Courts, Police, Violence, Police Brutality, Illegal Drugs, Jails and Prisons, Criminal Justice Reform, Policing Reform, Rights of Felons, Rights of Victims, Mass Incarceration, Crime Rates, January 6th |
+| **Terrorism**                                                    | Domestic or International Terrorism, ~~Mass Shootings~~, Interrogation Techniques, Hijacking, Piracy, Policy to Combat Terrorism, Conspiracy                                                                                              |
+| **Guns**                                                         | Gun Rights, Gun Control, Gun Violence, Mass Shootings, 2nd Amendment, Gun Laws                                                                                                                                                            |
+| **History**                                                      | Claiming to be "Historic", Citing Historical Events, 20 years ago or older, Precedented/Unprecedented. Generally claims about what has happened in the past.                                                                              |
+| **Record/Candidate Biography/ Campaigns and Personal Behavior**  | Claims about Personal Behavior, Beliefs, Campaigns, Corruption, Campaign Spending, Scandals. Only tagged when about a singular person. Not two people or an administration.                                                               |
+
+In our tagging of claims, we wanted to be able to describe as many attributes of a claim as possible. First, we allowed a claim to be assigned multiple tags, and we had different types of tags\-- Macro and Micro. \
+
+Micro tags were traditional subject tags that describe the substance of the claim and what political issues or policy issues it is discussing. \
+\
+Macro tags take a more big picture approach describing the directive of the claim (Opponent/Self/Legislation) and the use of Fear within a claim.
+
+Four different coders were trained on how to tag claims based on the subject tag definitions. Taggers did practice rounds on randomly selected claims and we talked through instances where they disagreed and worked to clarify our definitions.
+
+Different than other research, we were actively seeking consensus between our taggers. Because each claim could receive multiple tags, one different tag would mean a mismatch. High inter-coder reliability would be hard to achieve. Understanding the confounding factors that come with our method of tagging, we feel confident in our system. The tagged data is available for review. \
+\
+Asa Royal created an online tagging interface for our coders to use. A coder was presented with only the text of a claim, and a link the fact-check if they needed more information. They would then select all the tags they felt applied to that claim. All claims were tagged by at least two coders. If the two coders agreed on the tags, that claim was not reviewed. But, if there was disagreement between the two coders, as there was for 776 of the claims, Lead researcher Grace Abels manually reviewed each claim and the two different sets of tags that had been assigned. Grace Abels then determined the final tags for each claim.
+
+After tagging the dataset was joined with the larger version 11.
 
 ```{r createmetadata, warning=FALSE, message=FALSE, echo = FALSE}
 taggedclaims <- read_csv("tagged_claims_limited.csv")
@@ -207,9 +279,9 @@ pf_mega_withdupes <- pf_mega_withdupes %>%
   select(-title.x, -textualRating.x, -claimant.x)
 ```
 
-Manual Removal of Duplicate Claims\
-\
-During tagging, 31 more claims were identified as duplicates, shown below.
+### Manual Removal of Duplicate Claims
+
+During tagging, 31 more claims were identified as duplicates, shown below. These were claims with differing urls but the same claim. These were not captured earlier because we searched for duplicates with identical urls. Most often these duplicates were fact-checks that had already been published and were included again in a round-up of fact-checks.
 
 ```{r finddupes, warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega_withdupes %>%
@@ -257,8 +329,9 @@ pf_mega_nodupes <- pf_mega_withdupes %>%
          ...1 != 3381)
 ```
 
-\
+### Location of Lie
 
+\
 One of the things that we tagged by was location of the lie, meaning the medium and format of the statement containing the lie. This tracked things like whether it was said on TV, in an interview, on social media, etc. We had several overarching categories called `location` tags, and then more specific subcategories tagged `location.extra`. When loading this data into R, we made a select number of changes to make it compatible with the existing data. We matched the name of the claim identifier column in the location of lie data to be identical to the mega data and selected only half the variables leaving only new information and the variables needed to join the two datasets correctly. We also found that one of the variables had not loaded in correctly, so we informed R that the `claimDate` column was, in fact, containing time/date data and fixed one erroneous claim where the year was misstyped 2106 instead of 2016.
 
 ```{r locoflie, warning=FALSE, message=FALSE, echo = FALSE}
