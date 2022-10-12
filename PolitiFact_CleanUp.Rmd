@@ -259,8 +259,7 @@ pf_mega_nodupes <- pf_mega_withdupes %>%
 
 \
 
-One of the things that we tagged by was location of the lie, meaning the medium and format of the statement containing the lie. This tracked things like whether it was said on TV, in an interview, on social media, etc. We had several metacategories called `location` tags, and then more specific subcategories tagged `location.extra`.
-When loading this data into R, we made a select number of changes to make it compatible with the existing data. We matched the claim identifier column in the location of lie data to be identical to the mega data, and selected only half the variables leaving only new information and the variables needed to join the two datasets correctly. We also found that one of the variables had not loaded in correctly, so we informed R that the `claimDate` column was, in fact, containing time/date data. We fixed one erroneous claim where the year was misstyped 2106 instead of 2016.
+One of the things that we tagged by was location of the lie, meaning the medium and format of the statement containing the lie. This tracked things like whether it was said on TV, in an interview, on social media, etc. We had several metacategories called `location` tags, and then more specific subcategories tagged `location.extra`. When loading this data into R, we made a select number of changes to make it compatible with the existing data. We matched the claim identifier column in the location of lie data to be identical to the mega data, and selected only half the variables leaving only new information and the variables needed to join the two datasets correctly. We also found that one of the variables had not loaded in correctly, so we informed R that the `claimDate` column was, in fact, containing time/date data. We fixed one erroneous claim where the year was misstyped 2106 instead of 2016.
 
 ```{r locoflie, warning=FALSE, message=FALSE, echo = FALSE}
 loc_of_lie <- read.csv("locationoflietagging.csv")
@@ -272,7 +271,7 @@ loc_of_lie <- loc_of_lie %>%
 loc_of_lie$claimDate[loc_of_lie$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
 ```
 
-EXPLAIN JOIN \
+EXPLAIN JOIN\
 
 ```{r}
 pf_mega_location <- left_join(pf_mega_nodupes, loc_of_lie, by = c("...1", "url", "languageCode", "publisher.name", "publisher.site", "text", "claimDate", "claimant_party"))
