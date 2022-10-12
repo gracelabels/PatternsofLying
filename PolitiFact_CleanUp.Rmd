@@ -209,7 +209,7 @@ pf_mega_withdupes <- pf_mega_withdupes %>%
 
 Manual Removal of Duplicate Claims\
 \
-EXPLAIN DUPLICATE REMOVAL
+During tagging, 31 more claims were identified as duplicates, shown below.
 
 ```{r finddupes, warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega_withdupes %>%
@@ -219,6 +219,8 @@ pf_mega_withdupes %>%
   arrange(desc(n)) %>%
   kable(caption = "Remaining Duplicates Identified during Tagging")
 ```
+
+We prioritized preserving the claims linked to the original and specific fact check over those republished as part of a larger article. To do so, we manually removed the 31 duplicates by their claim identifier number. This resulted in a remaining 2469 claims.
 
 ```{r finaldedupe, warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega_nodupes <- pf_mega_withdupes %>%
@@ -263,21 +265,41 @@ One of the things that we tagged by was location of the lie, meaning the medium 
 loc_of_lie <- read.csv("locationoflietagging.csv")
 loc_of_lie$...1 <- loc_of_lie$X.1
 loc_of_lie <- loc_of_lie %>%
-  select(-claimant, -X.1, -claimant_canonical_name, -reason, -ratingsimp, -`T.F.RQ1`, -X, -rand_num, -is_politician_strict, -textualRating, -reviewDate)
+  select(-claimant, 
+         -X.1, 
+         -claimant_canonical_name, 
+         -reason, 
+         -ratingsimp, 
+         -`T.F.RQ1`, 
+         -X, -rand_num, 
+         -is_politician_strict, 
+         -textualRating, 
+         -reviewDate)
 loc_of_lie <- loc_of_lie %>%
   mutate(claimDate = as.Date(claimDate))
-loc_of_lie$claimDate[loc_of_lie$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
+loc_of_lie$claimDate[loc_of_lie$claimDate == 
+                       (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
 ```
 
 We selected to join the location of lie data to the larger dataset by the claim identifier column, `...1`, and by `url`, `languageCode`, `publisher.name`, `publisher.site`, `text`, `claimDate`, and `claimant_party`. We chose not to merge by title or text of claim due to a small number of claims that were encoded oddly with incorrect symbols. This error likely occured during exportation and importation of the dataset. The correct title and text were pulled from the megadata, and we are certain these are still joined correctly thanks to the claim identifier column. We found one more incorrect claim that was missing the correct text, we sourced the accurate claim from the URL and overwrote it in our data. Then, we exported the final dataset into a viewable and downloadable csv, called `pf_mega_location.csv`.
 
-```{r}
-pf_mega_location <- left_join(pf_mega_nodupes, loc_of_lie, by = c("...1", "url", "languageCode", "publisher.name", "publisher.site", "text", "claimDate", "claimant_party"))
+```{r megalocation, warning=FALSE, message=FALSE, echo = FALSE}
+pf_mega_location <- left_join(pf_mega_nodupes, 
+                              loc_of_lie, 
+                              by = c("...1", 
+                                     "url", 
+                                     "languageCode", 
+                                     "publisher.name", 
+                                     "publisher.site", 
+                                     "text", 
+                                     "claimDate", 
+                                     "claimant_party"))
 pf_mega_location$title <- pf_mega_location$title.x
 pf_mega_location <- pf_mega_location %>%
   select(-title.x, -title.y)
 
-pf_mega_location$text[pf_mega_location$...1 == 2766] <- "The Trans-Pacific trade deal could cost America 448,000 more jobs."
+pf_mega_location$text[pf_mega_location$...1 == 2766] <- 
+  "The Trans-Pacific trade deal could cost America 448,000 more jobs."
 
 write_csv(pf_mega_location, file = "pf_mega_location.csv")
 ```
