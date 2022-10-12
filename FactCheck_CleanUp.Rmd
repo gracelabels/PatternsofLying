@@ -16,4 +16,18 @@ v8_fc <- read_csv("v8fc.csv")
 
 FactCheck.Org does not have an ordered tier based rating system like PolitiFact and the Washington Post. Rather they have list of descriptive ratings they more commonly assign to claims. FactCheck.Org only publishes claims they find to have some level of false information. Their assesments are decriptive of the nature of the falsehood rather than assessing the level of false information. 
 
+The most common ratings are as follows 
+
+Unsupported
+Spins the Facts
+Out of Context
+Not the Whole Story
+No Evidence
+Misleading
+FALSE
+Exaggerates
+Distorts the Facts
+Cherry Picks
+
+
 
