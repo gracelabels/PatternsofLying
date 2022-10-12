@@ -100,11 +100,9 @@ v9_pf %>%
 
 ### Version 10 - Condensing claimant names
 
-At this stage we noticed that some claimants were listed under several separate names referring to the same person. Like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this repetition so that we could see the true \# of claims made by each claimant.
+At this stage we noticed that some claimants were listed under several separate names referring to the same person. Like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this repetition so that we could see the true \# of claims made by each claimant. To do so, we moved our data into a program called OpenRefine. Here, we clustered claimant names by similar terms to identify where repetition/multiple names for the same person occured. We used this to identify all duplicate forms of name and then recoded the data accordingly.
 
-This processed combined several names making the list 25 names shorter.
-
-698 unique claimants remain. WRITE ABOUT OPEN REFINE CLAIMANT CLEANING
+This processed combined several names making the list 25 names shorter. 698 unique claimants remain.
 
 ```{r condense claimant names, warning=FALSE, message=FALSE, echo = FALSE}
 v10_pf <- v9_pf
@@ -180,7 +178,7 @@ v11_pf %>%
   kable(caption = "Claim Rating by Party for Final Dataset")
 ```
 
-EXPLAIN DATE ERROR ANF MOVE UP
+In this process an erroneous claim came to our attention, dated 2106 instead of 2016. We manually recoded this.
 
 ```{r date error fixed,  warning=FALSE, message=FALSE, echo = FALSE}
 v11_pf$claimDate[v11_pf$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
@@ -190,7 +188,7 @@ v11_pf$claimDate[v11_pf$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-1
 
 HOW WE TAGGED AND WHY
 
-WHY WE JOINED BY JUST THESE VARIABLS
+WHY WE JOINED BY JUST THESE VARIABLES
 
 ```{r createmetadata, warning=FALSE, message=FALSE, echo = FALSE}
 taggedclaims <- read_csv("tagged_claims_limited.csv")
