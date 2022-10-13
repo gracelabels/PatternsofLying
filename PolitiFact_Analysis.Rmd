@@ -117,7 +117,7 @@ binarymicro <- pf_mega %>%
                     `National and State Macroeconomic Issues` == FALSE ~ 0)) %>%
   mutate(`Economic Well-Being and Domestic Commerce` = 
            case_when(`Economic Well-Being and Domestic Commerce` == TRUE ~ 1,
-           `Economic Well-Being and Domestic Commerce` == FALSE ~ 0)) %>%
+          `Economic Well-Being and Domestic Commerce` == FALSE ~ 0)) %>%
    mutate(`Labor and Employment` = case_when(`Labor and Employment` == TRUE ~ 1,
            `Labor and Employment` == FALSE ~ 0)) %>%
    mutate(`Foreign Trade` = case_when(`Foreign Trade` == TRUE ~ 1,
@@ -127,37 +127,75 @@ binarymicro <- pf_mega %>%
    mutate(`Civil Rights, Minority Issues, and Civil Liberties` = 
         case_when(`Civil Rights, Minority Issues, and Civil Liberties` == TRUE ~ 1,
         `Civil Rights, Minority Issues, and Civil Liberties` == FALSE ~ 0)) %>%
-   mutate(`Immigration and Refugee Issues` = case_when(`Immigration and Refugee Issues` == TRUE ~ 1,
+   mutate(`Immigration and Refugee Issues` = 
+          case_when(`Immigration and Refugee Issues` == TRUE ~ 1,
           `Immigration and Refugee Issues` == FALSE ~ 0)) %>%
-   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>% 
-  mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
-   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
-   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
-   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
-   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
-   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
-   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
+   mutate(`LGBTQ` = case_when(`LGBTQ` == TRUE ~ 1,
+          `LGBTQ` == FALSE ~ 0)) %>% 
+  mutate(`Race` = case_when(`Race` == TRUE ~ 1,
+          `Race` == FALSE ~ 0)) %>%
+   mutate(`Religion` = case_when(`Religion` == TRUE ~ 1,
+          `Religion` == FALSE ~ 0)) %>%
+   mutate(`Women` = case_when(`Women` == TRUE ~ 1,
+          `Women` == FALSE ~ 0)) %>%
+   mutate(`Health (non-care)` = case_when(`Health (non-care)` == TRUE ~ 1,
+          `Health (non-care)` == FALSE ~ 0)) %>%
+   mutate(`Social Welfare` = case_when(`Social Welfare` == TRUE ~ 1,
+          `Social Welfare` == FALSE ~ 0)) %>%
+   mutate(`Education` = case_when(`Education` == TRUE ~ 1,
+          `Education` == FALSE ~ 0)) %>%
+   mutate(Abortion = case_when(Abortion == TRUE ~ 1,
+          Abortion == FALSE ~ 0)) %>%
+   mutate(`Healthcare` = case_when(`Healthcare` == TRUE ~ 1,
+          `Healthcare` == FALSE ~ 0)) %>%
+   mutate(`Government Operations` = case_when(`Government Operations` == TRUE ~ 1,
+          `Government Operations` == FALSE ~ 0)) %>%
+   mutate(`Defense/Military` = case_when(`Defense/Military` == TRUE ~ 1,
+          `Defense/Military` == FALSE ~ 0)) %>%
+   mutate(`International_affairs and Foreign Aid` = case_when(`International_affairs and Foreign Aid` == TRUE ~ 1,
+          `International_affairs and Foreign Aid` == FALSE ~ 0)) %>%
+   mutate(`Voting/Elections` = case_when(`Voting/Elections` == TRUE ~ 1,
+          `Voting/Elections` == FALSE ~ 0)) %>%
+   mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
+          `Agriculture` == FALSE ~ 0)) %>%
   
-  mutate(`Self/Personal Record` = case_when(`Self/Personal Record` == TRUE ~ 1, 
-                                            `Self/Personal Record` == FALSE ~ 0)) %>%
-  mutate(`Opponent/Opponent's Record` = case_when(`Opponent/Opponent's Record` == TRUE ~ 1, 
-                                                  `Opponent/Opponent's Record` == FALSE ~ 0)) %>%
-  select(Fear, Legislation, `Self/Personal Record`, `Opponent/Opponent's Record`, claimant_party) %>%
-  filter(!is.na(Fear)) 
+  select(`National and State Macroeconomic Issues`,
+         `Economic Well-Being and Domestic Commerce`,
+         `Labor and Employment`,
+         `Foreign Trade`,
+         `Healthcare`,
+         claimant_party) %>%
+  filter(!is.na(`Foreign Trade`)) 
 
 micro_tibble <- binarymicro %>%
   group_by(claimant_party) %>%
-  summarize( National and State Macroeconomic Issues = sum(`National and State Macroeconomic Issues`),
-             Economic Well-Being and Domestic Commerce = sum(`Economic Well-Being and Domestic Commerce`),
-             `Labor and Employment` = sum(`Labor and Employment`),`Foreign Trade` = sum(`Foreign Trade`))
+  summarize( `National and State Macroeconomic Issues` = sum(`National and State Macroeconomic Issues`),
+             `Economic Well-Being and Domestic Commerce` = sum(`Economic Well-Being and Domestic Commerce`),
+             `Labor and Employment` = sum(`Labor and Employment`),
+             `Foreign Trade` = sum(`Foreign Trade`), 
+              `Healthcare` = sum(`Healthcare`))
 
 micro_tibble <- t(micro_tibble)
 
