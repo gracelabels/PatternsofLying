@@ -3,8 +3,9 @@ title: "Location of the Lie EDA"
 author: "Sofia Bliss-Carrascosa"
 output: pdf_document
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
+
 ```{r loadpackages, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -171,6 +172,7 @@ loc_relevel %>%
   ) +
   scale_fill_manual(values = truenesscolors)
 ```
+
 \newpage
 
 Social Media
