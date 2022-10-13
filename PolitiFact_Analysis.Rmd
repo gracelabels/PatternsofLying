@@ -57,6 +57,22 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
        x = "Claims by Party",
        fill = "Rating", y = "Percentage") +
   scale_fill_manual(values = truenesscolors)
+
+dems <- pf_mega %>%
+  filter(claimant_party == "Democratic")
+dems %>%
+  group_by(textualRating) %>%
+  count() %>%
+  summarize(prop = n/nrow(dems)) %>%
+  kable(digits = 4, caption = "Proportion of Democratic Truthfulness")
+
+reps <- pf_mega %>%
+  filter(claimant_party == "Republican")
+reps %>%
+  group_by(textualRating) %>%
+  count() %>%
+  summarize(prop = n/nrow(dems)) %>%
+  kable(digits = 4, caption = "Proportion of Republican Truthfulness")
 ```
 
 ```{r pivot table,  warning=FALSE, message=FALSE, echo = FALSE}
@@ -71,7 +87,7 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
 ```
 
 ```{r, subject tag table,  warning=FALSE, message=FALSE, echo = FALSE}
-binarytest <- pf_mega %>%
+binarymacro <- pf_mega %>%
   mutate(Fear = case_when(Fear == TRUE ~ 1,
                           Fear == FALSE ~ 0)) %>%
   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
@@ -83,15 +99,17 @@ binarytest <- pf_mega %>%
   select(Fear, Legislation, `Self/Personal Record`, `Opponent/Opponent's Record`, claimant_party) %>%
   filter(!is.na(Fear)) 
 
-macro_tibble <- binarytest %>%
+macro_tibble <- binarymacro %>%
   group_by(claimant_party) %>%
   summarize(Fear = sum(Fear), Legislation = sum(Legislation), "Self/Personal Record" = sum(`Self/Personal Record`), "Opponent/Opponent's Record" = sum(`Opponent/Opponent's Record`))
 
 macro_tibble <- t(macro_tibble)
+
+print(macro_tibble)
 ```
 
 
 ```{r}
-
+microtibble
 ```
 
