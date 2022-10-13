@@ -181,35 +181,20 @@ At this stage, the dataset of 7,337 claims had been cleaned of irrelevant and re
 From here on out, we began working with each publisher dataset separately. Only four publishers had enough remaining claims to move forward: FactCheck.Org, The New York Times, PolitiFact, and The Washington Post. This resulted in four individual datasets, one per publisher.
 
 ```{r create v5, message=FALSE, warning=FALSE, echo=FALSE}
-v5_pf <- v4_dejunked %>%
-  filter(publisher.site == "politifact.com")
-
-v5_wapo <- v4_dejunked %>%
-  filter(publisher.site == "washingtonpost.com")
-
 v5_fc <- v4_dejunked %>%
   filter(publisher.site == "factcheck.org")
 
 v5_nyt <- v4_dejunked %>%
   filter(publisher.site == "nytimes.com")
+
+v5_pf <- v4_dejunked %>%
+  filter(publisher.site == "politifact.com")
+
+v5_wapo <- v4_dejunked %>%
+  filter(publisher.site == "washingtonpost.com")
 ```
 
 ```{r v5 tables, message=FALSE, warning=FALSE, echo=FALSE }
-v5_pf %>%
-  count() %>%
-  kable(caption = "Politifact")
-
-v5_pf %>%
-  count(claimant_party) %>%
-  kable(caption = "Politifact - Sorted by Party")
-v5_wapo %>%
-  count() %>%
-  kable(caption = "Washington Post")
-
-v5_wapo %>%
-  count(claimant_party) %>%
-  kable(caption = "Washington Post - Sorted by Party")
-
 v5_fc %>%
   count() %>%
   kable(caption = "FactCheck.Org")
@@ -225,6 +210,20 @@ v5_nyt %>%
   count(claimant_party) %>%
   kable(caption = "New York Times - Sorted by Party")
 
+v5_pf %>%
+  count() %>%
+  kable(caption = "Politifact")
+
+v5_pf %>%
+  count(claimant_party) %>%
+  kable(caption = "Politifact - Sorted by Party")
+v5_wapo %>%
+  count() %>%
+  kable(caption = "Washington Post")
+
+v5_wapo %>%
+  count(claimant_party) %>%
+  kable(caption = "Washington Post - Sorted by Party")
 ```
 
 ### Version 6 - Removing Trump
@@ -278,23 +277,6 @@ v6_nyt <- v5_nyt %>%
 ```
 
 ```{r v6 tables, message=FALSE, warning=FALSE, echo=FALSE}
-v6_pf %>%
-  count() %>%
-  kable(caption = "Politifact, no Trump")
-
-v6_pf %>%
-  count(claimant_party) %>%
-  kable(caption = "Politifact, no Trump - 
-        Sorted by Party")
-v6_wapo %>%
-  count() %>%
-  kable(caption = "Washington Post, no Trump")
-
-v6_wapo %>%
-  count(claimant_party) %>%
-  kable(caption = "Washington Post, no Trump - 
-        Sorted by Party")
-
 v6_fc %>%
   count() %>%
   kable(caption = "FactCheck.Org, no Trump")
@@ -310,6 +292,23 @@ v6_nyt %>%
 v6_nyt %>%
   count(claimant_party) %>%
   kable(caption = "New York Times, no Trump -  
+        Sorted by Party")
+
+v6_pf %>%
+  count() %>%
+  kable(caption = "Politifact, no Trump")
+
+v6_pf %>%
+  count(claimant_party) %>%
+  kable(caption = "Politifact, no Trump - 
+        Sorted by Party")
+v6_wapo %>%
+  count() %>%
+  kable(caption = "Washington Post, no Trump")
+
+v6_wapo %>%
+  count(claimant_party) %>%
+  kable(caption = "Washington Post, no Trump - 
         Sorted by Party")
 ```
 
@@ -348,13 +347,13 @@ Dr. Deborah Birx who [served in the Trump Admin](served%20in%20the%20Trump%20Adm
 
 John Kelly, [Former Chief of Staff in Trump Admin](https://en.wikipedia.org/wiki/John_F._Kelly) (1 claim)
 
-Kevin K. McAleenan,  [Sec. of Homeland Sec. Trump Admin](https://en.wikipedia.org/wiki/Kevin_McAleenan) (1 claim)
+Kevin K. McAleenan, [Sec. of Homeland Sec. Trump Admin](https://en.wikipedia.org/wiki/Kevin_McAleenan) (1 claim)
 
 Kirstjen Nielsen, [Homeland Security Sec. Trump Admin](https://en.wikipedia.org/wiki/Kirstjen_Nielsen) (4 claims)
 
 Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (1 claim)
 
-Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio) (1 claim) 
+Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio) (1 claim)
 
 **One claimant was assigned a Democratic affiliation:**
 
@@ -362,9 +361,16 @@ Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Lorett
 
 **2 claimants were removed for not being political figures:**
 
-Hal Turner, [commentator](https://en.wikipedia.org/wiki/Hal_Turner), Not a political figure (1 claim) 
+Hal Turner, [commentator](https://en.wikipedia.org/wiki/Hal_Turner), Not a political figure (1 claim)
 
-Sean P. Conley, [Presidential physician](https://en.wikipedia.org/wiki/Sean_Conley), Not a political figure (1 claim) 
+Sean P. Conley, [Presidential physician](https://en.wikipedia.org/wiki/Sean_Conley), Not a political figure (1 claim)
+
+**11 Republican claims were assigned**
+
+**1 Democratic claim was assigned**
+
+**2 claims were removed**
+
 
 **In the end, 11 total claims were assigned a Republican affiliation, 1 claim was assigned a Democratic affiliation, and 2 claims were removed from the FactCheck.Org dataset.**
 
@@ -403,7 +409,7 @@ v6_nyt %>%
 
 Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (1 claim)
 
-Jesse Binnall, [Lawyer representing President Donald Trump](https://ballotpedia.org/Jesse_Binnall) (1 claim) \
+Jesse Binnall, [Lawyer representing President Donald Trump](https://ballotpedia.org/Jesse_Binnall) (1 claim)\
 
 ```{r v7 substitutions NYT, message=FALSE, warning=FALSE, echo=FALSE}
 v7_nyt <- v6_nyt
@@ -430,133 +436,133 @@ v6_pf %>%
 
 **The following claimants were assigned a Republican affiliation:**
 
-Beth Parlato, [NY Republican Political candidate](https://ballotpedia.org/Beth_Parlato) (1 claim) 
+Beth Parlato, [NY Republican Political candidate](https://ballotpedia.org/Beth_Parlato) (1 claim)
 
-Bob Spindell, [Republican member of WI elections commission](https://wisconsinexaminer.com/brief/spindell-reappointed-to-wisconsin-elections-commission/) (1 claim) 
+Bob Spindell, [Republican member of WI elections commission](https://wisconsinexaminer.com/brief/spindell-reappointed-to-wisconsin-elections-commission/) (1 claim)
 
-Brett Giroir, [Served as Assistant Secretary of Health in the Trump Admin](https://en.wikipedia.org/wiki/Brett_Giroir) (2 claims) 
+Brett Giroir, [Served as Assistant Secretary of Health in the Trump Admin](https://en.wikipedia.org/wiki/Brett_Giroir) (2 claims)
 
-Brett McGurk, [National Security positions with Bush, trump, and Obama](https://en.wikipedia.org/wiki/Brett_McGurk) (1 claim) 
+Brett McGurk, [National Security positions with Bush, trump, and Obama](https://en.wikipedia.org/wiki/Brett_McGurk) (1 claim)
 
-George Papadopoulos, [Served on trump campaign and Congressional candidate](https://en.wikipedia.org/wiki/George_Papadopoulos)(1 claim) 
+George Papadopoulos, [Served on trump campaign and Congressional candidate](https://en.wikipedia.org/wiki/George_Papadopoulos)(1 claim)
 
-H.R. McMaster, [National Security Advisor in Trump Admin](https://en.wikipedia.org/wiki/H._R._McMaster) (1 claim) 
+H.R. McMaster, [National Security Advisor in Trump Admin](https://en.wikipedia.org/wiki/H._R._McMaster) (1 claim)
 
 Jesse Kremer, [Republican WI legislator](https://ballotpedia.org/Jesse_Kremer) (1 claim)
 
-John Kelly,  [Former Chief of Staff in Trump Admin](https://en.wikipedia.org/wiki/John_F._Kelly) (3 claims)
+John Kelly, [Former Chief of Staff in Trump Admin](https://en.wikipedia.org/wiki/John_F._Kelly) (3 claims)
 
 Kirstjen Nielsen, [Homeland Security Sec. Trump Admin](https://en.wikipedia.org/wiki/Kirstjen_Nielsen) (1 claim)
 
-Louis Marinelli, [California Political Candidate](https://en.wikipedia.org/wiki/Louis_J._Marinelli#The_President_of_California_Act) (1 claim) 
+Louis Marinelli, [California Political Candidate](https://en.wikipedia.org/wiki/Louis_J._Marinelli#The_President_of_California_Act) (1 claim)
 
-Marc Butler, [New York Republican](https://en.wikipedia.org/wiki/Marc_W._Butler) (1 claim) 
+Marc Butler, [New York Republican](https://en.wikipedia.org/wiki/Marc_W._Butler) (1 claim)
 
-Paul Maner, [Georgia Republican Candidate](https://ballotpedia.org/Paul_Maner) (1 claim) 
+Paul Maner, [Georgia Republican Candidate](https://ballotpedia.org/Paul_Maner) (1 claim)
 
-Ryan Frazier, [Colorado Republican candidate](https://ballotpedia.org/Ryan_Frazier) (1 claim) 
+Ryan Frazier, [Colorado Republican candidate](https://ballotpedia.org/Ryan_Frazier) (1 claim)
 
-Scott Dawson, [Alabama Republican Candidate](https://ballotpedia.org/Scott_Dawson_(Alabama)) (1 claim) 
+Scott Dawson, [Alabama Republican Candidate](https://ballotpedia.org/Scott_Dawson_(Alabama)) (1 claim)
 
-Scott Jones, [Republican congressional candidate](https://www.politifact.com/factchecks/2016/oct/17/scott-jones/scott-jones-falsely-claims-judges-ruled-allegation/) (3 claims) 
+Scott Jones, [Republican congressional candidate](https://www.politifact.com/factchecks/2016/oct/17/scott-jones/scott-jones-falsely-claims-judges-ruled-allegation/) (3 claims)
 
 Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia.org/wiki/Sidney_Powell) (2 claims)
 
 Steve Cortes, [Former advisor to Donald Trump](https://premierespeakers.com/steve-cortes/bio) (1 claim) 
 
-State Representatives, l[ink lists Wisconsin Assembly Republicans](https://www.politifact.com/factchecks/2019/mar/13/wisconsin-assembly-republicans/republicans-botch-claim-comparing-tuition-immigran/)) (1 claim) 
+State Representatives, l[ink lists Wisconsin Assembly Republicans](https://www.politifact.com/factchecks/2019/mar/13/wisconsin-assembly-republicans/republicans-botch-claim-comparing-tuition-immigran/)) (1 claim)
 
 Todd Wilcox, [Florida Republican Candidate](https://ballotpedia.org/Todd_Wilcox_(Florida)) (1 claim)
 
 **The following claimants were assigned a Democratic affiliation:**
 
-Alejandro Mayorkas, [Biden Sec. of Homeland Security](https://www.dhs.gov/person/alejandro-mayorkas) (1 claim) 
+Alejandro Mayorkas, [Biden Sec. of Homeland Security](https://www.dhs.gov/person/alejandro-mayorkas) (1 claim)
 
-Chris Meagher, [Dep. Press Sec. for Biden Admin](https://en.wikipedia.org/wiki/Chris_Meagher) (1 claim) 
+Chris Meagher, [Dep. Press Sec. for Biden Admin](https://en.wikipedia.org/wiki/Chris_Meagher) (1 claim)
 
-Jeffery Zients, [Coronavirus Response Coordinator for Biden](https://en.wikipedia.org/wiki/Jeffrey_Zients) (1 claim) 
+Jeffery Zients, [Coronavirus Response Coordinator for Biden](https://en.wikipedia.org/wiki/Jeffrey_Zients) (1 claim)
 
-John Kirby, [Dept of defense Obama/Biden](https://en.wikipedia.org/wiki/John_Kirby_(admiral)), (1 claim) 
+John Kirby, [Dept of defense Obama/Biden](https://en.wikipedia.org/wiki/John_Kirby_(admiral)), (1 claim)
 
-Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Loretta_Lynch) (1 claim) 
+Loretta Lynch, [Attorney General for Obama](https://en.wikipedia.org/wiki/Loretta_Lynch) (1 claim)
 
-Mike Collier, [Dem. Texas Lieutenant Gov. candidate](https://ballotpedia.org/Mike_Collier_(Texas)) (1 claim) 
+Mike Collier, [Dem. Texas Lieutenant Gov. candidate](https://ballotpedia.org/Mike_Collier_(Texas)) (1 claim)
 
-Nate McMurray, [NY Democratic politician](https://ballotpedia.org/Nate_McMurray) (1 claim) 
+Nate McMurray, [NY Democratic politician](https://ballotpedia.org/Nate_McMurray) (1 claim)
 
 Clay Aiken, [NC Congressional Candidate](https://en.wikipedia.org/wiki/Clay_Aiken), (1 claim)\
 
 **The following claimants were assigned an Independent affiliation:**
 
-Alexander Strenger, [Ran for city council in Austin](https://ballotpedia.org/Alexander_Strenger) (1 claim) 
+Alexander Strenger, [Ran for city council in Austin](https://ballotpedia.org/Alexander_Strenger) (1 claim)
 
-Bob Donovan, [non-partisan Milwaukee Common Council member](https://ballotpedia.org/Robert_G._Donovan_(Wisconsin)) (1 claim) 
+Bob Donovan, [non-partisan Milwaukee Common Council member](https://ballotpedia.org/Robert_G._Donovan_(Wisconsin)) (1 claim)
 
 Charles Francis, [Non-partisan Mayoral candidate](https://ballotpedia.org/Charles_Francis) (1 claim)
 
 Lowell Holtz, [Non-partisan WI candidate](https://ballotpedia.org/Lowell_Holtz) (2 claims)
 
-Michael Long, [New York State Conservative Party Chairman](https://www.politifact.com/personalities/michael-long/) (2 claims) 
+Michael Long, [New York State Conservative Party Chairman](https://www.politifact.com/personalities/michael-long/) (2 claims)
 
-William Taylor, [Ambassador to Ukraine](https://www.politifact.com/personalities/william-taylor/), worked in both party administration (1 claim) 
+William Taylor, [Ambassador to Ukraine](https://www.politifact.com/personalities/william-taylor/), worked in both party administration (1 claim)
 
 **The following claimants were removed from the dataset:**
 
 Ashley Smith, [civilian](http://www.politifact.com/factchecks/2017/aug/03/ashley-smith/ashley-smith-transgender-residents-1-300-greg-abbo/), not political figure based on PF (1 claim)
 
-Bill Maher, [political comedian](https://en.wikipedia.org/wiki/Bill_Maher), Not a political figure (1 claim) 
+Bill Maher, [political comedian](https://en.wikipedia.org/wiki/Bill_Maher), Not a political figure (1 claim)
 
 Bono, [singer](https://en.wikipedia.org/wiki/Bono), not political figure (1 claim)
 
-Brit Hume, [journalist](https://en.wikipedia.org/wiki/Brit_Hume), not a political figure (1 claim) 
+Brit Hume, [journalist](https://en.wikipedia.org/wiki/Brit_Hume), not a political figure (1 claim)
 
-Charles Ramsey, [police chief](https://www.politifact.com/factchecks/2016/jul/10/charles-ramsey/how-many-police-departments-are-us/), not a political figure (1 claim) 
+Charles Ramsey, [police chief](https://www.politifact.com/factchecks/2016/jul/10/charles-ramsey/how-many-police-departments-are-us/), not a political figure (1 claim)
 
-Daniel Kelly, [WI Supreme Court Justice](https://en.wikipedia.org/wiki/Daniel_Kelly_(Wisconsin_judge)), not a political figure (2 claims) 
+Daniel Kelly, [WI Supreme Court Justice](https://en.wikipedia.org/wiki/Daniel_Kelly_(Wisconsin_judge)), not a political figure (2 claims)
 
-David Martin,[CEO of M CAM Inc.,](https://www.wipo.int/meetings/en/2006/scp_of_ge_06/speakers/martin.html)Not a political figure (1 claim) 
+David Martin,[CEO of M CAM Inc.,](https://www.wipo.int/meetings/en/2006/scp_of_ge_06/speakers/martin.html) Not a political figure (1 claim)
 
-Edward Flynn, [Chief of Milwaukee Police dept.](https://en.wikipedia.org/wiki/Edward_A._Flynn), not a political figure (1 claim) 
+Edward Flynn, [Chief of Milwaukee Police dept.](https://en.wikipedia.org/wiki/Edward_A._Flynn), not a political figure (1 claim)
 
 Erin Burnett, [Political commentator,](https://en.wikipedia.org/wiki/Erin_Burnett) Not a political figure (1 claim)
 
-Giffords, [Gun violence activist group](https://www.politifact.com/factchecks/2018/feb/22/giffords/florida-gov-rick-scott-made-it-illegal-doctors-tal/), not political figure (1 claim) 
+Giffords, [Gun violence activist group](https://www.politifact.com/factchecks/2018/feb/22/giffords/florida-gov-rick-scott-made-it-illegal-doctors-tal/), not political figure (1 claim)
 
-Hal Turner, [commentator,](https://en.wikipedia.org/wiki/Hal_Turner) Not a political figure (1 claim) 
+Hal Turner, [commentator,](https://en.wikipedia.org/wiki/Hal_Turner) Not a political figure (1 claim)
 
-J. Christian Adams, [conservative activist](https://en.wikipedia.org/wiki/J._Christian_Adams), not a political figure (1 claim) 
+J. Christian Adams, [conservative activist](https://en.wikipedia.org/wiki/J._Christian_Adams), not a political figure (1 claim)
 
-Jake Tapper, [journalist](https://en.wikipedia.org/wiki/Jake_Tapper), Not a political figure (3 claims) 
+Jake Tapper, [journalist](https://en.wikipedia.org/wiki/Jake_Tapper), Not a political figure (3 claims)
 
-James Hauser, [Not a political figure, only post](https://en.wikipedia.org/wiki/Jake_Tapper) (1 claim) 
+James Hauser, [Not a political figure, only post](https://en.wikipedia.org/wiki/Jake_Tapper) (1 claim)
 
 John Patrick, [President of the Texas AFL-CIO](https://www.politifact.com/personalities/john-patrick/), not a political figure (1 claim) 
 
-Kevin Downing, [Attorney to Paul Manafort](https://en.wikipedia.org/wiki/Kevin_M._Downing), not a political figure (1 claim) 
+Kevin Downing, [Attorney to Paul Manafort](https://en.wikipedia.org/wiki/Kevin_M._Downing), not a political figure (1 claim)
 
-Lawrence O'Donnell,[MSNBC Host](https://www.msnbc.com/the-last-word), not a political figure (1 claim) 
+Lawrence O'Donnell,[MSNBC Host](https://www.msnbc.com/the-last-word), not a political figure (1 claim)
 
-Lisa Moore, [English Professor](https://liberalarts.utexas.edu/english/faculty/moorell), not a political figure (1 claim) 
+Lisa Moore, [English Professor](https://liberalarts.utexas.edu/english/faculty/moorell), not a political figure (1 claim)
 
-Maria Bartiromo, [FOX news host](https://en.wikipedia.org/wiki/Maria_Bartiromo), not a political figure (2 claims) 
+Maria Bartiromo, [FOX news host](https://en.wikipedia.org/wiki/Maria_Bartiromo), not a political figure (2 claims)
 
-Mark Levin,[Talk show host](https://en.wikipedia.org/wiki/Mark_Levin), not a political figure (1 claim) 
+Mark Levin,[Talk show host](https://en.wikipedia.org/wiki/Mark_Levin), not a political figure (1 claim)
 
 Michael Screnock, [WI Supreme Court Justice](https://www.politifact.com/personalities/michael-screnock/), not a political figure (1 claim)
 
 Mike Crute, [Radio show host](https://www.politifact.com/personalities/mike-crute/), not a political figure (1 claim)
 
-Nicholas Burns, [Former ambassador, not a political figure](https://en.wikipedia.org/wiki/R._Nicholas_Burns) (2 claims) 
+Nicholas Burns, [Former ambassador, not a political figure](https://en.wikipedia.org/wiki/R._Nicholas_Burns) (2 claims)
 
 Ray Cross, [University President](https://ballotpedia.org/Ray_Cross), not a political figure (1 claim)
 
-Robert Sanborn, [Nonprofit president](https://childrenatrisk.org/staff/dr-robert-sanborn/), not a political figure (1 claim) 
+Robert Sanborn, [Nonprofit president](https://childrenatrisk.org/staff/dr-robert-sanborn/), not a political figure (1 claim)
 
 Shelley Grogan, [WI Judge non-partisan](https://ballotpedia.org/Shelley_Grogan), not a political figure (1 claim)\
 
 **25 Republican claims were assigned**
 
-**8 Democratic claims were assigned** 
+**8 Democratic claims were assigned**
 
 **8 Independent claims were assigned**
 
