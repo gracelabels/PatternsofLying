@@ -371,7 +371,6 @@ Sean P. Conley, [Presidential physician](https://en.wikipedia.org/wiki/Sean_Conl
 
 **2 claims were removed**
 
-
 **In the end, 11 total claims were assigned a Republican affiliation, 1 claim was assigned a Democratic affiliation, and 2 claims were removed from the FactCheck.Org dataset.**
 
 ```{r v7 substitutions FC, message=FALSE, warning=FALSE, echo=FALSE}
