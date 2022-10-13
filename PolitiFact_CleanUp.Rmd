@@ -354,7 +354,7 @@ loc_of_lie$claimDate[loc_of_lie$claimDate ==
                        (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
 ```
 
-We selected to join the location of lie data to the larger dataset by the claim identifier column, `...1`, and by `url`, `languageCode`, `publisher.name`, `publisher.site`, `text`, `claimDate`, and `claimant_party`. We chose not to merge by title or text of claim due to a small number of claims that were encoded oddly with incorrect symbols. This error likely occured during exportation and importation of the dataset. The correct title and text were pulled from the megadata, and we are certain these are still joined correctly thanks to the claim identifier column. We found one more incorrect claim that was missing the correct text, we sourced the accurate claim from the URL and overwrote it in our data. Then, we exported the final dataset into a viewable and downloadable csv, called `pf_mega_location.csv`.
+We selected to join the location of lie data to the larger dataset by the claim identifier column, `...1`, and by `url`, `languageCode`, `publisher.name`, `publisher.site`, `text`, `claimDate`, and `claimant_party`. We chose not to merge by title or text of claim due to a small number of claims that were encoded oddly with incorrect symbols. This error likely occured during exportation and importation of the dataset. The correct title and text were pulled from the megadata, and we are certain these are still joined correctly thanks to the claim identifier column. We found one more incorrect claim that was missing the correct text, we sourced the accurate claim from the URL and overwrote it in our data. There was one claim that was erroneously untagged with location information, this was fixed. Then, we exported the final dataset into a viewable and downloadable csv, called `pf_mega_location.csv`.
 
 ```{r megalocation, warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega_location <- left_join(pf_mega_nodupes, 
@@ -373,6 +373,11 @@ pf_mega_location <- pf_mega_location %>%
 
 pf_mega_location$text[pf_mega_location$...1 == 2766] <- 
   "The Trans-Pacific trade deal could cost America 448,000 more jobs."
+
+pf_mega_location$location[pf_mega_location$...1 == 7539] <- 
+  "Social Media"
+pf_mega_location$location.extra[pf_mega_location$...1 == 7539] <- 
+  "Twitter"
 
 write_csv(pf_mega_location, file = "pf_mega_location.csv")
 ```
