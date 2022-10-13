@@ -158,34 +158,62 @@ binarymicro <- pf_mega %>%
           `Voting/Elections` == FALSE ~ 0)) %>%
    mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
           `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
-          `Agriculture` == FALSE ~ 0)) %>%
+     mutate(`Environment` = case_when(`Environment` == TRUE ~ 1,
+          `Environment` == FALSE ~ 0)) %>%
+     mutate(`Energy` = case_when(`Energy` == TRUE ~ 1,
+          `Energy` == FALSE ~ 0)) %>%
+     mutate(`Transportation` = case_when(`Transportation` == TRUE ~ 1,
+          `Transportation` == FALSE ~ 0)) %>%
+     mutate(`Community Development and Housing` = case_when(`Community Development and Housing` == TRUE ~ 1,
+          `Community Development and Housing` == FALSE ~ 0)) %>%
+     mutate(`Technology Science Space` = case_when(`Technology Science Space` == TRUE ~ 1,
+          `Technology Science Space` == FALSE ~ 0)) %>%
+     mutate(`Media and Communications` = case_when(`Media and Communications` == TRUE ~ 1,
+          `Media and Communications` == FALSE ~ 0)) %>%
+     mutate(`Law and Crime and Policing` = case_when(`Law and Crime and Policing` == TRUE ~ 1,
+          `Law and Crime and Policing` == FALSE ~ 0)) %>%
+     mutate(`Terrorism` = case_when(`Terrorism` == TRUE ~ 1,
+          `Terrorism` == FALSE ~ 0)) %>%
+     mutate(`Guns` = case_when(`Guns` == TRUE ~ 1,
+          `Guns` == FALSE ~ 0)) %>%
+     mutate(`History` = case_when(`History` == TRUE ~ 1,
+          `History` == FALSE ~ 0)) %>%
+     mutate(`Record/Candidate Biography/ Campaigns and Personal Behavior` = 
+              case_when(`Record/Candidate Biography/ Campaigns and Personal Behavior` == TRUE ~ 1,
+          `Record/Candidate Biography/ Campaigns and Personal Behavior` == FALSE ~ 0)) %>%
   
   select(`National and State Macroeconomic Issues`,
          `Economic Well-Being and Domestic Commerce`,
          `Labor and Employment`,
          `Foreign Trade`,
+         `Civil Rights, Minority Issues, and Civil Liberties`,
+         `Immigration and Refugee Issues`,
+         `LGBTQ`,
+         `Race`,
+         `Taxes`,
+         `Religion`,
+         `Women`,
+         `Health (non-care)`,
+         `Social Welfare`,
+         `Education`,
+         `Abortion`,
          `Healthcare`,
+         `Government Operations`,
+         `Defense/Military`,
+         `International_affairs and Foreign Aid`,
+         `Voting/Elections`,
+         `Agriculture`,
+         `Environment`,
+         `Energy`,
+         `Transportation`,
+         `Community Development and Housing`,
+         `Technology Science Space`,
+         `Media and Communications`,
+         `Law and Crime and Policing`,
+         `Terrorism`,
+         `Guns`,
+         `History`,
+         `Record/Candidate Biography/ Campaigns and Personal Behavior`,
          claimant_party) %>%
   filter(!is.na(`Foreign Trade`)) 
 
@@ -194,8 +222,37 @@ micro_tibble <- binarymicro %>%
   summarize( `National and State Macroeconomic Issues` = sum(`National and State Macroeconomic Issues`),
              `Economic Well-Being and Domestic Commerce` = sum(`Economic Well-Being and Domestic Commerce`),
              `Labor and Employment` = sum(`Labor and Employment`),
-             `Foreign Trade` = sum(`Foreign Trade`), 
-              `Healthcare` = sum(`Healthcare`))
+             `Foreign Trade` = sum(`Foreign Trade`),
+             `Civil Rights, Minority Issues, and Civil Liberties` = sum(`Civil Rights, Minority Issues, and Civil Liberties`),
+             `Immigration and Refugee Issues` = sum(`Immigration and Refugee Issues`),
+             `LGBTQ` = sum(`LGBTQ`),
+             `Race` = sum(`Race`),
+             `Religion` = sum(`Religion`),
+             `Women` = sum(`Women`),
+             `Health (non-care)` = sum(`Health (non-care)`),
+             `Social Welfare` = sum(`Social Welfare`),
+             `Education` = sum(`Education`),
+             `Abortion` = sum(`Abortion`),
+             `Healthcare` = sum(`Healthcare`),
+             `Government Operations` = sum(`Government Operations`),
+             `Defense/Military` = sum(`Defense/Military`),
+             `International_affairs and Foreign Aid` = sum(`International_affairs and Foreign Aid`),
+             `Voting/Elections` = sum(`Voting/Elections`),
+             `Agriculture` = sum(`Agriculture`),
+             `Environment` = sum(`Environment`),
+             `Energy` = sum(`Energy`),
+             `Transportation` = sum(`Transportation`),
+              `Taxes` = sum(`Taxes`),
+             `Community Development and Housing` = sum(`Community Development and Housing`),
+             `Technology Science Space` = sum(`Technology Science Space`),
+             `Media and Communications` = sum(`Media and Communications`),
+             `Law and Crime and Policing` = sum(`Law and Crime and Policing`),
+             `Terrorism` = sum(`Terrorism`),
+             `Guns` = sum(`Guns`),
+             `History` = sum(`History`),
+             `Record/Candidate Biography/ Campaigns and Personal Behavior` =
+               sum(`Record/Candidate Biography/ Campaigns and Personal Behavior`))
+
 
 micro_tibble <- t(micro_tibble)
 
