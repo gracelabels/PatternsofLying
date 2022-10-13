@@ -105,8 +105,65 @@ macro_tibble <- binarymacro %>%
 
 macro_tibble <- t(macro_tibble)
 
-print(macro_tibble)
+macro_tibble %>% kable()
 ```
+
+```{r}
+pf_mega %>% colnames()
+
+binarymicro <- pf_mega %>%
+  mutate(`National and State Macroeconomic Issues` = 
+           case_when(`National and State Macroeconomic Issues` == TRUE ~ 1,
+                    `National and State Macroeconomic Issues` == FALSE ~ 0)) %>%
+  mutate(`Economic Well-Being and Domestic Commerce` = 
+           case_when(`Economic Well-Being and Domestic Commerce` == TRUE ~ 1,
+           `Economic Well-Being and Domestic Commerce` == FALSE ~ 0)) %>%
+   mutate(`Labor and Employment` = case_when(`Labor and Employment` == TRUE ~ 1,
+           `Labor and Employment` == FALSE ~ 0)) %>%
+   mutate(`Foreign Trade` = case_when(`Foreign Trade` == TRUE ~ 1,
+          `Foreign Trade` == FALSE ~ 0)) %>%
+   mutate(`Taxes` = case_when(`Taxes` == TRUE ~ 1,
+          `Taxes` == FALSE ~ 0)) %>%
+   mutate(`Civil Rights, Minority Issues, and Civil Liberties` = 
+        case_when(`Civil Rights, Minority Issues, and Civil Liberties` == TRUE ~ 1,
+        `Civil Rights, Minority Issues, and Civil Liberties` == FALSE ~ 0)) %>%
+   mutate(`Immigration and Refugee Issues` = case_when(`Immigration and Refugee Issues` == TRUE ~ 1,
+          `Immigration and Refugee Issues` == FALSE ~ 0)) %>%
+   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>% 
+  mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
+                                 Legislation == FALSE ~ 0)) %>%
+  
+  mutate(`Self/Personal Record` = case_when(`Self/Personal Record` == TRUE ~ 1, 
+                                            `Self/Personal Record` == FALSE ~ 0)) %>%
+  mutate(`Opponent/Opponent's Record` = case_when(`Opponent/Opponent's Record` == TRUE ~ 1, 
+                                                  `Opponent/Opponent's Record` == FALSE ~ 0)) %>%
+  select(Fear, Legislation, `Self/Personal Record`, `Opponent/Opponent's Record`, claimant_party) %>%
+  filter(!is.na(Fear)) 
+
+micro_tibble <- binarymicro %>%
+  group_by(claimant_party) %>%
+  summarize( National and State Macroeconomic Issues = sum(`National and State Macroeconomic Issues`),
+             Economic Well-Being and Domestic Commerce = sum(`Economic Well-Being and Domestic Commerce`),
+             `Labor and Employment` = sum(`Labor and Employment`),`Foreign Trade` = sum(`Foreign Trade`))
+
+micro_tibble <- t(micro_tibble)
+
+micro_tibble %>% kable()
+```
+
 
 
 ```{r}
