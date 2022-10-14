@@ -12,6 +12,7 @@ editor_options:
 ```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
 library(tidyverse)
 library(knitr)
+library(tibble)
 ```
 
 ```{r color scale and ordering, warning=FALSE, message=FALSE, echo = FALSE }
@@ -76,63 +77,77 @@ reps %>%
 ```
 
 ```{r pivot table,  warning=FALSE, message=FALSE, echo = FALSE}
-#pf_mega %>%
-  #count(claimant_party, textualRating) %>%
-  #pivot_wider(id_cols = c(claimant_party,
-                         # textualRating),
-              #names_from = textualRating,
-             # values_from = n,
-              #values_fill = 0)%>%
-  #kable(caption = "Fact-checks per rating by Party")
+pf_mega %>%
+  count(claimant_party, textualRating) %>%
+    pivot_wider(id_cols = c(claimant_party),
+              names_from = textualRating,
+              values_from = n,
+              values_fill = 0) %>%
+  kable(caption = "Fact-checks per rating by Party")
+
 ```
 
-```{r, subject tag table,  warning=FALSE, message=FALSE, echo = FALSE}
+```{r, subject tag table macro,  warning=FALSE, message=FALSE, echo = FALSE}
 binarymacro <- pf_mega %>%
   mutate(Fear = case_when(Fear == TRUE ~ 1,
-                          Fear == FALSE ~ 0)) %>%
+         Fear == FALSE ~ 0)) %>%
   mutate(Legislation = case_when(Legislation == TRUE ~ 1,
-                                 Legislation == FALSE ~ 0)) %>%
+         Legislation == FALSE ~ 0)) %>%
   mutate(`Self/Personal Record` = case_when(`Self/Personal Record` == TRUE ~ 1, 
-                                            `Self/Personal Record` == FALSE ~ 0)) %>%
-  mutate(`Opponent/Opponent's Record` = case_when(`Opponent/Opponent's Record` == TRUE ~ 1, 
-                                                  `Opponent/Opponent's Record` == FALSE ~ 0)) %>%
-  select(Fear, Legislation, `Self/Personal Record`, `Opponent/Opponent's Record`, claimant_party) %>%
+         `Self/Personal Record` == FALSE ~ 0)) %>%
+  mutate(`Opponent/Opponent's Record` = 
+          case_when(`Opponent/Opponent's Record` == TRUE ~ 1, 
+         `Opponent/Opponent's Record` == FALSE ~ 0)) %>%
+  select(Fear,
+         Legislation,
+         `Self/Personal Record`,
+         `Opponent/Opponent's Record`,
+         claimant_party) %>%
   filter(!is.na(Fear)) 
 
 macro_tibble <- binarymacro %>%
   group_by(claimant_party) %>%
-  summarize(Fear = sum(Fear), Legislation = sum(Legislation), "Self/Personal Record" = sum(`Self/Personal Record`), "Opponent/Opponent's Record" = sum(`Opponent/Opponent's Record`))
+  summarize(Fear = sum(Fear),
+            Legislation = sum(Legislation),
+            `Self/Personal Record` = sum(`Self/Personal Record`),
+            `Opponent/Opponent's Record` = sum(`Opponent/Opponent's Record`))
 
 macro_tibble <- t(macro_tibble)
 
-macro_tibble %>% kable()
+macro_tibble <- janitor::row_to_names(macro_tibble, 1) 
+
+macro_tibble <- tibble(macro_tibble)
+
+macro_tibble <- macro_tibble %>% 
+  #rowwise() %>%
+  #mutate(Total = sum(c_across(Democratic:Republican)))
+#macro_tibble %>% 
+ # kable(caption = "Macro Subject Counts by Party")
 ```
 
-```{r}
-pf_mega %>% colnames()
-
+```{r subject tag table micro, message= FALSE, warning= FALSE, echo= FALSE }
 binarymicro <- pf_mega %>%
   mutate(`National and State Macroeconomic Issues` = 
-           case_when(`National and State Macroeconomic Issues` == TRUE ~ 1,
-                    `National and State Macroeconomic Issues` == FALSE ~ 0)) %>%
+          case_when(`National and State Macroeconomic Issues` == TRUE ~ 1,
+          `National and State Macroeconomic Issues` == FALSE ~ 0)) %>%
   mutate(`Economic Well-Being and Domestic Commerce` = 
-           case_when(`Economic Well-Being and Domestic Commerce` == TRUE ~ 1,
-          `Economic Well-Being and Domestic Commerce` == FALSE ~ 0)) %>%
+          case_when(`Economic Well-Being and Domestic Commerce` == TRUE ~ 1,
+         `Economic Well-Being and Domestic Commerce` == FALSE ~ 0)) %>%
    mutate(`Labor and Employment` = case_when(`Labor and Employment` == TRUE ~ 1,
-           `Labor and Employment` == FALSE ~ 0)) %>%
+          `Labor and Employment` == FALSE ~ 0)) %>%
    mutate(`Foreign Trade` = case_when(`Foreign Trade` == TRUE ~ 1,
           `Foreign Trade` == FALSE ~ 0)) %>%
    mutate(`Taxes` = case_when(`Taxes` == TRUE ~ 1,
           `Taxes` == FALSE ~ 0)) %>%
    mutate(`Civil Rights, Minority Issues, and Civil Liberties` = 
-        case_when(`Civil Rights, Minority Issues, and Civil Liberties` == TRUE ~ 1,
-        `Civil Rights, Minority Issues, and Civil Liberties` == FALSE ~ 0)) %>%
+          case_when(`Civil Rights, Minority Issues, and Civil Liberties` == TRUE ~ 1,
+          `Civil Rights, Minority Issues, and Civil Liberties` == FALSE ~ 0)) %>%
    mutate(`Immigration and Refugee Issues` = 
           case_when(`Immigration and Refugee Issues` == TRUE ~ 1,
           `Immigration and Refugee Issues` == FALSE ~ 0)) %>%
    mutate(`LGBTQ` = case_when(`LGBTQ` == TRUE ~ 1,
           `LGBTQ` == FALSE ~ 0)) %>% 
-  mutate(`Race` = case_when(`Race` == TRUE ~ 1,
+   mutate(`Race` = case_when(`Race` == TRUE ~ 1,
           `Race` == FALSE ~ 0)) %>%
    mutate(`Religion` = case_when(`Religion` == TRUE ~ 1,
           `Religion` == FALSE ~ 0)) %>%
@@ -144,44 +159,48 @@ binarymicro <- pf_mega %>%
           `Social Welfare` == FALSE ~ 0)) %>%
    mutate(`Education` = case_when(`Education` == TRUE ~ 1,
           `Education` == FALSE ~ 0)) %>%
-   mutate(Abortion = case_when(Abortion == TRUE ~ 1,
-          Abortion == FALSE ~ 0)) %>%
+   mutate(`Abortion` = case_when(`Abortion` == TRUE ~ 1,
+          `Abortion` == FALSE ~ 0)) %>%
    mutate(`Healthcare` = case_when(`Healthcare` == TRUE ~ 1,
           `Healthcare` == FALSE ~ 0)) %>%
    mutate(`Government Operations` = case_when(`Government Operations` == TRUE ~ 1,
           `Government Operations` == FALSE ~ 0)) %>%
    mutate(`Defense/Military` = case_when(`Defense/Military` == TRUE ~ 1,
           `Defense/Military` == FALSE ~ 0)) %>%
-   mutate(`International_affairs and Foreign Aid` = case_when(`International_affairs and Foreign Aid` == TRUE ~ 1,
+   mutate(`International_affairs and Foreign Aid` = 
+           case_when(`International_affairs and Foreign Aid` == TRUE ~ 1,
           `International_affairs and Foreign Aid` == FALSE ~ 0)) %>%
    mutate(`Voting/Elections` = case_when(`Voting/Elections` == TRUE ~ 1,
           `Voting/Elections` == FALSE ~ 0)) %>%
    mutate(`Agriculture` = case_when(`Agriculture` == TRUE ~ 1,
           `Agriculture` == FALSE ~ 0)) %>%
-     mutate(`Environment` = case_when(`Environment` == TRUE ~ 1,
+   mutate(`Environment` = case_when(`Environment` == TRUE ~ 1,
           `Environment` == FALSE ~ 0)) %>%
-     mutate(`Energy` = case_when(`Energy` == TRUE ~ 1,
+   mutate(`Energy` = case_when(`Energy` == TRUE ~ 1,
           `Energy` == FALSE ~ 0)) %>%
-     mutate(`Transportation` = case_when(`Transportation` == TRUE ~ 1,
+   mutate(`Transportation` = case_when(`Transportation` == TRUE ~ 1,
           `Transportation` == FALSE ~ 0)) %>%
-     mutate(`Community Development and Housing` = case_when(`Community Development and Housing` == TRUE ~ 1,
+   mutate(`Community Development and Housing` = 
+           case_when(`Community Development and Housing` == TRUE ~ 1,
           `Community Development and Housing` == FALSE ~ 0)) %>%
-     mutate(`Technology Science Space` = case_when(`Technology Science Space` == TRUE ~ 1,
+   mutate(`Technology Science Space` = 
+           case_when(`Technology Science Space` == TRUE ~ 1,
           `Technology Science Space` == FALSE ~ 0)) %>%
-     mutate(`Media and Communications` = case_when(`Media and Communications` == TRUE ~ 1,
+   mutate(`Media and Communications` = 
+           case_when(`Media and Communications` == TRUE ~ 1,
           `Media and Communications` == FALSE ~ 0)) %>%
-     mutate(`Law and Crime and Policing` = case_when(`Law and Crime and Policing` == TRUE ~ 1,
+   mutate(`Law and Crime and Policing` = 
+           case_when(`Law and Crime and Policing` == TRUE ~ 1,
           `Law and Crime and Policing` == FALSE ~ 0)) %>%
-     mutate(`Terrorism` = case_when(`Terrorism` == TRUE ~ 1,
+   mutate(`Terrorism` = case_when(`Terrorism` == TRUE ~ 1,
           `Terrorism` == FALSE ~ 0)) %>%
-     mutate(`Guns` = case_when(`Guns` == TRUE ~ 1,
+   mutate(`Guns` = case_when(`Guns` == TRUE ~ 1,
           `Guns` == FALSE ~ 0)) %>%
-     mutate(`History` = case_when(`History` == TRUE ~ 1,
+   mutate(`History` = case_when(`History` == TRUE ~ 1,
           `History` == FALSE ~ 0)) %>%
-     mutate(`Record/Candidate Biography/ Campaigns and Personal Behavior` = 
-              case_when(`Record/Candidate Biography/ Campaigns and Personal Behavior` == TRUE ~ 1,
+   mutate(`Record/Candidate Biography/ Campaigns and Personal Behavior` = 
+      case_when(`Record/Candidate Biography/ Campaigns and Personal Behavior` == TRUE ~ 1,
           `Record/Candidate Biography/ Campaigns and Personal Behavior` == FALSE ~ 0)) %>%
-  
   select(`National and State Macroeconomic Issues`,
          `Economic Well-Being and Domestic Commerce`,
          `Labor and Employment`,
@@ -214,16 +233,19 @@ binarymicro <- pf_mega %>%
          `Guns`,
          `History`,
          `Record/Candidate Biography/ Campaigns and Personal Behavior`,
-         claimant_party) %>%
+          claimant_party) %>%
   filter(!is.na(`Foreign Trade`)) 
 
 micro_tibble <- binarymicro %>%
   group_by(claimant_party) %>%
-  summarize( `National and State Macroeconomic Issues` = sum(`National and State Macroeconomic Issues`),
-             `Economic Well-Being and Domestic Commerce` = sum(`Economic Well-Being and Domestic Commerce`),
+  summarize( `National and State Macroeconomic Issues` = 
+              sum(`National and State Macroeconomic Issues`),
+             `Economic Well-Being and Domestic Commerce` = 
+              sum(`Economic Well-Being and Domestic Commerce`),
              `Labor and Employment` = sum(`Labor and Employment`),
              `Foreign Trade` = sum(`Foreign Trade`),
-             `Civil Rights, Minority Issues, and Civil Liberties` = sum(`Civil Rights, Minority Issues, and Civil Liberties`),
+             `Civil Rights, Minority Issues, and Civil Liberties` =
+              sum(`Civil Rights, Minority Issues, and Civil Liberties`),
              `Immigration and Refugee Issues` = sum(`Immigration and Refugee Issues`),
              `LGBTQ` = sum(`LGBTQ`),
              `Race` = sum(`Race`),
@@ -236,14 +258,16 @@ micro_tibble <- binarymicro %>%
              `Healthcare` = sum(`Healthcare`),
              `Government Operations` = sum(`Government Operations`),
              `Defense/Military` = sum(`Defense/Military`),
-             `International_affairs and Foreign Aid` = sum(`International_affairs and Foreign Aid`),
+             `International_affairs and Foreign Aid` =
+              sum(`International_affairs and Foreign Aid`),
              `Voting/Elections` = sum(`Voting/Elections`),
              `Agriculture` = sum(`Agriculture`),
              `Environment` = sum(`Environment`),
              `Energy` = sum(`Energy`),
              `Transportation` = sum(`Transportation`),
               `Taxes` = sum(`Taxes`),
-             `Community Development and Housing` = sum(`Community Development and Housing`),
+             `Community Development and Housing` = 
+              sum(`Community Development and Housing`),
              `Technology Science Space` = sum(`Technology Science Space`),
              `Media and Communications` = sum(`Media and Communications`),
              `Law and Crime and Policing` = sum(`Law and Crime and Policing`),
@@ -251,17 +275,19 @@ micro_tibble <- binarymicro %>%
              `Guns` = sum(`Guns`),
              `History` = sum(`History`),
              `Record/Candidate Biography/ Campaigns and Personal Behavior` =
-               sum(`Record/Candidate Biography/ Campaigns and Personal Behavior`))
+              sum(`Record/Candidate Biography/ Campaigns and Personal Behavior`))
 
 
 micro_tibble <- t(micro_tibble)
+micro_tibble <- janitor::row_to_names(micro_tibble, 1)
 
+micro_tibble <- micro_tibble %>% 
+  rowwise() %>%
+  mutate(Total = sum(c_across(Democratic:Republican)))
 micro_tibble %>% kable()
 ```
 
 
 
-```{r}
-microtibble
-```
+
 
