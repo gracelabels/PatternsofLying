@@ -54,26 +54,39 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
 ```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
          geom_bar(position = "fill") +
-  labs(title = "Percentage Rating by Party",
+  labs(title = "Proportion of Rating by Party",
        x = "Claims by Party",
-       fill = "Rating", y = "Percentage") +
+       fill = "Rating", y = "Proportion") +
   scale_fill_manual(values = truenesscolors)
 
 dems <- pf_mega %>%
   filter(claimant_party == "Democratic")
-dems %>%
+dems <- dems %>%
   group_by(textualRating) %>%
-  count() %>%
-  summarize(prop = n/nrow(dems)) %>%
-  kable(digits = 4, caption = "Proportion of Democratic Truthfulness")
+  summarize(count = n()) %>%
+  mutate(Democratic = 100*(count/nrow(dems))) %>%
+  select(textualRating, Democratic)
 
 reps <- pf_mega %>%
   filter(claimant_party == "Republican")
-reps %>%
+reps <- reps %>%
   group_by(textualRating) %>%
-  count() %>%
-  summarize(prop = n/nrow(dems)) %>%
-  kable(digits = 4, caption = "Proportion of Republican Truthfulness")
+  summarize(count = n()) %>%
+  mutate(Republican = 100*(count/nrow(reps))) %>%
+  select(textualRating, Republican)
+
+total <- pf_mega %>%
+  group_by(textualRating) %>%
+  summarize(count = n()) %>%
+  mutate(Total = 100*(count/nrow(pf_mega))) %>%
+  select(textualRating, Total)
+
+textRatingcounts <- full_join(dems, reps, by = "textualRating") %>%
+  full_join(total, by = "textualRating")
+
+textRatingcounts %>%
+  select(textualRating, Democratic, Republican, Total) %>%
+  kable(digits = 1, caption = "Percentage of Claims by Textual Rating")
 ```
 
 ```{r pivot table,  warning=FALSE, message=FALSE, echo = FALSE}
@@ -120,9 +133,7 @@ macro_tibble <- base::data.frame(macro_tibble)
 
  macro_tibble <- macro_tibble %>% 
   mutate(Democratic = as.numeric(Democratic),
-         Republican = as.numeric(Republican))
-
-macro_tibble <- macro_tibble %>%
+         Republican = as.numeric(Republican)) %>%
    mutate(Total = rowSums(across(where(is.numeric))))
 macro_tibble %>% kable()
 
@@ -288,9 +299,7 @@ micro_tibble <- base::data.frame(micro_tibble)
 
 micro_tibble <- micro_tibble %>% 
   mutate(Democratic = as.numeric(Democratic),
-         Republican = as.numeric(Republican))
-
-micro_tibble <- micro_tibble %>%
+         Republican = as.numeric(Republican)) %>%
    mutate(Total = rowSums(across(where(is.numeric))))
 
 micro_tibble %>% kable()
