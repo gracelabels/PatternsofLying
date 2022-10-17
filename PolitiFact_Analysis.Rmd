@@ -118,11 +118,11 @@ macro_tibble <- janitor::row_to_names(macro_tibble, 1)
 
 macro_tibble <- tibble(macro_tibble)
 
-macro_tibble <- macro_tibble %>% 
-  #rowwise() %>%
-  #mutate(Total = sum(c_across(Democratic:Republican)))
-#macro_tibble %>% 
- # kable(caption = "Macro Subject Counts by Party")
+# macro_tibble <- macro_tibble %>% 
+#   rowwise() %>%
+#   mutate(Total = sum(c_across(Democratic:Republican)))
+# macro_tibble %>%
+#   kable(caption = "Macro Subject Counts by Party")
 ```
 
 ```{r subject tag table micro, message= FALSE, warning= FALSE, echo= FALSE }
@@ -279,12 +279,14 @@ micro_tibble <- binarymicro %>%
 
 
 micro_tibble <- t(micro_tibble)
+
 micro_tibble <- janitor::row_to_names(micro_tibble, 1)
 
-micro_tibble <- micro_tibble %>% 
-  rowwise() %>%
-  mutate(Total = sum(c_across(Democratic:Republican)))
-micro_tibble %>% kable()
+# micro_tibble <- micro_tibble %>% 
+#   rowwise() %>%
+#   mutate(Total = sum(c_across(Democratic:Republican)))
+# micro_tibble %>% 
+#   kable()
 ```
 
 
