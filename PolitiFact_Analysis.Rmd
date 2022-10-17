@@ -35,19 +35,19 @@ pf_mega$`Government Operations`[pf_mega$...1 == "3990"] <- "TRUE"
 
 ```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
- geom_bar(position = "fill") +
-  scale_fill_manual( values = c("blue2", "red3")) +
-  labs(title = "Ratings Proportions by Party",
-       x = "Rating",
-       y = "Proportion",
-       fill = "Party of Claimant")
-
-ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
  geom_bar() +
   scale_fill_manual(values = c("blue2", "red3")) +
   labs(title = "Ratings Counts by Party",
        x = "Rating",
        y = "Total Claims",
+       fill = "Party of Claimant")
+
+ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
+ geom_bar(position = "fill") +
+  scale_fill_manual( values = c("blue2", "red3")) +
+  labs(title = "Ratings Proportions by Party",
+       x = "Rating",
+       y = "Proportion",
        fill = "Party of Claimant")
 ```
 
@@ -58,7 +58,21 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
        x = "Claims by Party",
        fill = "Rating", y = "Proportion") +
   scale_fill_manual(values = truenesscolors)
+```
+```{r pivot table for textual rating,  warning=FALSE, message=FALSE, echo = FALSE}
+pf_mega %>%
+  count(claimant_party, textualRating) %>%
+    pivot_wider(id_cols = c(textualRating),
+              names_from = claimant_party,
+              values_from = n,
+              values_fill = 0) %>%
+  mutate(Democratic = as.numeric(Democratic),
+         Republican = as.numeric(Republican)) %>%
+   mutate(Total = rowSums(across(where(is.numeric)))) %>%
+  kable(caption = "Fact-checks per rating by Party")
+```
 
+```{r percentage severity table, message=FALSE, warning=FALSE, echo=FALSE}
 dems <- pf_mega %>%
   filter(claimant_party == "Democratic")
 dems <- dems %>%
@@ -89,16 +103,6 @@ textRatingcounts %>%
   kable(digits = 1, caption = "Percentage of Claims by Textual Rating")
 ```
 
-```{r pivot table,  warning=FALSE, message=FALSE, echo = FALSE}
-pf_mega %>%
-  count(claimant_party, textualRating) %>%
-    pivot_wider(id_cols = c(claimant_party),
-              names_from = textualRating,
-              values_from = n,
-              values_fill = 0) %>%
-  kable(caption = "Fact-checks per rating by Party")
-
-```
 
 ```{r, subject tag table macro,  warning=FALSE, message=FALSE, echo = FALSE}
 binarymacro <- pf_mega %>%
@@ -135,7 +139,7 @@ macro_tibble <- base::data.frame(macro_tibble)
   mutate(Democratic = as.numeric(Democratic),
          Republican = as.numeric(Republican)) %>%
    mutate(Total = rowSums(across(where(is.numeric))))
-macro_tibble %>% kable()
+macro_tibble %>% kable(caption = "Macro Subject Tag Counts")
 
 ```
 
@@ -302,7 +306,7 @@ micro_tibble <- micro_tibble %>%
          Republican = as.numeric(Republican)) %>%
    mutate(Total = rowSums(across(where(is.numeric))))
 
-micro_tibble %>% kable()
+micro_tibble %>% kable(caption = "Micro Subject Tag Counts")
 ```
 
 
