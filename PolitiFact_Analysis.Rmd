@@ -257,7 +257,7 @@ binarymicro <- pf_mega %>%
           claimant_party) %>%
   filter(!is.na(`Foreign Trade`)) 
 
-micro_tibble <- binarymicro %>%
+micro_tibble_base <- binarymicro %>%
   group_by(claimant_party) %>%
   summarize( `National and State Macroeconomic Issues` = 
               sum(`National and State Macroeconomic Issues`),
@@ -298,19 +298,64 @@ micro_tibble <- binarymicro %>%
              `Record/Candidate Biography/ Campaigns and Personal Behavior` =
               sum(`Record/Candidate Biography/ Campaigns and Personal Behavior`))
 
-micro_tibble <- t(micro_tibble)
+micro_tibble_base <- t(micro_tibble_base)
 
-micro_tibble <- janitor::row_to_names(micro_tibble, 1) 
+micro_tibble_base <- janitor::row_to_names(micro_tibble_base, 1) 
 
-micro_tibble <- base::data.frame(micro_tibble)
-
-micro_tibble <- micro_tibble %>% 
+micro_tibble_base <- base::data.frame(micro_tibble_base) %>% 
   mutate(Democratic = as.numeric(Democratic),
-         Republican = as.numeric(Republican)) %>%
-   mutate(Total = rowSums(across(where(is.numeric))))
+         Republican = as.numeric(Republican)) 
 
-micro_tibble %>% kable(caption = "Micro Subject Tag Counts")
+micro_tibble_base$MicroTag <- row.names(micro_tibble_base)
+
+microreps <- micro_tibble_base %>%
+  select(-Democratic) %>%
+  mutate(Republican = as.numeric(Republican))
+microdems <- micro_tibble_base %>%
+  select(-Republican) %>%
+  mutate(Democratic = as.numeric(Democratic))
+
+falseRep <- pf_mega %>%
+  filter(claimant_party == "Republican") %>%
+  filter(textualRating == "Pants on Fire" |
+           textualRating == "False" |
+           textualRating == "Mostly False") %>%
+  count()
+
+falseDem <- pf_mega %>%
+  filter(claimant_party == "Democratic") %>%
+  filter(textualRating == "Pants on Fire" |
+           textualRating == "False" |
+           textualRating == "Mostly False") %>%
+  count()
+
+microreps$RepublicanPercentage <- 100*(microreps$Republican/as.numeric(falseRep))
+microdems$DemocraticPercentage <- 100*(microdems$Democratic/as.numeric(falseDem))
+
+micro_tibble <- full_join(micro_tibble_base, microdems, by = c("Democratic", "MicroTag")) %>%
+  full_join(microreps, by = c("Republican", "MicroTag"))
+
+micro_tibble$TotalCount <- micro_tibble$Democratic + micro_tibble$Republican
+micro_tibble$PercentDisparity <- 
+  (micro_tibble$RepublicanPercentage - micro_tibble$DemocraticPercentage)
+
+micro_tibble <- micro_tibble[, c("MicroTag", 
+                                 "Democratic", 
+                                 "Republican", 
+                                 "TotalCount", 
+                                 "DemocraticPercentage", 
+                                 "RepublicanPercentage", 
+                                 "PercentDisparity")]
+
+micro_tibble %>%
+  kable(caption = "Microtag Subject Counts and Percentages by Party",
+        digits = 2)
 ```
+
+```{r}
+
+```
+
 
 
 
