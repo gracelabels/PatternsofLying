@@ -50,15 +50,6 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
        y = "Proportion",
        fill = "Party of Claimant")
 ```
-
-```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
-ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
-         geom_bar(position = "fill") +
-  labs(title = "Proportion of Rating by Party",
-       x = "Claims by Party",
-       fill = "Rating", y = "Proportion") +
-  scale_fill_manual(values = truenesscolors)
-```
 ```{r pivot table for textual rating,  warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega %>%
   count(claimant_party, textualRating) %>%
@@ -71,6 +62,18 @@ pf_mega %>%
    mutate(Total = rowSums(across(where(is.numeric)))) %>%
   kable(caption = "Fact-checks per rating by Party")
 ```
+
+```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
+ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
+         geom_bar(position = "fill") +
+  labs(title = "Proportion of Rating by Party",
+       x = "Claims by Party",
+       fill = "Rating", y = "Proportion") +
+  scale_fill_manual(values = truenesscolors)
+```
+
+
+
 
 ```{r percentage severity table, message=FALSE, warning=FALSE, echo=FALSE}
 dems <- pf_mega %>%
