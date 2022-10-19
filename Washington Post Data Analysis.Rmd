@@ -24,11 +24,10 @@ Mostly false, Spins or Twists facts, Exaggerated --> Three Pinocchios
 Half true, Not the whole story, Depends on the math, Cherry-picked number --> Two Pinocchios
 True, Correct, Accurate --> Geppetto Checkmark
 
-For the more unclear categories, we sent 61 claims for individual review, these were manually reassigned a textual rating according to his instructions. For the purpose of concision, we removed claims that were tagged with uncommon anomaly ratings (1-2 observations). We began this process with 60 textual ratings, having the goal of eventually reducing down to the 5 rating ranking system.
+For the more unclear categories, we sent 61 claims for individual review. 57 of these were manually reassigned a textual rating according to his instructions, 4 were removed. For the purpose of concision, we removed claims that were tagged with uncommon anomaly ratings (1-2 observations). We began this process with 60 textual ratings, having the goal of eventually reducing down to the 5 rating ranking system.
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v8_wapo <- read.csv("v8wapo-cleantextrating.csv")
-
 #reassigning glennclaims
 
 v8_wapo$textualRating[v8_wapo$...1 == "14615"] <- "Two Pinocchios" 
@@ -42,57 +41,64 @@ v8_wapo$textualRating[v8_wapo$...1 == "14241"] <- "Two Pinocchios"
 v8_wapo$textualRating[v8_wapo$...1 == "13767"] <- "Two Pinocchios" 
 v8_wapo$textualRating[v8_wapo$...1 == "14596"] <- "Two Pinocchios"
 v8_wapo$textualRating[v8_wapo$...1 == "14418"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14285"] <- ""
-v8_wapo$textualRating[v8_wapo$...1 == "13484"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14105"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13781"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13878"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14630"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "3214"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14264"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13957"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14480"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14552"] <- ""
-v8_wapo$textualRating[v8_wapo$...1 == "14481"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14201"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14662"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13696"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14466"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13887"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14339"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13448"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14693"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13940"] <- ""
-v8_wapo$textualRating[v8_wapo$...1 == "14131"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14534"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13540"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14116"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13628"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13894"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13420"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13403"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13370"] <- ""
-v8_wapo$textualRating[v8_wapo$...1 == "13371"] <- ""
-v8_wapo$textualRating[v8_wapo$...1 == "13987"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13952"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14441"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13410"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13367"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13369"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13834"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14403"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14576"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13445"] <- ""
-v8_wapo$textualRating[v8_wapo$...1 == "13399"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "13873"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14009"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14628"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14588"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14540"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14023"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14337"] <- "" 
-v8_wapo$textualRating[v8_wapo$...1 == "14488"] <- ""
-v8_wapo$textualRating[v8_wapo$...1 == "13453"] <- "" 
+v8_wapo$textualRating[v8_wapo$...1 == "14285"] <- "Three Pinocchios"
+v8_wapo$textualRating[v8_wapo$...1 == "13484"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "14105"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13781"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13878"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14630"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "3214"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13957"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14480"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14481"] <- "Three Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14201"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "14662"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "13696"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "13887"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14339"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "13448"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14693"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13940"] <- "One Pinocchio"
+v8_wapo$textualRating[v8_wapo$...1 == "14131"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "14534"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "13540"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14116"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "13628"] <- "Three Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13894"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13420"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13403"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13370"] <- "Two Pinocchios"
+v8_wapo$textualRating[v8_wapo$...1 == "13371"] <- "One Pinocchio"
+v8_wapo$textualRating[v8_wapo$...1 == "13987"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13952"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "14441"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13410"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13367"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13369"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14403"] <- "One Pinocchio" 
+v8_wapo$textualRating[v8_wapo$...1 == "14576"] <- "Four Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13445"] <- "Three Pinocchios"
+v8_wapo$textualRating[v8_wapo$...1 == "13399"] <- "Four Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "13873"] <- "Four Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14009"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14628"] <- "Three Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14588"] <- "Three Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14540"] <- "Three Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14023"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14337"] <- "Two Pinocchios" 
+v8_wapo$textualRating[v8_wapo$...1 == "14488"] <- "Three Pinocchios"
+v8_wapo$textualRating[v8_wapo$...1 == "13453"] <- "Three Pinocchios"
+
+v8_wapo %>%
+  group_by(textualRating) %>%
+  count() %>%
+  arrange(desc(n))
+
+v8_wapo <- v8_wapo %>%
+  filter(...1 != "13834", 
+         ...1 != "14466", 
+         ...1 != "14552", 
+         ...1 != "14264")
 ```
 
 
@@ -103,13 +109,7 @@ v8_wapo_cleantextRating <- v8_wapo %>%
            textualRating == "Two Pinocchios" |
            textualRating == "Three Pinocchios" |
            textualRating == "Four Pinocchios" |
-           textualRating == "Geppetto Checkmark" |
-           textualRating == "Needs context" |
-           textualRating == "Disputed" |
-           textualRating == "Misleading" |
-           textualRating == "No evidence" |
-           textualRating == "Lacks evidence" |
-           textualRating == "Study in Dispute")
+           textualRating == "Geppetto Checkmark")
 
 
 v8_wapo_cleantextRating$textualRating <- factor(v8_wapo_cleantextRating$textualRating, 
@@ -117,13 +117,7 @@ v8_wapo_cleantextRating$textualRating <- factor(v8_wapo_cleantextRating$textualR
                                          "One Pinocchio", 
                                          "Two Pinocchios", 
                                          "Three Pinocchios", 
-                                         "Four Pinocchios", 
-                                         "Disputed",
-                                         "Study in Dispute",
-                                         "Misleading",
-                                         "Needs context",
-                                         "Lacks evidence",
-                                         "No evidence"))
+                                         "Four Pinocchios"))
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
