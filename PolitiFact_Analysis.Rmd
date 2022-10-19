@@ -31,7 +31,14 @@ pf_mega$textualRating <- factor(pf_mega$textualRating,
 
 ```{r fix tagging error,  warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega$`Government Operations`[pf_mega$...1 == "3990"] <- "TRUE"
+#This was a mistagged claim that we manually changed. 
 ```
+
+Having cleaning, sorted, and tagged all of our data, we conducted some initial data analysis to answer some of our research questions.
+
+### Which Party Lies More? 
+
+Our first research question was relatively simple. While it is an impossible question to answer definitively, we decided to look at each rating tier and see the breakdown by party to get a sense of which party receives more false ratings.
 
 ```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
@@ -41,7 +48,12 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
        x = "Rating",
        y = "Total Claims",
        fill = "Party of Claimant")
+```
 
+\
+To account for the different samples sizes, we also viewed the data proportionally. Here we can see that Republican claimants are responsible for over 76.9% of the Pants on Fire claims, 66% of False claims, and 55.2% of Mostly False claims. Democrats have a majority of truthful claims responsible for 57% of the Half True claims, 67.6% of the Mostly True claims, and 66.7% of True claims.
+
+```{r plot of party counts with fill,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
  geom_bar(position = "fill") +
   scale_fill_manual( values = c("blue2", "red3")) +
@@ -49,7 +61,11 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
        x = "Rating",
        y = "Proportion",
        fill = "Party of Claimant")
+
 ```
+
+Below are the counts of claims by party and textual Rating
+
 ```{r pivot table for textual rating,  warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega %>%
   count(claimant_party, textualRating) %>%
@@ -63,6 +79,8 @@ pf_mega %>%
   kable(caption = "Fact-checks per rating by Party")
 ```
 
+Severity within Party \
+
 ```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
          geom_bar(position = "fill") +
@@ -70,6 +88,7 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
        x = "Claims by Party",
        fill = "Rating", y = "Proportion") +
   scale_fill_manual(values = truenesscolors)
+
 ```
 
 ```{r percentage severity table, message=FALSE, warning=FALSE, echo=FALSE}
@@ -102,7 +121,6 @@ textRatingcounts %>%
   select(textualRating, Democratic, Republican, Total) %>%
   kable(digits = 1, caption = "Percentage of Claims by Textual Rating")
 ```
-
 
 ```{r, subject tag table macro,  warning=FALSE, message=FALSE, echo = FALSE}
 binarymacro <- pf_mega %>%
