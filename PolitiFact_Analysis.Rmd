@@ -6,7 +6,7 @@ output:
   pdf_document: default
   html_document: default
 editor_options:
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
@@ -72,9 +72,6 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
   scale_fill_manual(values = truenesscolors)
 ```
 
-
-
-
 ```{r percentage severity table, message=FALSE, warning=FALSE, echo=FALSE}
 dems <- pf_mega %>%
   filter(claimant_party == "Democratic")
@@ -118,11 +115,6 @@ binarymacro <- pf_mega %>%
   mutate(`Opponent/Opponent's Record` = 
           case_when(`Opponent/Opponent's Record` == TRUE ~ 1, 
          `Opponent/Opponent's Record` == FALSE ~ 0)) %>%
-  select(Fear,
-         Legislation,
-         `Self/Personal Record`,
-         `Opponent/Opponent's Record`,
-         claimant_party) %>%
   filter(!is.na(Fear)) 
 
 macro_tibble <- binarymacro %>%
@@ -138,11 +130,13 @@ macro_tibble <- janitor::row_to_names(macro_tibble, 1)
 
 macro_tibble <- base::data.frame(macro_tibble)
 
- macro_tibble <- macro_tibble %>% 
+macro_tibble <- macro_tibble %>% 
   mutate(Democratic = as.numeric(Democratic),
          Republican = as.numeric(Republican)) %>%
    mutate(Total = rowSums(across(where(is.numeric))))
-macro_tibble %>% kable(caption = "Macro Subject Tag Counts")
+
+macro_tibble %>% 
+  kable(caption = "Macro Subject Tag Counts")
 
 ```
 
@@ -222,39 +216,6 @@ binarymicro <- pf_mega %>%
    mutate(`Record/Candidate Biography/ Campaigns and Personal Behavior` = 
       case_when(`Record/Candidate Biography/ Campaigns and Personal Behavior` == TRUE ~ 1,
           `Record/Candidate Biography/ Campaigns and Personal Behavior` == FALSE ~ 0)) %>%
-  select(`National and State Macroeconomic Issues`,
-         `Economic Well-Being and Domestic Commerce`,
-         `Labor and Employment`,
-         `Foreign Trade`,
-         `Civil Rights, Minority Issues, and Civil Liberties`,
-         `Immigration and Refugee Issues`,
-         `LGBTQ`,
-         `Race`,
-         `Taxes`,
-         `Religion`,
-         `Women`,
-         `Health (non-care)`,
-         `Social Welfare`,
-         `Education`,
-         `Abortion`,
-         `Healthcare`,
-         `Government Operations`,
-         `Defense/Military`,
-         `International_affairs and Foreign Aid`,
-         `Voting/Elections`,
-         `Agriculture`,
-         `Environment`,
-         `Energy`,
-         `Transportation`,
-         `Community Development and Housing`,
-         `Technology Science Space`,
-         `Media and Communications`,
-         `Law and Crime and Policing`,
-         `Terrorism`,
-         `Guns`,
-         `History`,
-         `Record/Candidate Biography/ Campaigns and Personal Behavior`,
-          claimant_party) %>%
   filter(!is.na(`Foreign Trade`)) 
 
 micro_tibble_base <- binarymicro %>%
@@ -352,13 +313,3 @@ micro_tibble %>%
   kable(caption = "Microtag Subject Counts and Percentages by Party",
         digits = 2)
 ```
-
-```{r}
-
-```
-
-
-
-
-
-
