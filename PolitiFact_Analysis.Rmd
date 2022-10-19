@@ -348,6 +348,7 @@ micro_tibble <- micro_tibble[, c("MicroTag",
                                  "PercentDisparity")]
 
 micro_tibble %>%
+  arrange(PercentDisparity) %>%
   kable(caption = "Microtag Subject Counts and Percentages by Party",
         digits = 2)
 ```
