@@ -36,7 +36,7 @@ pf_mega$`Government Operations`[pf_mega$...1 == "3990"] <- "TRUE"
 
 Having cleaning, sorted, and tagged all of our data, we conducted some initial data analysis to answer some of our research questions.
 
-### Which Party Lies More? 
+### Which Party Lies More?
 
 Our first research question was relatively simple. While it is an impossible question to answer definitively, we decided to look at each rating tier and see the breakdown by party to get a sense of which party receives more false ratings.
 
@@ -79,7 +79,7 @@ pf_mega %>%
   kable(caption = "Fact-checks per rating by Party")
 ```
 
-Severity within Party \
+Severity within Party\
 
 ```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
