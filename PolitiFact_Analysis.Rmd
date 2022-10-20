@@ -38,7 +38,20 @@ Having cleaning, sorted, and tagged all of our data, we conducted some initial d
 
 ### Which Party Lies More?
 
-Our first research question was relatively simple. While it is an impossible question to answer definitively, we decided to look at each rating tier and see the breakdown by party to get a sense of which party receives more false ratings.
+Our first research question was relatively simple. Which party lies more? While it is an impossible question to answer definitively, we decided to look at each rating tier and see the breakdown by party to get a sense of which party receives more false ratings.
+
+```{r pivot table for textual rating,  warning=FALSE, message=FALSE, echo = FALSE}
+pf_mega %>%
+  count(claimant_party, textualRating) %>%
+    pivot_wider(id_cols = c(textualRating),
+              names_from = claimant_party,
+              values_from = n,
+              values_fill = 0) %>%
+  mutate(Democratic = as.numeric(Democratic),
+         Republican = as.numeric(Republican)) %>%
+   mutate(Total = rowSums(across(where(is.numeric)))) %>%
+  kable(caption = "Claims by Party Sorted by Rating")
+```
 
 ```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
@@ -50,7 +63,6 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
        fill = "Party of Claimant")
 ```
 
-\
 To account for the different samples sizes, we also viewed the data proportionally. Here we can see that Republican claimants are responsible for over 76.9% of the Pants on Fire claims, 66% of False claims, and 55.2% of Mostly False claims. Democrats have a majority of truthful claims responsible for 57% of the Half True claims, 67.6% of the Mostly True claims, and 66.7% of True claims.
 
 ```{r plot of party counts with fill,  warning=FALSE, message=FALSE, echo = FALSE}
@@ -64,22 +76,9 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
 
 ```
 
-Below are the counts of claims by party and textual Rating
+### Severity of Claims -- by Party
 
-```{r pivot table for textual rating,  warning=FALSE, message=FALSE, echo = FALSE}
-pf_mega %>%
-  count(claimant_party, textualRating) %>%
-    pivot_wider(id_cols = c(textualRating),
-              names_from = claimant_party,
-              values_from = n,
-              values_fill = 0) %>%
-  mutate(Democratic = as.numeric(Democratic),
-         Republican = as.numeric(Republican)) %>%
-   mutate(Total = rowSums(across(where(is.numeric)))) %>%
-  kable(caption = "Fact-checks per rating by Party")
-```
-
-Severity within Party\
+Our second research question was, does one party lie worse. For this, we looking within each party's claims and reviewed the distribution of ratings.
 
 ```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
@@ -90,6 +89,10 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
   scale_fill_manual(values = truenesscolors)
 
 ```
+
+Here we can see that 7.9% of all Republican claims are rated Pants on Fire as opposed to 2.2% of Democratic claims. 26.2 % and 22.6% of Republican claims are rated False and Mostly False respectively. 12.4% and 16.9% of Democratic claims are rated False and Mostly False.
+
+Democrats also have a greater proportion of their claims rated True and Mostly True. To see a full percentage breakdown, review the table below.
 
 ```{r percentage severity table, message=FALSE, warning=FALSE, echo=FALSE}
 dems <- pf_mega %>%
@@ -121,6 +124,12 @@ textRatingcounts %>%
   select(textualRating, Democratic, Republican, Total) %>%
   kable(digits = 1, caption = "Percentage of Claims by Textual Rating")
 ```
+
+### What do they Lie About? 
+
+Next we reviewed the distribution of our subject tags.
+
+Listed in our table below is the number of claims tagged with each macro tag, by party and in total. WRITE REST ABOUT OBSERVATIOSN
 
 ```{r, subject tag table macro,  warning=FALSE, message=FALSE, echo = FALSE}
 binarymacro <- pf_mega %>%
@@ -157,6 +166,8 @@ macro_tibble %>%
   kable(caption = "Macro Subject Tag Counts")
 
 ```
+
+We did the same with our micro tags. In addition to giving raw counts, we calculated what percentage o
 
 ```{r subject tag table micro, message= FALSE, warning= FALSE, echo= FALSE }
 binarymicro <- pf_mega %>%
