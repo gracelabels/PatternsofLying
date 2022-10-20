@@ -125,7 +125,7 @@ textRatingcounts %>%
   kable(digits = 1, caption = "Percentage of Claims by Textual Rating")
 ```
 
-### What do they Lie About? 
+### What do they Lie About?
 
 Next we reviewed the distribution of our subject tags.
 
