@@ -151,7 +151,8 @@ v8_wapo_cleantextRating %>%
   labs(title = "Rating Proportions by Party",
        x = "Rating",
        y = "Proportion",
-       fill = "Party of Claimant")
+       fill = "Party of Claimant") + 
+  theme(axis.text.x = element_text(size = 7))    
 
 v8_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
@@ -160,7 +161,8 @@ v8_wapo_cleantextRating %>%
   labs(title = "Rating Counts by Party",
        x = "Rating",
        y = "Counts",
-       fill = "Party of Claimant")
+       fill = "Party of Claimant") + 
+  theme(axis.text.x = element_text(size = 7))  
 ```
 
 By proportion of total claims alone, and keeping in mind the limitations of any conclusion due to sample size, it appears that Democrats are fact-checked on more truthful claims, whereas Republicans account for a higher share of the egregious falsehoods checked by the Washington Post.
