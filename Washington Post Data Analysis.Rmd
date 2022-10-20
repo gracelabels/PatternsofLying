@@ -89,11 +89,6 @@ v8_wapo$textualRating[v8_wapo$...1 == "14337"] <- "Two Pinocchios"
 v8_wapo$textualRating[v8_wapo$...1 == "14488"] <- "Three Pinocchios"
 v8_wapo$textualRating[v8_wapo$...1 == "13453"] <- "Three Pinocchios"
 
-v8_wapo %>%
-  group_by(textualRating) %>%
-  count() %>%
-  arrange(desc(n))
-
 v8_wapo <- v8_wapo %>%
   filter(...1 != "13834", 
          ...1 != "14466", 
@@ -103,7 +98,6 @@ v8_wapo <- v8_wapo %>%
 
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
-
 v8_wapo_cleantextRating <- v8_wapo %>%
   filter(textualRating == "One Pinocchio" |
            textualRating == "Two Pinocchios" |
@@ -111,8 +105,14 @@ v8_wapo_cleantextRating <- v8_wapo %>%
            textualRating == "Four Pinocchios" |
            textualRating == "Geppetto Checkmark")
 
+truenesscolors = c("#69B34C",
+                   "#FDE64B",
+                   "#FAB733",
+                   "#FF872C",
+                   "#FF0000")
 
-v8_wapo_cleantextRating$textualRating <- factor(v8_wapo_cleantextRating$textualRating, 
+v8_wapo_cleantextRating$textualRating <- 
+  factor(v8_wapo_cleantextRating$textualRating, 
                               levels = c("Geppetto Checkmark", 
                                          "One Pinocchio", 
                                          "Two Pinocchios", 
@@ -141,31 +141,36 @@ v8_wapo_cleantextRating %>%
   kable(caption = "Claim Counts by Party and Rating")
 ```
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
-v8_wapo_5scale <- v8_wapo_cleantextRating %>%
-  filter(textualRating == "One Pinocchio" |
-           textualRating == "Two Pinocchios" |
-           textualRating == "Three Pinocchios" |
-           textualRating == "Four Pinocchios" |
-           textualRating == "Geppetto Checkmark")
+Likely due to selection bias towards correcting falsehoods and/or an extremely high threshold of proof for truth, there are very few claims rated Geppetto Checkmark or One Pinocchio. As such, its hard to draw any significant conclusions from the limited data. The little information we have does appear to superficially indicate a higher ratio of Democratic truths to their Republican counterparts. There are dozens more datapoints under the Two, Three, and Four Pinocchios rating, both for Democratic and Republican politicians. By count, Democrat falsehoods exceed Republican's in the Two Pinocchios category, but they account for a lower proportion of claims rated Three and Four Pinocchios.
 
-v8_wapo_5scale %>%
+```{r, warning=FALSE, message=FALSE, echo = FALSE}
+v8_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
   geom_bar(position = "fill") +
-  scale_fill_manual( values = c("blue2", "red3")) +
+  scale_fill_manual(values = c("blue2", "red3")) +
   labs(title = "Rating Proportions by Party",
        x = "Rating",
        y = "Proportion",
        fill = "Party of Claimant")
 
-v8_wapo_5scale %>%
+v8_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
   geom_bar() +
-  scale_fill_manual( values = c("blue2", "red3")) +
+  scale_fill_manual(values = c("blue2", "red3")) +
   labs(title = "Rating Counts by Party",
        x = "Rating",
        y = "Counts",
        fill = "Party of Claimant")
 ```
 
+By proportion of total claims alone, and keeping in mind the limitations of any conclusion due to sample size, it appears that Democrats are fact-checked on more truthful claims, whereas Republicans account for a higher share of the egregious falsehoods checked by the Washington Post.
+
+```{r, warning=FALSE, message=FALSE, echo = FALSE}
+ggplot(v8_wapo_cleantextRating, aes(x = claimant_party, fill = textualRating)) +
+         geom_bar(position = "fill") +
+  labs(title = "Proportion of Rating by Party",
+       x = "Claims by Party",
+       fill = "Rating", y = "Proportion") +
+  scale_fill_manual(values = truenesscolors)
+```
 
