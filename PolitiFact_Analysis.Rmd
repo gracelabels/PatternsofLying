@@ -342,3 +342,58 @@ micro_tibble %>%
   kable(caption = "Microtag Subject Counts and Percentages by Party",
         digits = 2)
 ```
+
+```{r, message= FALSE, warning= FALSE, echo= FALSE}
+pf_mega$claimDate[pf_mega$...1 == "7190"] <- as.Date("2016-05-10")
+pf_mega$claimDate[pf_mega$...1 == "7077"] <- as.Date("2017-03-12")
+pf_mega$claimDate[pf_mega$...1 == "1923"] <- as.Date("2017-11-01")
+pf_mega$claimDate[pf_mega$...1 == "6008"] <- as.Date("2017-12-01")
+pf_mega$year <- as.numeric(format(pf_mega$claimDate,'%Y'))
+```
+
+```{r, message= FALSE, warning= FALSE, echo= FALSE}
+year_tibble <- binarymicro %>%
+  select(claimYear, `National and State Macroeconomic Issues`:`Record/Candidate Biography/ Campaigns and Personal Behavior`)
+year_tibble %>%
+  group_by(claimYear) %>%
+  summarize( `National and State Macroeconomic Issues` = 
+              sum(`National and State Macroeconomic Issues`),
+             `Economic Well-Being and Domestic Commerce` = 
+              sum(`Economic Well-Being and Domestic Commerce`),
+             `Labor and Employment` = sum(`Labor and Employment`),
+             `Foreign Trade` = sum(`Foreign Trade`),
+             `Civil Rights, Minority Issues, and Civil Liberties` =
+              sum(`Civil Rights, Minority Issues, and Civil Liberties`),
+             `Immigration and Refugee Issues` = sum(`Immigration and Refugee Issues`),
+             `LGBTQ` = sum(`LGBTQ`),
+             `Race` = sum(`Race`),
+             `Religion` = sum(`Religion`),
+             `Women` = sum(`Women`),
+             `Health (non-care)` = sum(`Health (non-care)`),
+             `Social Welfare` = sum(`Social Welfare`),
+             `Education` = sum(`Education`),
+             `Abortion` = sum(`Abortion`),
+             `Healthcare` = sum(`Healthcare`),
+             `Government Operations` = sum(`Government Operations`),
+             `Defense/Military` = sum(`Defense/Military`),
+             `International_affairs and Foreign Aid` =
+              sum(`International_affairs and Foreign Aid`),
+             `Voting/Elections` = sum(`Voting/Elections`),
+             `Agriculture` = sum(`Agriculture`),
+             `Environment` = sum(`Environment`),
+             `Energy` = sum(`Energy`),
+             `Transportation` = sum(`Transportation`),
+              `Taxes` = sum(`Taxes`),
+             `Community Development and Housing` = 
+              sum(`Community Development and Housing`),
+             `Technology Science Space` = sum(`Technology Science Space`),
+             `Media and Communications` = sum(`Media and Communications`),
+             `Law and Crime and Policing` = sum(`Law and Crime and Policing`),
+             `Terrorism` = sum(`Terrorism`),
+             `Guns` = sum(`Guns`),
+             `History` = sum(`History`),
+             `Record/Candidate Biography/ Campaigns and Personal Behavior` =
+              sum(`Record/Candidate Biography/ Campaigns and Personal Behavior`))
+```
+
+
