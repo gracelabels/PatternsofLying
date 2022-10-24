@@ -416,7 +416,7 @@ year_tibble_icky <- year_tibble %>%
 
 year_tibble_icky %>%
   ggplot(aes(x = claimYear, y = Count, color = Tag)) +
-  geom_line() +
+  geom_point() +
   xlim(2016, 2021) +
   labs(x = "Claim Year", 
        y = "Count", 
