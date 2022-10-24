@@ -157,13 +157,48 @@ macro_tibble <- janitor::row_to_names(macro_tibble, 1)
 
 macro_tibble <- base::data.frame(macro_tibble)
 
-macro_tibble <- macro_tibble %>% 
-  mutate(Democratic = as.numeric(Democratic),
-         Republican = as.numeric(Republican)) %>%
-   mutate(Total = rowSums(across(where(is.numeric))))
+macro_tibble$MacroTag <- row.names(macro_tibble)
 
-macro_tibble %>% 
-  kable(caption = "Macro Subject Tag Counts")
+macro_tibble <- macro_tibble %>%
+  mutate(Republican = as.numeric(Republican),
+         Democratic = as.numeric(Democratic))
+
+macroreps <- macro_tibble %>%
+  select(-Democratic)
+macrodems <- macro_tibble %>%
+  select(-Republican)
+falseRep <- pf_mega %>%
+  filter(claimant_party == "Republican") %>%
+  filter(textualRating == "Pants on Fire" |
+           textualRating == "False" |
+           textualRating == "Mostly False") %>%
+  count()
+
+falseDem <- pf_mega %>%
+  filter(claimant_party == "Democratic") %>%
+  filter(textualRating == "Pants on Fire" |
+           textualRating == "False" |
+           textualRating == "Mostly False") %>%
+  count()
+
+macroreps$RepublicanPercentage <- 100*(macroreps$Republican/as.numeric(falseRep))
+macrodems$DemocraticPercentage <- 100*(macrodems$Democratic/as.numeric(falseDem))
+
+macro_tibble <- full_join(macro_tibble, macrodems, by = c("Democratic", "MacroTag")) %>%
+  full_join(macroreps, by = c("Republican", "MacroTag"))
+
+macro_tibble$TotalCount <- macro_tibble$Democratic + macro_tibble$Republican
+
+macro_tibble <- macro_tibble[, c("MacroTag", 
+                                 "Democratic", 
+                                 "Republican", 
+                                 "TotalCount", 
+                                 "DemocraticPercentage", 
+                                 "RepublicanPercentage")]
+
+macro_tibble %>%
+  kable(caption = "MacroTag Subject Counts and Percentages by Party",
+        digits = 2)
 
 ```
 
@@ -354,46 +389,40 @@ pf_mega$year <- as.numeric(format(pf_mega$claimDate,'%Y'))
 ```{r, message= FALSE, warning= FALSE, echo= FALSE}
 year_tibble <- binarymicro %>%
   select(claimYear, `National and State Macroeconomic Issues`:`Record/Candidate Biography/ Campaigns and Personal Behavior`)
-year_tibble %>%
+
+year_tibble <- year_tibble %>%
   group_by(claimYear) %>%
-  summarize( `National and State Macroeconomic Issues` = 
-              sum(`National and State Macroeconomic Issues`),
-             `Economic Well-Being and Domestic Commerce` = 
+  summarize(`Labor and Employment` = sum(`Labor and Employment`),
+            `Economic Well-Being and Domestic Commerce` = 
               sum(`Economic Well-Being and Domestic Commerce`),
-             `Labor and Employment` = sum(`Labor and Employment`),
-             `Foreign Trade` = sum(`Foreign Trade`),
-             `Civil Rights, Minority Issues, and Civil Liberties` =
-              sum(`Civil Rights, Minority Issues, and Civil Liberties`),
-             `Immigration and Refugee Issues` = sum(`Immigration and Refugee Issues`),
-             `LGBTQ` = sum(`LGBTQ`),
-             `Race` = sum(`Race`),
-             `Religion` = sum(`Religion`),
-             `Women` = sum(`Women`),
-             `Health (non-care)` = sum(`Health (non-care)`),
-             `Social Welfare` = sum(`Social Welfare`),
-             `Education` = sum(`Education`),
-             `Abortion` = sum(`Abortion`),
-             `Healthcare` = sum(`Healthcare`),
-             `Government Operations` = sum(`Government Operations`),
-             `Defense/Military` = sum(`Defense/Military`),
-             `International_affairs and Foreign Aid` =
+            `Education` = sum(`Education`),
+            `Guns` = sum(`Guns`),
+            `Taxes` = sum(`Taxes`),
+            `Health (non-care)` = sum(`Health (non-care)`),
+            `Healthcare` = sum(`Healthcare`),
+            `Defense/Military` = sum(`Defense/Military`),
+            `Social Welfare` = sum(`Social Welfare`),
+            `Government Operations` = sum(`Government Operations`),
+            `History` = sum(`History`),
+            `International_affairs and Foreign Aid` = 
               sum(`International_affairs and Foreign Aid`),
-             `Voting/Elections` = sum(`Voting/Elections`),
-             `Agriculture` = sum(`Agriculture`),
-             `Environment` = sum(`Environment`),
-             `Energy` = sum(`Energy`),
-             `Transportation` = sum(`Transportation`),
-              `Taxes` = sum(`Taxes`),
-             `Community Development and Housing` = 
-              sum(`Community Development and Housing`),
-             `Technology Science Space` = sum(`Technology Science Space`),
-             `Media and Communications` = sum(`Media and Communications`),
-             `Law and Crime and Policing` = sum(`Law and Crime and Policing`),
-             `Terrorism` = sum(`Terrorism`),
-             `Guns` = sum(`Guns`),
-             `History` = sum(`History`),
-             `Record/Candidate Biography/ Campaigns and Personal Behavior` =
-              sum(`Record/Candidate Biography/ Campaigns and Personal Behavior`))
+            `Voting/Elections` = sum(`Voting/Elections`),
+            `Law and Crime and Policing` = sum(`Law and Crime and Policing`),
+            `Immigration and Refugee Issues` = 
+              sum(`Immigration and Refugee Issues`))
+
+year_tibble_icky <- year_tibble %>% 
+  pivot_longer(-claimYear, names_to = "Tag", values_to = "Count")
+
+year_tibble_icky %>%
+  ggplot(aes(x = claimYear, y = Count, color = Tag)) +
+  geom_line() +
+  xlim(2016, 2021) +
+  labs(x = "Claim Year", 
+       y = "Count", 
+       color = "Micro Subject Tag",
+       title = "Top 15 Micro Subject Counts",
+       subtitle = "Distribution by Year")
 ```
 
 
