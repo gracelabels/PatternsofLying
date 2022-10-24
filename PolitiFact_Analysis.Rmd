@@ -1,7 +1,5 @@
 ---
 title: "PolitiFact Analysis"
-author: "Sofia Bliss-Carrascoas"
-date: "9/28/2022"
 output:
   pdf_document: default
   html_document: default
@@ -53,32 +51,36 @@ pf_mega %>%
   kable(caption = "Claims by Party Sorted by Rating")
 ```
 
-```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE}
+```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 4.5}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
  geom_bar() +
   scale_fill_manual(values = c("blue2", "red3")) +
   labs(title = "Ratings Counts by Party",
        x = "Rating",
        y = "Total Claims",
-       fill = "Party of Claimant")
+       fill = "Party of Claimant") +
+  theme_bw()
 ```
 
 To account for the different samples sizes, we also viewed the data proportionally. Here we can see that Republican claimants are responsible for over 76.9% of the Pants on Fire claims, 66% of False claims, and 55.2% of Mostly False claims. Democrats have a majority of truthful claims responsible for 57% of the Half True claims, 67.6% of the Mostly True claims, and 66.7% of True claims.
 
-```{r plot of party counts with fill,  warning=FALSE, message=FALSE, echo = FALSE}
+```{r plot of party counts with fill,  warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 4.5}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
  geom_bar(position = "fill") +
   scale_fill_manual( values = c("blue2", "red3")) +
   labs(title = "Ratings Proportions by Party",
        x = "Rating",
        y = "Proportion",
-       fill = "Party of Claimant")
+       fill = "Party of Claimant") +
+  theme_bw()
 
 ```
 
+\pagebreak
+
 ### Severity of Claims -- by Party
 
-Our second research question was, does one party lie worse. For this, we looking within each party's claims and reviewed the distribution of ratings.
+Our second research question was, does one party lie worse. For this, we looked within each party's claims and reviewed the distribution of ratings.
 
 ```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
@@ -86,7 +88,8 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
   labs(title = "Proportion of Rating by Party",
        x = "Claims by Party",
        fill = "Rating", y = "Proportion") +
-  scale_fill_manual(values = truenesscolors)
+  scale_fill_manual(values = truenesscolors) +
+  theme_bw()
 
 ```
 
@@ -124,6 +127,8 @@ textRatingcounts %>%
   select(textualRating, Democratic, Republican, Total) %>%
   kable(digits = 1, caption = "Percentage of Claims by Textual Rating")
 ```
+
+\pagebreak
 
 ### What do they Lie About?
 
@@ -209,6 +214,8 @@ This table has an additional column called \"Percent Disparity.\" This column is
 Democrats are more likely than Republicans to have their falsehoods be about Labor and Employment, Economic Well-Being and Domestic Commerce, Education, Guns and Race.
 
 Republicans on the other hand are more likely than Democrats to tell falsehoods that focus on Immigration and Refugee Issues, Law Crime and Policing, Voting/Elections, International Affairs and Foreign Aid, Environment, and History. 
+
+\pagebreak
 
 ```{r subject tag table micro, message= FALSE, warning= FALSE, echo= FALSE }
 binarymicro <- pf_mega %>%
@@ -392,7 +399,6 @@ pf_mega$claimDate[pf_mega$...1 == "6008"] <- as.Date("2017-12-01")
 pf_mega$year <- as.numeric(format(pf_mega$claimDate,'%Y'))
 ```
 
-We determined the top 15 most common subject tags by count, excluding `Record/Candidate Biography/ Campaigns and Personal Behavior`. We knew from experience that during specific time periods, certain subjects would be lied about at a disproportionate rate. For example, the spike in lies relating to Health at the ouset of the pandemic. To visualize this phenomenon, we made the following graph displaying these 15 tags and how the frequency of lies progressed over time. It is of note that we only have six months of data in 2021, which is why counts are disproportionately lower.
 ```{r, message= FALSE, warning= FALSE, echo= FALSE}
 year_tibble <- binarymicro %>%
   select(claimYear, `National and State Macroeconomic Issues`:`Record/Candidate Biography/ Campaigns and Personal Behavior`)
