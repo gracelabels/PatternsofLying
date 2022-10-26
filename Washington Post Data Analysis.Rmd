@@ -165,7 +165,7 @@ v8_wapo_cleantextRating %>%
   theme(axis.text.x = element_text(size = 7))  
 ```
 
-By proportion of total claims alone, and keeping in mind the limitations of any conclusion due to sample size, it appears that Democrats are fact-checked on more truthful claims, whereas Republicans account for a higher share of the egregious falsehoods checked by the Washington Post.
+By proportion of total claims alone, and keeping in mind the limitations of any conclusion due to sample size, it appears that Democrats are fact-checked on more truthful claims, whereas Republicans account for a higher share of the egregious falsehoods checked by the Washington Post. 
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(v8_wapo_cleantextRating, aes(x = claimant_party, fill = textualRating)) +
