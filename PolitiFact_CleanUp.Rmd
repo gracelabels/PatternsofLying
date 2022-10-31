@@ -1,7 +1,5 @@
 ---
 title: "PolitiFact Clean Up"
-author: "Grace Abels"
-date: "4/19/2022"
 output:
   pdf_document: default
   html_document: default
