@@ -48,7 +48,7 @@ pf_mega %>%
   mutate(Democratic = as.numeric(Democratic),
          Republican = as.numeric(Republican)) %>%
    mutate(Total = rowSums(across(where(is.numeric)))) %>%
-  kable(caption = "Claims by Party Sorted by Rating")
+  kable(caption = "Claims by Party and Rating")
 ```
 
 ```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 4.5}
@@ -62,7 +62,7 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
   theme_bw()
 ```
 
-To account for the different samples sizes, we also viewed the data proportionally. Here we can see that Republican claimants are responsible for over 76.9% of the Pants on Fire claims, 66% of False claims, and 55.2% of Mostly False claims. Democrats have a majority of truthful claims responsible for 57% of the Half True claims, 67.6% of the Mostly True claims, and 66.7% of True claims.
+We also viewed the data proportionally. Here we can see that Republican claimants are responsible for over 76.9% of the Pants on Fire claims, 66% of False claims, and 55.2% of Mostly False claims. Democrats have a majority of truthful claims responsible for 57% of the Half True claims, 67.6% of the Mostly True claims, and 66.7% of True claims.
 
 ```{r plot of party counts with fill,  warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 4.5}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
@@ -80,7 +80,7 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
 
 ### Severity of Claims -- by Party
 
-Our second research question was, does one party lie worse. For this, we looked within each party's claims and reviewed the distribution of ratings.
+Our second research question was also simple: does one party lie worse? For this, we looked within each party's claims and reviewed the severity of ratings they received.
 
 ```{r severity graph,  warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
@@ -93,7 +93,7 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
 
 ```
 
-Here we can see that 7.9% of all Republican claims are rated Pants on Fire as opposed to 2.2% of Democratic claims. 26.2 % and 22.6% of Republican claims are rated False and Mostly False respectively. 12.4% and 16.9% of Democratic claims are rated False and Mostly False.
+By this table, it seems that Republicans have a higher proportion of false-ish statements. Here we can see that 7.9% of all Republican claims are rated Pants on Fire as opposed to 2.2% of Democratic claims. 26.2 % and 22.6% of Republican claims are rated False and Mostly False respectively. 12.4% and 16.9% of Democratic claims are rated False and Mostly False.
 
 Democrats also have a greater proportion of their claims rated True and Mostly True. To see a full percentage breakdown, review the table below.
 
@@ -132,9 +132,9 @@ textRatingcounts %>%
 
 ### What do they Lie About?
 
-Next we reviewed the distribution of our subject tags. A reminder that claims can be tagged with multiple tags each and only Mostly False, False, and Pants on Fire claims were tagged by subject.
+Next we reviewed the distribution of our subject tags. A reminder: claims can be tagged with multiple tags each and only Mostly False, False, and Pants on Fire claims were tagged by subject.
 
-Listed in our table below is the number of falsehoods tagged with each of the four macro tags, by party and in total. For each of tags (rows) the columns show the \# of democratic claims tagged with that subject tag, the \# of Republican claims tagged with that subject tag, and the total \# of claims tagged with that subject tag. The third and fourth columns also shows what percentage of a given parties' falsehoods were assigned that tag. For example 17.88 % of Republican falsehoods were tagged as Legislation. 15.59 % of Democratic falsehoods were tagged as Self/Personal Record. These percentages are valuable to compare the two parties because there is a greater number of Republican False(ish) claims overall, so reviewing the proportions helps to compare across parties.
+Listed in our table below is the number of falsehoods tagged with each of the four macro tags, by party and in total. For each of the tags (rows) the columns show the number of Democratic claims tagged with that subject tag, the number of Republican claims tagged with that subject tag, and the total number of claims tagged with that subject tag. The third and fourth columns also shows what percentage of a given parties' falsehoods were assigned that tag. For example 17.88 % of Republican falsehoods were tagged as Legislation. 15.59 % of Democratic falsehoods were tagged as Self/Personal Record. These percentages are valuable to compare the two parties because there is a greater number of Republican False(ish) claims overall, so reviewing the proportions helps to compare across parties.
 
 ```{r, subject tag table macro,  warning=FALSE, message=FALSE, echo = FALSE}
 binarymacro <- pf_mega %>%
@@ -207,9 +207,9 @@ macro_tibble %>%
 
 ```
 
-We created a similar table to review each of the 32 micro subject tags. For each of tags (rows) The table shows the \# of democratic claims tagged with that subject tag, the \# of Republican claims tagged with that subject tag, and the total \# of claims tagged with that subject tag. the table is the count of claims assigned that tag split by part and in total. Again the third and fourth columns show what percentage of a given parties' claims were assigned that tag. For example, 11.88 % of Democratic falsehoods were tagged as labor and employment compared to only 5.66% of Republican falsehoods receiving that tag.
+We created a similar table to review each of the 32 micro subject tags. For each of the tags (rows), the table shows the number of Democratic claims tagged with that subject tag, the number of Republican claims tagged with that subject tag, and the total number of claims tagged with that subject tag. Again the third and fourth columns show what percentage of a given parties' claims were assigned that tag. For example, 11.88 % of Democratic falsehoods were tagged as Labor and Employment compared to only 5.66% of Republican falsehoods receiving that tag.
 
-This table has an additional column called "Percent Disparity." This column is a subtraction of DemocraticPercentage - Republican Percentage. This is the variable used to order the table. The lower the value (negative) signifies that falsehoods about that subject make up a greater proportion of Democrat lies than Republicans. The greater the value in Percent Disparity means that falsehoods about that subject make up a greater proportion of Republican lies than Democrats. This allows us to see where the parties diverge in subject.\
+Table 4 has an additional column called "Percent Disparity." This column is the difference between DemocraticPercentage and Republican Percentage. This is the variable used to order the table. The lower the value (negative) signifies that falsehoods about that subject make up a greater proportion of Democrat lies than Republicans. The greater the value in Percent Disparity means that falsehoods about that subject make up a greater proportion of Republican lies than Democrats, allowing us to see where the parties diverge in subject.\
 
 Democrats are more likely than Republicans to have their falsehoods be about Labor and Employment, Economic Well-Being and Domestic Commerce, Education, Guns and Race.
 
