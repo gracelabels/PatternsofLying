@@ -4,7 +4,6 @@ author: "Sofia Bliss-Carrascosa"
 date: "10/05/2022"
 output:
   pdf_document: default
-  html_document: default
 editor_options:
   chunk_output_type: console
 ---
@@ -14,6 +13,10 @@ library(tidyverse)
 library(knitr)
 ```
 We began with a dataset of Washington Post fact checks from Claim Review. We began with 554 observations and in the process of cleaning our data, described below, we ended with 530.
+
+```{r}
+
+```
 
 In OpenRefine, we created a new column called ‘claimant_clean’ and manually sorted the names of all claimants to determine when there were different spellings of the same name. This was done via the cluster function embedded in the application. When iterations were found, we selected a single name to refer to each person by. For the claimant column, this cleaning process resulted in a reduction of claimants from 188 individual names to 169.
 
@@ -27,69 +30,70 @@ True, Correct, Accurate --> Geppetto Checkmark
 For the more unclear categories, we sent 61 claims for individual review. 57 of these were manually reassigned a textual rating according to his instructions, 4 were removed. For the purpose of concision, we removed claims that were tagged with uncommon anomaly ratings (1-2 observations). We began this process with 60 textual ratings, having the goal of eventually reducing down to the 5 rating ranking system.
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
-v8_wapo <- read.csv("v8wapo-cleantextrating.csv")
+v9_wapo <- read.csv("v8wapo-cleantextrating.csv")
 #reassigning glennclaims
 
-v8_wapo$textualRating[v8_wapo$...1 == "14615"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14369"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "13891"] <- "One Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14290"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13842"] <- "One Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13838"] <- "One Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13719"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14241"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13767"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14596"] <- "Two Pinocchios"
-v8_wapo$textualRating[v8_wapo$...1 == "14418"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14285"] <- "Three Pinocchios"
-v8_wapo$textualRating[v8_wapo$...1 == "13484"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "14105"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13781"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13878"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14630"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "3214"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13957"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14480"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14481"] <- "Three Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14201"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "14662"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "13696"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "13887"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14339"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "13448"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14693"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13940"] <- "One Pinocchio"
-v8_wapo$textualRating[v8_wapo$...1 == "14131"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "14534"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "13540"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14116"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "13628"] <- "Three Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13894"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13420"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13403"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13370"] <- "Two Pinocchios"
-v8_wapo$textualRating[v8_wapo$...1 == "13371"] <- "One Pinocchio"
-v8_wapo$textualRating[v8_wapo$...1 == "13987"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13952"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "14441"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13410"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13367"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13369"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14403"] <- "One Pinocchio" 
-v8_wapo$textualRating[v8_wapo$...1 == "14576"] <- "Four Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13445"] <- "Three Pinocchios"
-v8_wapo$textualRating[v8_wapo$...1 == "13399"] <- "Four Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "13873"] <- "Four Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14009"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14628"] <- "Three Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14588"] <- "Three Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14540"] <- "Three Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14023"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14337"] <- "Two Pinocchios" 
-v8_wapo$textualRating[v8_wapo$...1 == "14488"] <- "Three Pinocchios"
-v8_wapo$textualRating[v8_wapo$...1 == "13453"] <- "Three Pinocchios"
 
-v8_wapo <- v8_wapo %>%
+v9_wapo$textualRating[v9_wapo$...1 == "14615"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14369"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "13891"] <- "One Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14290"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13842"] <- "One Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13838"] <- "One Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13719"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14241"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13767"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14596"] <- "Two Pinocchios"
+v9_wapo$textualRating[v9_wapo$...1 == "14418"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14285"] <- "Three Pinocchios"
+v9_wapo$textualRating[v9_wapo$...1 == "13484"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "14105"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13781"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13878"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14630"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "3214"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13957"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14480"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14481"] <- "Three Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14201"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "14662"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "13696"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "13887"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14339"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "13448"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14693"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13940"] <- "One Pinocchio"
+v9_wapo$textualRating[v9_wapo$...1 == "14131"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "14534"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "13540"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14116"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "13628"] <- "Three Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13894"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13420"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13403"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13370"] <- "Two Pinocchios"
+v9_wapo$textualRating[v9_wapo$...1 == "13371"] <- "One Pinocchio"
+v9_wapo$textualRating[v9_wapo$...1 == "13987"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13952"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "14441"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13410"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13367"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13369"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14403"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "14576"] <- "Four Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13445"] <- "Three Pinocchios"
+v9_wapo$textualRating[v9_wapo$...1 == "13399"] <- "Four Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13873"] <- "Four Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14009"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14628"] <- "Three Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14588"] <- "Three Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14540"] <- "Three Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14023"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14337"] <- "Two Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "14488"] <- "Three Pinocchios"
+v9_wapo$textualRating[v9_wapo$...1 == "13453"] <- "Three Pinocchios"
+
+v9_wapo <- v9_wapo %>%
   filter(...1 != "13834", 
          ...1 != "14466", 
          ...1 != "14552", 
@@ -98,7 +102,7 @@ v8_wapo <- v8_wapo %>%
 
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
-v8_wapo_cleantextRating <- v8_wapo %>%
+v10_wapo_cleantextRating <- v9_wapo %>%
   filter(textualRating == "One Pinocchio" |
            textualRating == "Two Pinocchios" |
            textualRating == "Three Pinocchios" |
@@ -111,8 +115,8 @@ truenesscolors = c("#69B34C",
                    "#FF872C",
                    "#FF0000")
 
-v8_wapo_cleantextRating$textualRating <- 
-  factor(v8_wapo_cleantextRating$textualRating, 
+v10_wapo_cleantextRating$textualRating <- 
+  factor(v10_wapo_cleantextRating$textualRating, 
                               levels = c("Geppetto Checkmark", 
                                          "One Pinocchio", 
                                          "Two Pinocchios", 
@@ -121,17 +125,17 @@ v8_wapo_cleantextRating$textualRating <-
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
-v8_wapo_cleantextRating %>%
+v10_wapo_cleantextRating %>%
   group_by(claimant_party) %>%
   count() %>%
   kable(caption = "Claim Counts by Party")
 
-v8_wapo_cleantextRating %>%
+v10_wapo_cleantextRating %>%
   group_by(textualRating) %>%
   count() %>%
   kable(caption = "Claim Counts by Rating")
 
-v8_wapo_cleantextRating %>%
+v10_wapo_cleantextRating %>%
   group_by(claimant_party, textualRating) %>%
   count() %>%
   pivot_wider(id_cols = claimant_party, 
@@ -144,7 +148,7 @@ v8_wapo_cleantextRating %>%
 Likely due to selection bias towards correcting falsehoods and/or an extremely high threshold of proof for truth, there are very few claims rated Geppetto Checkmark or One Pinocchio. As such, its hard to draw any significant conclusions from the limited data. The little information we have does appear to superficially indicate a higher ratio of Democratic truths to their Republican counterparts. There are dozens more datapoints under the Two, Three, and Four Pinocchios rating, both for Democratic and Republican politicians. By count, Democrat falsehoods exceed Republican's in the Two Pinocchios category, but they account for a lower proportion of claims rated Three and Four Pinocchios.
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
-v8_wapo_cleantextRating %>%
+v10_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
   geom_bar(position = "fill") +
   scale_fill_manual(values = c("blue2", "red3")) +
@@ -154,7 +158,7 @@ v8_wapo_cleantextRating %>%
        fill = "Party of Claimant") + 
   theme(axis.text.x = element_text(size = 7))    
 
-v8_wapo_cleantextRating %>%
+v10_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
   geom_bar() +
   scale_fill_manual(values = c("blue2", "red3")) +
@@ -168,7 +172,7 @@ v8_wapo_cleantextRating %>%
 By proportion of total claims alone, and keeping in mind the limitations of any conclusion due to sample size, it appears that Democrats are fact-checked on more truthful claims, whereas Republicans account for a higher share of the egregious falsehoods checked by the Washington Post. 
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
-ggplot(v8_wapo_cleantextRating, aes(x = claimant_party, fill = textualRating)) +
+ggplot(v10_wapo_cleantextRating, aes(x = claimant_party, fill = textualRating)) +
          geom_bar(position = "fill") +
   labs(title = "Proportion of Rating by Party",
        x = "Claims by Party",
