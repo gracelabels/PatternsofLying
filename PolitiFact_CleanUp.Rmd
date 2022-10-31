@@ -18,11 +18,11 @@ library(knitr)
 v8_pf <- read_csv("v8pf.csv")
 ```
 
-### Version 8 - Removal of PolitiFact anomalous claims
+### Version 9 - Removal of PolitiFact anomalous claims
 
-At this stage in the process, we are working with four publisher datasets from which we have sorted out all claims that do not fit our criteria of claims by U.S politician. We have also eliminated Independent and Libertarian claims. Now within each publisher we pivot to focus on textualRating, which denotes the rating that the claim was given by the fact-checker. Some publishers have standardized scales with a ranking system, others do not. For this step we have defined the existing rating scale, seen how many fit into that scale, and how many anomaly claims remain.
+At this stage in the process, we were working with four publisher datasets from which we had sorted out all claims that did not fit our criteria of claims by U.S politician. We had also eliminated Independent and Libertarian claims. Now within each publisher we pivoted to focus on textualRating, which denotes the rating that the claim was given by the fact-checker. Some publishers have standardized scales with a ranking system, others do not. Here we defined the existing rating scale, identified how many claims fit into that scale, and how many anomaly claims remained.
 
-For PolitiFact, they have an established 6 tier rating scale called the Truth-O-Meter used to categorize claims.
+PolitiFact has an established six tier rating scale called the Truth-O-Meter used to categorize claims.
 
 As stated on PolitiFact's website:
 
@@ -44,9 +44,9 @@ The burden of proof is on the speaker, and they rate statements based on the inf
 
 Below is a breakdown of all the ratings in the PolitiFact dataset's textualRating column.
 
-There are: 2,527 normal claims (those rated with on of the 6 standardized ratings) and 354 anomalous claims (those with a non-standardized text based rating).
+There are: 2,527 normal claims (those rated with one of the six standardized ratings) and 354 anomalous claims (those with a non-standardized text based rating).
 
-Below the breakdown of the 20 most numerous ratings.
+Below the breakdown of the 20 most numerous ratings. It is not a complete list, but we place it below to show some examples.
 
 ```{r orig text ratings, warning=FALSE, message=FALSE, echo = FALSE}
 v8_pf %>%
@@ -58,8 +58,6 @@ v8_pf %>%
 ```
 
 When we reviewed the list of anomaly claims, we noticed that they all came from PolitiFact articles, not fact checks. PolitiFact only uses Truth-O-Meter ratings when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not sufficient evidence to do a full scale fact-check, the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since PolitiFact did not feel comfortable enough to deliver a full Truth-O-Meter rating, we were unwilling to attribute a different level of certainty to the rating. Thus all claims that were not given one the 6 standard ratings in textualRating were removed from the dataset. This resulted in a remaining dataset of 2,527 claims.
-
-### Version 9 - Standardized Ratings Only
 
 ```{r use pF ratings, warning=FALSE, message=FALSE, echo = FALSE}
 v9_pf <- v8_pf %>%
@@ -94,7 +92,7 @@ v9_pf %>%
 
 ### Version 10 - Condensing claimant names
 
-After this removal we began looking closely at the remaining claimant names. Version 8 had 724 unique claimant names, below are the first 20.
+After this removal we began looking closely at the remaining claimant names. Version 9 had 724 unique claimant names, below are the first 20.
 
 ```{r pf people, warning=FALSE, message=FALSE, echo = FALSE}
 v9_pf %>%
@@ -105,7 +103,7 @@ v9_pf %>%
   kable(caption = "Claimant Names by Number of Occurences")
 ```
 
-At this stage we noticed that some claimants were listed under several separate names despite referring to the same person, like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this repetition so that we could see the true number of claims made by each claimant. To do so, we moved our data into a program called OpenRefine. Here, we clustered claimant names by similar terms to identify where repetition/multiple names for the same person occured. We used this to identify all duplicate forms of claimant namea and then recoded the data accordingly.
+At this stage we noticed that some claimants were listed under several separate names despite referring to the same person, like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this redundancy so that we could see the true number of claims made by each claimant. To do so, we moved our data into a program called OpenRefine. Here, we clustered claimant names to identify where multiple names were used to refer to the same person. We used this to identify all duplicate forms of claimant names and then manually recoded the data accordingly.
 
 This processed combined several names making the list 27 names shorter. 697 unique claimants resulted. The 20 most numerous claimants are listed below.
 
@@ -155,11 +153,11 @@ v10_pf %>%
 
 ### Version 11 -- Final Claimant Cleaning
 
-During this process we also noticed that some claimants, who did not fit our defintion of politician, had slipped through the cracks in our code. To try and ensure that we had only the data we desired in our dataset, we ran the list of claimant names through a stricter version of the politician filter. 58 names were marked as potentially non-politicial figures. Each name was manually reviewed and we identified 6 names that did not belong in the dataset: Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Right, and Marco Rubio's heckler.
+During this process we also noticed that some claimants who did not fit our defintion of politician, yet had not been identified as such by our code. To ensure that we had only the data we desired in our dataset, we ran the list of claimant names through a stricter version of the politician filter. 58 names were marked as potentially not being politicial figures. Each name was manually reviewed and we identified 6 names that did not belong in the dataset: Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Right, and Marco Rubio's heckler.
 
-21 claims by these claimants were removed as a result.
+21 claims were removed as a result.
 
-Later on during tagging we identified three more claimants (Pat Robertson, Juan Williams, and Evan Smith) and 1 claim that was mislabeled (our data said it was spoken by Maxine Waters but the link said it was bloggers) that were not political figures.
+Later on during tagging we identified three more claimants that were not political figures (Pat Robertson, Juan Williams, and Evan Smith) and 1 claim that was mislabeled (our data said it was spoken by Maxine Waters but the PolitiFact article listed the claimant as "bloggers").
 
 For ease we have addressed them at this stage, thus 6 additional claims were removed.
 
@@ -187,17 +185,16 @@ v11_pf %>%
   kable(caption = "Claim Rating by Party for Final Dataset")
 ```
 
-During this process an erroneous claim came to our attention, dated 2106 instead of 2016. We manually recoded this.
-
 ```{r date error fixed,  warning=FALSE, message=FALSE, echo = FALSE}
 v11_pf$claimDate[v11_pf$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
+#During this process an erroneous claim came to our attention, dated 2106 instead of 2016. We manually recoded this.
 ```
 
 ### Tagged Claims
 
-To learn more about what politicians were lying about, we subject tagged each claim in the data set with relevant and comprehensive tags to categorize the topics of lies.\
+Now that we had a workable dataset, we wanted to learn more about what politicians were lying about. We subject tagged each claim in the data set with relevant and comprehensive tags to categorize the topics of lies and identify patterns in lying.\
 \
-We decided to only tag False(ish) claims (Mostly False, False, and Pants on Fire) because out aim is to study what politicians are lying about, not what they are telling the truth about. We acknowledge this choice could limit our inquiry, but since claims were going to be tagged manually we decided to focus on our primary research question. This left 1,085 False(ish) claims to be subject tagged.
+We decided to only tag False(ish) claims (Mostly False, False, and Pants on Fire) because our aim was to study what politicians are lying about, not what they are telling the truth about. We acknowledge this choice could limit our inquiry, but since claims were going to be tagged manually we decided to focus on our primary research question. This left 1,085 False(ish) claims to be subject tagged.
 
 ```{r count of falseish pf, message=FALSE, warning=FALSE, echo=FALSE}
 v11_pf %>%
@@ -210,15 +207,20 @@ v11_pf %>%
   kable(caption = "False(ish) Claims to be Tagged")
 ```
 
-We then had to construct a method for tagging claims. We started, with Frank Baumagrtner's well established subject tags used for the [Comparative Agendas Project](https://www.comparativeagendas.net/pages/master-codebook).\
+We then had to construct a method for tagging claims. To not start from scratch, we decided to ground our project in established tagging framework drawing from Frank Baumagrtner's well established subject tags used for the [Comparative Agendas Project](https://www.comparativeagendas.net/pages/master-codebook).\
 \
-However, since they were designed to tag policy and not politics, there were some missing categories that were politically relevant. To address those missing tags, our research team conducted a series of practice tagging sessions in which 100 randomly selected claims were subject tagged. Through this process we discovered which categories were missing allowed us to establish categories that best encompass the claims found in the dataset. The tagging system and tags themselves were built based on the data we were tagging.\
+However, since they were designed to tag policy platforms and not political speech, there were some categories missing from Baumagrtner's tags that were common among the claims we analyzed. To address this, our research team conducted a series of practice tagging sessions in which 100 randomly selected claims were subject tagged. Through this process we discovered which categories we felt were relevant but missing, allowing us to establish categories that best encompassed the types of claims found in the dataset. The tagging system and tags themselves were built based on the data we were tagging.\
 \
-Each tag is defined by a list of topics that fall underneath that subject area. We identified these by buzzwords that may be seen in a claim, or general concepts (more niche than the overall tag) that can help a tagger tag the claims correctly. Despite every effort to be comprehensive, we acknowledge there may be some gaps in our definitions.\
+We defined tags by supplying a list of topics that fell underneath that subject area. We identified these by buzzwords that may be seen in a claim, or general concepts that could help a tagger tag the claims correctly. Despite every effort to be comprehensive, we acknowledge there may be some gaps in our definitions.\
 \
 Words in italics signify modifications/clarifications to the definition after tagging had begun.\
 \
 People may disagree with category grouping. We acknowledge the subjective nature of these categories.
+
+Micro tags were traditional subject tags that describe the substance of the claim and the political issues or policy issues it is discussing.\
+Macro tags take a more big picture approach describing the directive of the claim (Opponent/Self/Legislation) and the use of Fear within a claim.
+
+**MICRO TAGS:**
 
 +-----------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **Subject**                                                     | **Or having to do with/associated with**                                                                                                                                                                                                    |
@@ -288,6 +290,8 @@ People may disagree with category grouping. We acknowledge the subjective nature
 | **Record/Candidate Biography/ Campaigns and Personal Behavior** | Claims about Personal Behavior, Beliefs, Campaigns, Corruption, Campaign Spending, Scandals. *Only tagged when about a singular person. Not two people or an administration.*                                                               |
 +-----------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
+**MACRO TAGS:**
+
 +--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **Fear**                       | Claims intended by speaker to elicit fear. Including fear of both immediate or delayed bodily harm, financial/economic harm, harm to property, harm to security, harm to rights, harm to health, harm to democracy. Fear of cultural encroachment. Intended to scare. *Must include inflammatory language, the use of extremes or exaggerations, or current/impending threats of harm to the listener.* |
 +--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -297,26 +301,22 @@ People may disagree with category grouping. We acknowledge the subjective nature
 +--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **Legislation**                | About a Proposed or Passed Policy, Impact of Policy/Legislation, Nature of Policy, Motivations for Policy. Legislation includes any bills including spending bills and tax bills. Applies when a claim refers to a specific piece of legislation. Not general spending or tax issues.                                                                                                                   |
 +--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **IMPORTANT NOTES**            | Claims that are tagged with Self or Opponent are typically also tagged candidate biography, unless the Self/Opponent in question is not an individual but a whole party. Similarly there may be some tagged candidate biography that are not self/Opponent because they are discussing the record of someone within their own party because it is neither their opponent or themselves.                 |
+| **IMPORTANT NOTES**            | Claims that are tagged with Self or Opponent are typically also tagged candidate biography, unless the Self/Opponent in question is not an individual but a whole party. Similarly there may be some tagged candidate biography that are not Self/Opponent because they are discussing the record of someone within their own party because it is neither their opponent or themselves.                 |
 |                                |                                                                                                                                                                                                                                                                                                                                                                                                         |
-|                                | Discussion of Taxes and Funding are not always legislation, only is a specific bill/ policy is mentioned. Raising Or Lowering taxes is not unless it is about a tax BILL. Also historic legislation typically does not apply.                                                                                                                                                                           |
+|                                | Discussion of Taxes and Funding are not always legislation, only is a specific bill/ policy is mentioned. Raising Or Lowering taxes is not unless it is about a tax bill. Also historic legislation typically does not apply.                                                                                                                                                                           |
 |                                |                                                                                                                                                                                                                                                                                                                                                                                                         |
 |                                | *Claims about lobbying groups will be tagged according to the issue the group is lobbying for. NRA=Guns etc. If it is about the candidates willingness to respond to lobbyist it is also candidate biography.*                                                                                                                                                                                          |
 +--------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
-In our tagging of claims, we wanted to be able to describe as many attributes of a claim as possible. First, we allowed a claim to be assigned multiple tags, and we had different types of tags-- Macro and Micro.\
+Through tagging, we wanted to be able to describe as many attributes of a claim as possible. First, we allowed a claim to be assigned multiple tags, and we had different types of tags-- Macro and Micro.
 
-Micro tags were traditional subject tags that describe the substance of the claim and what political issues or policy issues it is discussing.\
+Four coders were trained on how to tag claims based on the subject tag definitions. Taggers did practice rounds on randomly selected claims and we talked through instances where they disagreed and worked to standardize our definitions.
+
+We were actively seeking consensus between our taggers. However, because each claim could receive multiple tags, one different tag would mean a mismatch and high inter-coder reliability would be hard to achieve.\
 \
-Macro tags take a more big picture approach describing the directive of the claim (Opponent/Self/Legislation) and the use of Fear within a claim.
+Asa Royal created an online tagging interface for our coders to use. A coder was presented with only the text of a claim, and a link the fact-check if they needed more information. They were not shown the claimant's name or party affiliation unless they reviewed the URL. They would then select all the tags they felt applied to that claim. All claims were tagged by at least two coders. If the two coders agreed on the tags, that claim 's tag were not reviewed. But, if there was disagreement between the two coders, as was the case for 776 of the claims, lead researcher Grace Abels manually reviewed each claim and the two different sets of tags that had been assigned. Grace Abels then determined the final tags for each claim.
 
-Four different coders were trained on how to tag claims based on the subject tag definitions. Taggers did practice rounds on randomly selected claims and we talked through instances where they disagreed and worked to clarify our definitions.
-
-We were actively seeking consensus between our taggers. Because each claim could receive multiple tags, one different tag would mean a mismatch. High inter-coder reliability would be hard to achieve. Understanding the confounding factors that come with our method of tagging, we feel confident in our system. The tagged data is available for review.\
-\
-Asa Royal created an online tagging interface for our coders to use. A coder was presented with only the text of a claim, and a link the fact-check if they needed more information. They would then select all the tags they felt applied to that claim. All claims were tagged by at least two coders. If the two coders agreed on the tags, that claim was not reviewed. But, if there was disagreement between the two coders, as was the case for 776 of the claims, lead researcher Grace Abels manually reviewed each claim and the two different sets of tags that had been assigned. Grace Abels then determined the final tags for each claim.
-
-After tagging, the dataset was joined with the larger version 11.
+Understanding the confounding factors that come with our method of tagging, we feel confident in our system. The tagged data is available for review. After tagging, the dataset was joined with the larger version 11.
 
 ```{r createmetadata, warning=FALSE, message=FALSE, echo = FALSE}
 taggedclaims <- read_csv("tagged_claims_limited.csv")
@@ -337,7 +337,7 @@ pf_mega_withdupes <- pf_mega_withdupes %>%
 
 ### Manual Removal of Duplicate Claims
 
-During tagging, 31 more claims were identified as duplicates, shown below. These were claims with differing urls but identical content. These were not captured earlier because we searched for duplicates with identical urls. Most often these duplicates were fact-checks that had already been published and were included again in an article round-up of fact-checks.
+During tagging, 31 more claims were identified as duplicates, shown below. These were claims with differing urls but identical text. These were not captured earlier because we searched for duplicates with identical urls. Most often these duplicates were fact-checks that had already been published and were included again in an article round-up of fact-checks.
 
 ```{r finddupes, warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega_withdupes %>%
@@ -388,7 +388,7 @@ pf_mega_nodupes <- pf_mega_withdupes %>%
 ### Location of Lie
 
 \
-One of the things that we tagged by was location of the lie, meaning the medium and format of the statement containing the lie. This tracked things like whether it was said on TV, in an interview, on social media, etc. We had several overarching categories called `location` tags, and then more specific subcategories tagged `location.extra`. When loading this data into R, we made a select number of changes to make it compatible with the existing data. We matched the name of the claim identifier column in the location of lie data to be identical to the mega data and selected only half the variables leaving only new information and the variables needed to join the two datasets correctly. We also found that one of the variables had not loaded in correctly, so we informed R that the `claimDate` column was, in fact, containing time/date data and fixed one erroneous claim where the year was misstyped 2106 instead of 2016.
+In addition to the Micro and Macro tags, we also tagged by the location of the lie, meaning the medium and format of the statement containing the lie. This tracked attributes such as whether it was said on TV, in an interview, on social media, etc. We had several overarching categories called `location` tags, and then more specific subcategories tagged `location.extra`. When loading this data into R, we made a select number of changes to make it compatible with the existing data.
 
 ```{r locoflie, warning=FALSE, message=FALSE, echo = FALSE}
 loc_of_lie <- read.csv("locationoflietagging.csv")
@@ -408,6 +408,7 @@ loc_of_lie <- loc_of_lie %>%
   mutate(claimDate = as.Date(claimDate))
 loc_of_lie$claimDate[loc_of_lie$claimDate == 
                        (as.Date("2106-11-08"))] <- as.Date("2016-11-08")
+#We matched the name of the claim identifier column in the location of lie data to be identical to the mega data and selected only half the variables leaving only new information and the variables needed to join the two datasets correctly. We also found that one of the variables had not loaded in correctly, so we informed R that the claimDate column was, in fact, containing time/date data and fixed one erroneous claim where the year was misstyped 2106 instead of 2016.
 ```
 
 We selected to join the location of lie data to the larger dataset by the claim identifier column, `...1`, and by `url`, `languageCode`, `publisher.name`, `publisher.site`, `text`, `claimDate`, and `claimant_party`. We chose not to merge by title or text of claim due to a small number of claims that were encoded oddly with incorrect symbols. This error likely occured during exportation and importation of the dataset. The correct title and text were pulled from the megadata, and we are certain these are still joined correctly thanks to the claim identifier column. We found one more incorrect claim that was missing the correct text, we sourced the accurate claim from the URL and overwrote it in our data. There was one claim that was erroneously untagged with location information, this was fixed. Then, we exported the final dataset into a viewable and downloadable csv, called `pf_mega_location.csv`.
