@@ -5,6 +5,8 @@ output:
   html_document: default
 editor_options:
   chunk_output_type: console
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
@@ -12,9 +14,46 @@ library(tidyverse)
 library(knitr)
 ```
 
+As described in the pages of the book \_\_\_\_\_\_\_\_\_\_, Bill Adair and his research team sought to understand how politicians lie through data.
+Throughout our research, which is based on a dataset of existing fact-checks, we asked who lies more, who lies worse, what do they lie about, and where do they lie?
+
+Much of this data analysis was initially done in spreadsheets, but has been replicated here in R so that it can be reproduced and shared with the public.
+We seek transparency in all our work, so feel free to explore the data yourself.
+Sometimes the changes may seem small, irrelevant and tedious, but we wanted to be fully transparent with each and every change we made.
+
+This is the first of a series of Rmd files that walk a reader through our work.
+Here we describe our data management and cleaning process in detail.
+We used a version system to keep ourselves organized and archive previous versions of the data.
+
+Each version represents a new dataset that has been altered from the previous one.
+This allows us to look back at previous steps and clearly communicate every change we made.
+
 ## Version 0 - All Unsorted Data
 
-The version 0 dataset was pulled by Joel Luther. The dataset includes all entries from Claim Review that were published by fact checkers based in the US (and in English). 14 unique fact-checking publishers were included. Included entries were those in which the reviewDate was between Jan 1st, 2016 and June 30th, 2021.
+Our data was drawn from Claim Review.
+ClaimReview is a tagging system developed by the Duke Reporters Lab and Google in 2015.
+When a fact-checker publishes a fact-check, they submit some baseline information to the ClaimReview database about the fact-check.
+Some of the categories are listed below.
+
+url - Link to the fact-check.
+title - The title of the fact-check, often a summary.
+publisher.name - Name of the site that published the fact-check (PolitiFact).
+reviewDate - Date the fact-check was published.
+text - The actual claim being fact-checked.
+claimDate - The date the claim was made.
+claimant - The name of the speaker/person making the claim.
+textualRating - The rating assigned to the claim.
+
+ClaimReview was initially developed to promote fact-checks in search results, incentivizing fact-checkers to participate.
+ClaimReview also had something of an unintended benefit: It created a giant, growing database of fact-checks uploaded by fact-checkers around the world.
+From US-based fact-checkers alone, there are 18,770 claims from Jan 2016 to June 2021.
+
+This is the database from which we pulled in order to conduct our reserach.
+
+The version 0 dataset was pulled by Duke Reporters Lab Joel Luther.
+The dataset includes all entries from Claim Review that were published by fact checkers based in the US (and in English).
+14 unique fact-checking publishers were included.
+Included entries were those in which the reviewDate was between Jan 1st, 2016 and June 30th, 2021.
 
 ```{r v0 all unsorted, message=FALSE, warning=FALSE, echo = FALSE}
 
@@ -35,15 +74,31 @@ To access V0, and any other code or datasets used in this project, feel free to 
 
 ### Version 1 - Only Political Figures
 
-Asa Royal, the software engineer assisting on the project, built a small data pipeline that tried to identify whether the speaker of each claim was a person and whether they met our definition of a politician. For our purposes, a politician was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency. For the remainder of our analysis we will be using the terms politician and political figure interchangably.
+ClaimReview consists of fact-checks for all sorts of misinformation, not just the lies of politicians, which was the focus of our research.
+So we filtered the claimants so that the data was narrowed down to just claims made by political figures.
+That process is described below.
 
-We identified human claimants by feeding claimant names in our dataset through an entity recognition API. Given text like ""The Sierra Club"" or ""Bill Murray"", the API tried to detect what it referred to -- *e.g.* a person or an organization -- letting us label claimants as human.
+Asa Royal, the software engineer assisting on the project, built a small data pipeline that tried to identify whether the speaker of each claim was a person and whether they met our definition of a politician.
+For our purposes, a politician was anyone who'd held or run for partisan office, or who'd been hired or appointed by a such a person to serve on a campaign or in a government agency.
+For the remainder of our analysis we will be using the terms politician and political figure interchangably.
 
-Next, we tried to categorize human claimants as politicians or non-politicians. We began by running claimant names through a Wikipedia API. If a given claimant had a Wikipedia article about them, our code checked whether the article contained any "politician indicators". For example, if the infobox in an article about a claimant said they'd worked as a politician or political operative, we accepted that as fact and marked them as a politician. Likewise, if in the first few paragraphs of the Wikipedia article, text matched certain keywords (*e.g.* in a single sentence, the article mentioned its subject "ran" in an "election" or "work"ed in the "White House"), the code inferred that they, too, were a politician.
+We identified human claimants by feeding claimant names in our dataset through an entity recognition API.
+Given text like ""The Sierra Club"" or ""Bill Murray"", the API tried to detect what it referred to -- *e.g.* a person or an organization -- letting us label claimants as human.
 
-Additionally, once the code deduced that a claimant was a politician, it scanned their Wikipedia infobox for reference to their party affiliation, recording it in our dataset. If there was no Wikipedia article about a human claimant, as was occasionally the case for unsuccessful candidates for local office, the data pipeline tried to find a corresponding page for the claimant on Ballotpedia, an online encyclopedia of American politics. If it found one, it searched the page for the same markers looked for on Wikipedia pages, and similarly tried to identify the claimant's party affiliation.
+Next, we tried to categorize human claimants as politicians or non-politicians.
+We began by running claimant names through a Wikipedia API. If a given claimant had a Wikipedia article about them, our code checked whether the article contained any "politician indicators".
+For example, if the infobox in an article about a claimant said they'd worked as a politician or political operative, we accepted that as fact and marked them as a politician.
+Likewise, if in the first few paragraphs of the Wikipedia article, text matched certain keywords (*e.g.* in a single sentence, the article mentioned its subject "ran" in an "election" or "work"ed in the "White House"), the code inferred that they, too, were a politician.
 
-When the aforementioned process was complete for each claimant and we filtered out all claims in the dataset whose claimants weren't labeled as human politicians, we considered data collection to be finished. To begin making this data workable, we undertook some light data cleaning. Namely, if we found that a claimant had been affiliated with several political parties, we gave them a party label corresponding to the party they'd identified with when they'd made the claim. In a small number of cases, our code categorized a claimant as a politician but failed to infer their party; those claimants' politician status and party ID were manually reviewed and edited at a later stage but were labelled as unknown_affiliation for the time being. The resulting dataset only contained claims by political figures with a corresponding party label.
+Additionally, once the code deduced that a claimant was a politician, it scanned their Wikipedia infobox for reference to their party affiliation, recording it in our dataset.
+If there was no Wikipedia article about a human claimant, as was occasionally the case for unsuccessful candidates for local office, the data pipeline tried to find a corresponding page for the claimant on [Ballotpedia](https://ballotpedia.org/Main_Page), an online encyclopedia of American politics.
+If it found one, it searched the page for the same markers looked for on Wikipedia pages, and similarly tried to identify the claimant's party affiliation.
+
+When the aforementioned process was complete for each claimant and we filtered out all claims in the dataset whose claimants weren't labeled as human politicians, we considered data collection to be finished.
+To begin making this data workable, we undertook some light data cleaning.
+Namely, if we found that a claimant had been affiliated with several political parties, we gave them a party label corresponding to the party they'd identified with when they'd made the claim.
+In a small number of cases, our code categorized a claimant as a politician but failed to infer their party; those claimants' politician status and party ID were manually reviewed and edited at a later stage but were labelled as unknown_affiliation for the time being.
+The resulting dataset only contained claims by political figures with a corresponding party label.
 
 ```{r pull v1 data, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -66,7 +121,11 @@ v1_all_us_polclaims %>%
 
 ### Version 2 - 5 Parties
 
-As seen in Table 5, several of the claimants were assigned non-US political parties, suggesting they were not US political figures. At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed. Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation. At this time, those with unknown\_ affiliation were left unsorted. With further cleaning needing to be done, we held off on manually sorting these claims until we had further narrowed our dataset.
+As seen in Table 5, several of the claimants were assigned non-US political parties, suggesting they were not US political figures.
+At this point, all claims whose party affiliation in claimant_party was not Democratic, Republican, Libertarian, Independent, or unknown_affilition were removed.
+Version 2 only consists of claims made by political figures belonging to U.S. political parties or ones that we assigned an unknown affiliation.
+At this time, those with unknown\_ affiliation were left unsorted.
+With further cleaning needing to be done, we held off on manually sorting these claims until we had further narrowed our dataset.
 
 ```{r create v2, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -95,7 +154,10 @@ v2_5parties %>%
 
 ### Version 3 - Deduped
 
-At this step we filtered out duplicate claims where both the url and and text of the claim were identical. The first appearance of each claim remained in the dataset, others were removed. This resulted in a database of 7,360 unique claims.\
+At this step we filtered out duplicate claims where both the url and and text of the claim were identical.
+The first appearance of each claim remained in the dataset, others were removed.
+This resulted in a database of 7,360 unique claims.\
+
 \
 *Note: Later on in our subject tagging we uncovered more duplicates that had identical text, but had been republished by a website under a different url. For transparency about our data cleaning process we are following our original steps and will remove those duplicates later.*
 
@@ -126,7 +188,8 @@ v3_deduped %>%
 
 ### Version 4 - Dejunked
 
-For a final clean up before sorting by publisher and removing Trump, a member of our research team **manually identified 23 false positive rows** that either listed multiple claimants or had a false positive non-human claimant (e.g. "Donald Trump's campaign"). Those 23 claims were manually removed.
+For a final clean up before sorting by publisher and removing Trump, a member of our research team **manually identified 23 false positive rows** that either listed multiple claimants or had a false positive non-human claimant (e.g. "Donald Trump's campaign").
+Those 23 claims were manually removed.
 
 ```{r manual removal for v4, message=FALSE, warning=FALSE, echo=FALSE}
 v4_dejunked <- v3_deduped %>%
@@ -173,11 +236,14 @@ v4_dejunked %>%
 
 ```
 
-At this stage, the dataset of 7,337 claims had been filtered to fit the parameters of our query. The dataset that remains consists of claims that were made by U.S. political figures, and fact-checked by one of 13 U.S based publishers.
+At this stage, the dataset of 7,337 claims had been filtered to fit the parameters of our query.
+The dataset that remains consists of claims that were made by U.S. political figures, and fact-checked by one of 13 U.S based publishers.
 
 ### Version 5 - Split into Publisher data
 
-From here on out, we began working with each publisher dataset separately. Only four publishers had enough remaining claims to move forward: FactCheck.Org, The New York Times, PolitiFact, and The Washington Post. This resulted in four individual datasets, one per publisher.
+From here on out, we began working with each publisher dataset separately.
+Only four publishers had enough remaining claims to move forward: FactCheck.Org, The New York Times, PolitiFact, and The Washington Post.
+This resulted in four individual datasets, one per publisher.
 
 ```{r create v5, message=FALSE, warning=FALSE, echo=FALSE}
 v5_fc <- v4_dejunked %>%
@@ -227,7 +293,10 @@ v5_wapo %>%
 
 ### Version 6 - Removing Trump
 
-We made the decision to remove Donald Trump entirely from this dataset. He was overrepresented in the dataset and his large number of Republican falsehoods threatened to skew the data. To do so, we first identified all the different iterations of "Trump" within the `claimant` column. We could not simply remove all claimants whose names included Trump, because by our definitions, his daughter Ivanka Trump was a political figure.
+We made the decision to remove Donald Trump entirely from this dataset.
+He was overrepresented in the dataset and his large number of Republican falsehoods threatened to skew the data.
+To do so, we first identified all the different iterations of "Trump" within the `claimant` column.
+We could not simply remove all claimants whose names included Trump, because by our definitions, his daughter Ivanka Trump was a political figure.
 
 ```{r find trump names, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -245,7 +314,8 @@ elim_trump %>%
 
 ```
 
-With these four versions of Trump's name, we manually removed them from the data. This created a dataset without Trump for each publisher, denoted V6.
+With these four versions of Trump's name, we manually removed them from the data.
+This created a dataset without Trump for each publisher, denoted V6.
 
 ```{r create v6, message=FALSE, warning=FALSE, echo=FALSE}
 
@@ -313,16 +383,23 @@ v6_wapo %>%
 
 ### Version 7 - Sorting Unknown Affiliation
 
-After we had divided the data into smaller publisher sub-sets and removed Trump from the data, our next step was to address missing data in the claimant_party section. As a reminder, the code that was used to assign party affiliations scraped Wikipedia data and Ballotpedia for politicians and party affiliations. 100 remaining claims were made by a claimant who was identified as a political figure but for whom a party could not be found. They were labeled unknown_affiliation. Having reduced our data to the selection of claims we planned to analyze, our next step was to manually assign party affiliations to the unknown_affiliation claims.
+After we had divided the data into smaller publisher sub-sets and removed Trump from the data, our next step was to address missing data in the claimant_party section.
+As a reminder, the code that was used to assign party affiliations scraped Wikipedia data and Ballotpedia for politicians and party affiliations.
+100 remaining claims were made by a claimant who was identified as a political figure but for whom a party could not be found.
+They were labeled unknown_affiliation.
+Having reduced our data to the selection of claims we planned to analyze, our next step was to manually assign party affiliations to the unknown_affiliation claims.
 
-This was done by pulling the claims labeled unknown_affiliation for each publisher. Based on the name of the claimant and the content of the fact-check, claimants were either
+This was done by pulling the claims labeled unknown_affiliation for each publisher.
+Based on the name of the claimant and the content of the fact-check, claimants were either
 
 1.  Assigned a party (Democrat, Republican, Independent, Libertarian)
 2.  Marked to be removed from the dataset because they were not a political figure.
 
 *NOTE: If a claimant served in an administration and spoke on behalf of that administration or politician, they were considered a political figure and assigned the affiliation of the administration or politician they served/spoke on behalf of. This may not always align with the their personal political beliefs but represented the party they spoke for within their role. This applied to appointed cabinet members, political officials, and lawyers representing politicians. Political commentators, activists, and celebrities were removed and not considered political figures*
 
-If you are reproducing this, these steps may not be relevant to you. Our filtering algorithm was unable to assign these political figures accurately despite many of them having political affiliations based on our definition. We are providing this information for the sake of transparency and to exemplify how one might manually sort the unknown_affiliations.
+If you are reproducing this, these steps may not be relevant to you.
+Our filtering algorithm was unable to assign these political figures accurately despite many of them having political affiliations based on our definition.
+We are providing this information for the sake of transparency and to exemplify how one might manually sort the unknown_affiliations.
 
 #### FactCheck.Org unknown affiliation review
 
@@ -364,8 +441,7 @@ Hal Turner, [commentator](https://en.wikipedia.org/wiki/Hal_Turner), not a polit
 
 Sean P. Conley, [Presidential physician](https://en.wikipedia.org/wiki/Sean_Conley), not a political figure (1 claim)
 
-**In the end, 11 total claims were assigned a Republican affiliation, 1 claim was assigned a Democratic affiliation, and 2 claims were removed from the FactCheck.Org dataset.**
-Table 33 shows the count by party after this adjustment.
+**In the end, 11 total claims were assigned a Republican affiliation, 1 claim was assigned a Democratic affiliation, and 2 claims were removed from the FactCheck.Org dataset.** Table 33 shows the count by party after this adjustment.
 
 ```{r v7 substitutions FC, message=FALSE, warning=FALSE, echo=FALSE}
 v7_fc <- v6_fc %>%
@@ -404,8 +480,7 @@ Sidney Powell, [Lawyer representing President Donald Trump](https://en.wikipedia
 
 Jesse Binnall, [Lawyer representing President Donald Trump](https://ballotpedia.org/Jesse_Binnall) (1 claim)\
 
-**2 total claims were assigned a Republican affiliation**
-Table 35 shows the count by party after this adjustment.
+**2 total claims were assigned a Republican affiliation** Table 35 shows the count by party after this adjustment.
 
 ```{r v7 substitutions NYT, message=FALSE, warning=FALSE, echo=FALSE}
 v7_nyt <- v6_nyt
@@ -420,7 +495,8 @@ v7_nyt %>%
 
 #### PolitiFact unknown affiliation review
 
-Next we reviewed unknown\_ affiliation claims for the PolitiFact database. There were 59 unique claimants and 72 claims.
+Next we reviewed unknown\_ affiliation claims for the PolitiFact database.
+There were 59 unique claimants and 72 claims.
 
 ```{r pf unknown affiliation table, message=FALSE, warning=FALSE, echo=FALSE }
 v6_pf %>%
@@ -556,8 +632,7 @@ Robert Sanborn, [nonprofit president](https://childrenatrisk.org/staff/dr-robert
 
 Shelley Grogan, [WI judge non-partisan](https://ballotpedia.org/Shelley_Grogan), not a political figure (1 claim)\
 
-**In the end, 25 claims were assigned a Republican affiliation, 8 claims were assigned a Democratic affiliation, 8 claims were assigned an Independent affiliation, and 31 cliams were removed from the PolitiFact dataset.**
-Table 37 shows the couns by party after the sort.
+**In the end, 25 claims were assigned a Republican affiliation, 8 claims were assigned a Democratic affiliation, 8 claims were assigned an Independent affiliation, and 31 cliams were removed from the PolitiFact dataset.** Table 37 shows the couns by party after the sort.
 
 ```{r v7 substitutions PF, message=FALSE, warning=FALSE, echo=FALSE}
 v7_pf <- v6_pf %>%
@@ -630,7 +705,8 @@ v7_pf %>%
 
 #### The Washington Post unknown affiliation review
 
-Next we reviewed unknown\_ affiliation claims for the Washington Post database. There were 9 unique claimants and 12 claims.
+Next we reviewed unknown\_ affiliation claims for the Washington Post database.
+There were 9 unique claimants and 12 claims.
 
 ```{r wapo unknown affiliation table, message=FALSE, echo= FALSE, warning=FALSE}
 v6_wapo %>%
@@ -664,8 +740,7 @@ Anthony Fauci, [not a political figure](https://en.wikipedia.org/wiki/Anthony_Fa
 
 Jim Acosta, [Political commentator](https://en.wikipedia.org/wiki/Jim_Acosta), not a political figure (1 claim)
 
-**In the end, 8 claims were assigned a Republican affiliation, 2 claims were assigned a Democratic affiliation and 2 claims were removed from the Washington Post dataset.**
-Table 39 shows these updated counts.
+**In the end, 8 claims were assigned a Republican affiliation, 2 claims were assigned a Democratic affiliation and 2 claims were removed from the Washington Post dataset.** Table 39 shows these updated counts.
 
 ```{r v7 substitutions WP, message=FALSE, warning=FALSE, echo=FALSE}
 v7_wapo <- v6_wapo %>%
@@ -689,7 +764,8 @@ v7_wapo %>%
 
 At this stage, it became clear that the Independent and Libertarian claims made up a very small part of each publisher dataset.
 
-These categories were too small to draw statistically relevant conclusions from the data, and so to not distract from potential findings about the two major US parties, claims with an Independent or Libertarian party affiliation were removed from our analysis. Only Democratic and Republican claims remain in the datasets.
+These categories were too small to draw statistically relevant conclusions from the data, and so to not distract from potential findings about the two major US parties, claims with an Independent or Libertarian party affiliation were removed from our analysis.
+Only Democratic and Republican claims remain in the datasets.
 
 ```{r v8, message=FALSE, warning=FALSE, echo=FALSE}
 v8_fc <- v7_fc %>%
@@ -725,7 +801,10 @@ v8_wapo %>%
   kable(caption = "Washington Post by Claimant Party")
 ```
 
-At this stage we moved forward with data set specific cleaning. Each publisher had it own rating scale, rating quirks, and duplications that needed to be addressed. Also we decided not to move forward with analysis of FactCheck.Org and the Washington Post. To see futher data cleaning or to understand why we did not move forward with our analysis see the following documents in GitHub:\
+At this stage we moved forward with data set specific cleaning.
+Each publisher had it own rating scale, rating quirks, and duplications that needed to be addressed.
+Also we decided not to move forward with analysis of FactCheck.Org and the Washington Post.
+To see futher data cleaning or to understand why we did not move forward with our analysis see the following documents in GitHub:\
 \
 PolitiFact_CleanUp
 
