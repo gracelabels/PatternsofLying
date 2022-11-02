@@ -35,11 +35,21 @@ v8_wapo %>%
   print(n=65)
 ```
 
-However, in version 8 of our data, there were 335 are normal claims (those rated on the WaPo scale of 5 standardized ratings) and 219 anomaly claims with a non-standardized text based rating.
+However, in version 8 of our data, there were 335 are normal claims (those rated on the WaPo scale of 5 standardized ratings) and 219 anomaly claims with a non-standardized text based rating like, "Not the whole story" and "Lacks context."
 
-Of those 219, 188 were labeled with an anomaly claim repeated more than once. To accord these common anomalies with the standard rating system, we took the data to Glenn Kessler, the singular WaPo fact-checker and the individual most familiar with the scale. At this stage we sent the more common ratings (occasionally grouping similar ones together) and asking him where they fall on the ratings scale. Claims marked: Wrong, Incorrect, False --\> Four Pinocchios Mostly false, Spins or Twists facts, Exaggerated --\> Three Pinocchios Half true, Not the whole story, Depends on the math, Cherry-picked number --\> Two Pinocchios True, Correct, Accurate --\> Geppetto Checkmark
+Of those 219, 188 were labeled with an anomaly claim that was repeated more than once. To accord these common anomalies with the standard rating system, we took the data to Glenn Kessler, the singular WaPo fact-checker and the individual most familiar with the scale. At this stage we sent the more common ratings (occasionally grouping similar ones together) and asking him where they fall on the ratings scale.
 
-For the more unclear categories, we sent 61 claims for individual review. 57 of these were manually reassigned a textual rating according to his instructions, 4 were removed. For the purpose of concision, we removed claims that were tagged with uncommon anomaly ratings (1-2 observations). We began this process with 60 textual ratings, having the goal of eventually reducing down to the 5 rating ranking system.
+Claims marked:
+
+Wrong, Incorrect, False --\> Four Pinocchios Mostly false,
+
+Spins or Twists facts, Exaggerated --\> Three Pinocchios
+
+Half true, Not the whole story, Depends on the math, Cherry-picked number --\> Two Pinocchios
+
+True, Correct, Accurate --\> Geppetto Checkmark
+
+For the more unclear categories, we sent 61 claims for individual review. 57 of these were manually reassigned a textual rating according to his instructions, 4 were removed. For the purpose of concision, we removed claims that were tagged with uncommon anomaly ratings (1-2 observations). We began this process with 60 textual ratings, and reduced this down to the 5 rating ranking system.
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v9_wapo <- read.csv("v8wapo-cleantextrating.csv")
