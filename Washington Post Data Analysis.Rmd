@@ -29,11 +29,6 @@ ADD FORMAL DEF
 
 ```{r}
 v8_wapo %>%
-  filter(textualRating != "Four Pinocchios") %>%
-  filter(textualRating != "Three Pinocchios") %>%
-  filter(textualRating != "Two Pinocchios") %>%
-  filter(textualRating != "One Pinocchio") %>%
-  filter(textualRating != "Geppetto Checkmark") %>%
   group_by(textualRating) %>%
   count() %>%
   arrange(desc(n)) %>%
@@ -59,10 +54,10 @@ v9_wapo %>%
   distinct(claimant_clean)
 v9_wapo$textualRating[v9_wapo$...1 == "14615"] <- "Two Pinocchios" 
 v9_wapo$textualRating[v9_wapo$...1 == "14369"] <- "One Pinocchio" 
-v9_wapo$textualRating[v9_wapo$...1 == "13891"] <- "One Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13891"] <- "One Pinocchio" 
 v9_wapo$textualRating[v9_wapo$...1 == "14290"] <- "Two Pinocchios" 
-v9_wapo$textualRating[v9_wapo$...1 == "13842"] <- "One Pinocchios" 
-v9_wapo$textualRating[v9_wapo$...1 == "13838"] <- "One Pinocchios" 
+v9_wapo$textualRating[v9_wapo$...1 == "13842"] <- "One Pinocchio" 
+v9_wapo$textualRating[v9_wapo$...1 == "13838"] <- "One Pinocchio" 
 v9_wapo$textualRating[v9_wapo$...1 == "13719"] <- "Two Pinocchios" 
 v9_wapo$textualRating[v9_wapo$...1 == "14241"] <- "Two Pinocchios" 
 v9_wapo$textualRating[v9_wapo$...1 == "13767"] <- "Two Pinocchios" 
