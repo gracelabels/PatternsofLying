@@ -10,6 +10,8 @@ editor_options:
 ```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
 library(tidyverse)
 library(knitr)
+library(tibble)
+library(kableExtra)
 ```
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
@@ -52,7 +54,7 @@ v8_pf %>%
   count() %>%
   arrange(desc(n)) %>%
   head(20) %>%
-  kable(caption = "Textual Ratings")
+  kable(format = "pipe", caption = "Textual Ratings")
 ```
 
 When we reviewed the list of anomaly claims, we noticed that they all came from PolitiFact articles, not fact checks. PolitiFact only uses Truth-O-Meter ratings when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not sufficient evidence to do a full scale fact-check, the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since PolitiFact did not feel comfortable enough to deliver a full Truth-O-Meter rating, we were unwilling to attribute a different level of certainty to the rating. Thus all claims that were not given one the 6 standard ratings in textualRating were removed from the dataset. This resulted in a remaining dataset of 2,527 claims.
@@ -85,7 +87,7 @@ v9_pf$textualRating <- factor(v9_pf$textualRating,
 v9_pf %>%
   group_by(textualRating) %>%
   count() %>%
-  kable(caption = "Truth-O-Meter Rating Distribution")
+  kable(format = "pipe", caption = "Truth-O-Meter Rating Distribution")
 ```
 
 ### Version 10 - Condensing claimant names
@@ -98,7 +100,7 @@ v9_pf %>%
   count() %>%
   arrange(desc(n)) %>%
   head(20) %>%
-  kable(caption = "Claimant Names by Number of Occurences")
+  kable(format = "pipe", caption = "Claimant Names by Number of Occurences")
 ```
 
 At this stage we noticed that some claimants were listed under several separate names despite referring to the same person, like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this redundancy so that we could see the true number of claims made by each claimant. To do so, we moved our data into a program called OpenRefine. Here, we clustered claimant names to identify where multiple names were used to refer to the same person. We used this to identify all duplicate forms of claimant names and then manually recoded the data accordingly.
@@ -146,7 +148,7 @@ v10_pf %>%
   count() %>%
   arrange(desc(n)) %>%
   head(20) %>%
-  kable(caption = "Claimant Names by Number of Occurences, no duplicate names")
+  kable(format = "pipe", caption = "Claimant Names by Number of Occurences, no duplicate names")
 ```
 
 ### Version 11 -- Final Claimant Cleaning
@@ -180,7 +182,7 @@ v11_pf %>%
   group_by(claimant_party, textualRating) %>%
   count() %>%
   pivot_wider(names_from = claimant_party, id_cols = textualRating, values_from = n) %>%
-  kable(caption = "Claim Rating by Party for Final Dataset")
+  kable(format = "pipe", caption = "Claim Rating by Party for Final Dataset")
 ```
 
 ```{r date error fixed,  warning=FALSE, message=FALSE, echo = FALSE}
@@ -202,7 +204,7 @@ v11_pf %>%
   group_by(claimant_party, textualRating) %>%
   count() %>%
   pivot_wider(names_from = claimant_party, id_cols = textualRating, values_from = n) %>%
-  kable(caption = "False(ish) Claims to be Tagged")
+  kable(format = "pipe", caption = "False(ish) Claims to be Tagged")
 ```
 
 We then had to construct a method for tagging claims. To not start from scratch, we decided to ground our project in established tagging framework drawing from Frank Baumagrtner's well established subject tags used for the [Comparative Agendas Project](https://www.comparativeagendas.net/pages/master-codebook).\
@@ -223,11 +225,13 @@ subjecttags <- read_csv("SubjectTagDef.csv")
 
 subjecttags %>%
   slice(1:32) %>%
-  kable(caption = "Micro Tag Definitions" )
+  kable(caption = "Micro Tag Definitions", digits = 2) %>%
+  kable_styling(full_width = TRUE, font_size = 6)
 
 subjecttags %>%
   slice(33:37) %>%
-  kable(caption = "Macro Tag Definitions" )
+  kable(caption = "Macro Tag Definitions", digits = 2) %>%
+  kable_styling(full_width = TRUE, font_size = 6)
 
 ```
 
@@ -268,7 +272,7 @@ pf_mega_withdupes %>%
   count() %>%
   filter(n > 1) %>%
   arrange(desc(n)) %>%
-  kable(caption = "Remaining Duplicates Identified during Tagging")
+  kable(format = "pipe", caption = "Remaining Duplicates Identified during Tagging")
 ```
 
 We prioritized preserving the claims linked to the original and specific fact check over those republished as part of a larger article. To do so, we manually removed the 31 duplicates by their claim identifier number. This resulted in a remaining 2469 claims.
