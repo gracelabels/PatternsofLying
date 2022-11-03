@@ -48,7 +48,7 @@ pf_mega %>%
   mutate(Democratic = as.numeric(Democratic),
          Republican = as.numeric(Republican)) %>%
    mutate(Total = rowSums(across(where(is.numeric)))) %>%
-  kable(caption = "Claims by Party and Rating")
+  kable(caption = "Claims by Party and Rating", format = "pipe")
 ```
 
 ```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 4.5}
