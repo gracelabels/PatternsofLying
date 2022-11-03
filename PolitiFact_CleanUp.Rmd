@@ -223,17 +223,24 @@ Macro tags take a more big picture approach describing the directive of the clai
 ```{r loading subject tag table, message=FALSE, warning=FALSE, echo=FALSE}
 subjecttags <- read_csv("SubjectTagDef.csv")
 
+```
+
+```{r micro suject table, message=FALSE, warning=FALSE, echo=FALSE }
 subjecttags %>%
   slice(1:32) %>%
   kable(caption = "Micro Tag Definitions", digits = 2) %>%
-  kable_styling(full_width = TRUE, font_size = 6)
+  kable_styling(font_size = 6, full_width = TRUE)
+```
 
+```{r macro subject table, message=FALSE, warning=FALSE, echo=FALSE }
 subjecttags %>%
   slice(33:37) %>%
   kable(caption = "Macro Tag Definitions", digits = 2) %>%
-  kable_styling(full_width = TRUE, font_size = 6)
+  kable_styling(font_size = 6, full_width = TRUE)
 
 ```
+
+\pagebreak
 
 Through tagging, we wanted to be able to describe as many attributes of a claim as possible. First, we allowed a claim to be assigned multiple tags, and we had different types of tags-- Macro and Micro.
 
