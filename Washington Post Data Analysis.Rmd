@@ -1,7 +1,5 @@
 ---
 title: "Washington Post"
-author: "Sofia Bliss-Carrascosa"
-date: "10/05/2022"
 output:
   pdf_document: default
 editor_options:
@@ -15,53 +13,75 @@ library(knitr)
 
 After the initial data cleaning described in our Data Cleaning document, there were 554 fact-checks published by the Washington Post between January 1st 2016 and June 30th, 2021. The dataset only includes fact-checks in which the claimant was a political figure, not Donald Trump, and assigned a Democratic or Republican affiliation. This dataset is called Version 8. We then did some light data cleaning prior to our analysis to clarify claimant names and streamline aberrant textual ratings. That process is described below.
 
-```{r read v 8 wapo csv}
+```{r read v 8 wapo csv, warning=FALSE, message=FALSE, echo = FALSE}
 v8_wapo <- read.csv("v8wapo.csv")
 ```
 
-## Claimant Name Cleaning + Initial Rating Clean Up V9
+## Claimant Name Cleaning
 
 In a program called OpenRefine, we created a new column called 'claimant_clean' and manually sorted the names of all claimants in our dataset to determine when there were different spellings of the same name. This was done via the cluster function embedded in the application. When varying iterations were found of the same name, we selected a single name to refer to each person by. For example Charles Schumer was changed to Chuck Schumer. For the claimant column, this cleaning process resulted in a reduction of claimants from 188 individual names to 169. This did not reduce the number of claims, just streamlined claimant names so the same political figure was not listed under several different names. The original claimant names are stored under the variable "claimant"
 
-Next we had to address the issue in textualRating. The Washington Post is not entirely consistent in its determinations of claim ratings. In theory, it has a standard ranking system ordered as follows: Geppetto Checkmark, One Pinocchio, Two Pinocchios, Three Pinocchios, Four Pinocchios.
+## Standardization of Textual Rating
 
-ADD FORMAL DEF
+Next we had to address the issue in textualRating. The Washington Post is not entirely consistent in its determinations of claim ratings. In theory, it has a standard ranking system ordered as follows: Geppetto Checkmark, One Pinocchio, Two Pinocchios, Three Pinocchios, Four Pinocchios. Of the 554 claims we pulled from the Washington Post, only 335 were originally ranked on the WaPo's five scale ratings system. These definitions go as follows, sourced from <https://www.washingtonpost.com/politics/2019/01/07/about-fact-checker/>:
 
-```{r}
+**The Geppetto Checkmark:** Statements and claims that contain "the truth, the whole truth, and nothing but the truth" will be recognized with our prized Geppetto checkmark. We tend to reserve this for claims that are unexpectedly true, so it is not awarded very often.
+
+**One Pinocchio:** Some shading of facts. Selective telling of truth. Some omissions and exaggerations but no outright falsehoods. (You could view this as "mostly true.")
+
+**Two Pinocchios:** Significant omissions and/or exaggerations. Some factual error may be involved but not necessarily. A politician can create a false, misleading impression by playing with words and using legalistic language that means little to ordinary people. (Similar to "half true.")
+
+**Three Pinocchios:** Significant factual error and/or obvious contradictions. This gets into the realm of "mostly false." But it could include statements which are technically correct (such as based on official government data) but are so taken out of context as to be very misleading.
+
+**Four Pinocchios:** Whoppers.
+
+Our original data had these textual ratings:
+
+```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v8_wapo %>%
   group_by(textualRating) %>%
   count() %>%
   arrange(desc(n)) %>%
-  print(n=65)
+  kable()
 ```
 
-However, in version 8 of our data, there were 335 are normal claims (those rated on the WaPo scale of 5 standardized ratings) and 219 anomaly claims with a non-standardized text based rating like, "Not the whole story" and "Lacks context."
+Having the aim to analyze a body of claims all on the standardized rating scale, we began by reassigning certain ratings in OpenRefine based on the exact wording of the Washington Post's own definitions.
 
-Of those 219, 188 were labeled with an anomaly claim that was repeated more than once. To accord these common anomalies with the standard rating system, we took the data to Glenn Kessler, the singular WaPo fact-checker and the individual most familiar with the scale. At this stage we sent the more common ratings (occasionally grouping similar ones together) and asking him where they fall on the ratings scale.
+7 **mostly false** ratings were reassigned **Three Pinocchios**.\
+4 **half true** ratings were reassigned to **Two Pinocchios**.\
+7 **true**, **correct**, and **accurate** ratings were reassigned the **Geppetto Checkmark**
 
-Claims marked:
+353 claims were then rated on the standard ranking system.
 
-Wrong, Incorrect, False --\> Four Pinocchios Mostly false,
+201 claims remained tagged with anomaly ratings, meaning we could not reliably compare them to the rest of our data. To address this, we reached out to Glenn Kessler, the singular fact-checker at the Washington Post and brains behind the operation. He knows their scale inside and out. We sent over the remaining anomaly tags (sometimes grouping similar ones together) with more than 2 occurrences and received two instructions. First, he identified several tags that could be reassigned without further review. Second, he indicated several tags that he preferred to review and reassign himself. To not overburden Glenn during the manual review process, we removed all claims tagged with an anomaly rating that appeared only once or twice. For the first step, we turned to OpenRefine to make the changes he outlined. This was done to speed up the recoding process, though it could have been done in RStudio if necessary.
 
-Spins or Twists facts, Exaggerated --\> Three Pinocchios
+**Reassignments are the following:**\
+Not the whole story ---> Two Pinocchio\
+Depends on math or on stats ---> Two Pinocchio\
+Wrong or incorrect ---> Four Pinocchio\
+Spins or twists the facts ---> Three Pinocchio\
+Exaggerated ---> Three Pinocchio\
+Cherry-picked number ---> Two Pinocchio\
+False ---> Four Pinocchio
 
-Half true, Not the whole story, Depends on the math, Cherry-picked number --\> Two Pinocchios
+This reassigned 115 claims onto the standardized rating scale, leaving us with 468 claims.
 
-True, Correct, Accurate --\> Geppetto Checkmark
+Then for the claims that he preferred to self identify we gave him a list of all the claims tagged with the following ratings:\
+Needs or lacks context\
+Disputed or in dispute or study in dispute\
+Misleading\
+No evidence or lacks evidence
 
-For the more unclear categories, we sent 61 claims for individual review. 57 of these were manually reassigned a textual rating according to his instructions, 4 were removed. For the purpose of concision, we removed claims that were tagged with uncommon anomaly ratings (1-2 observations). We began this process with 60 textual ratings, and reduced this down to the 5 rating ranking system.
+This amounted to 62 total ratings, 58 of which he assigned new ratings to. The remaining four were also removed from the data. This step was done in RStudio.
+
+**In total, we were left with 526 claims of the original 554 now ranked by the standard Washington Post system, these are the ones we will use for continued analysis.**
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v9_wapo <- read.csv("v8wapo-cleantextrating.csv")
+#this csv represents all changes made in OpenRefine, the earlier version of the dataset prior to these steps is above.
+
 #reassigning glennclaims
 
-v9_wapo %>%
-  group_by(textualRating) %>%
-  summarise(count = n()) %>%
-  print(n=40)
-
-v9_wapo %>%
-  distinct(claimant_clean)
 v9_wapo$textualRating[v9_wapo$...1 == "14615"] <- "Two Pinocchios" 
 v9_wapo$textualRating[v9_wapo$...1 == "14369"] <- "One Pinocchio" 
 v9_wapo$textualRating[v9_wapo$...1 == "13891"] <- "One Pinocchio" 
@@ -150,6 +170,10 @@ v10_wapo_cleantextRating$textualRating <-
                                          "Three Pinocchios", 
                                          "Four Pinocchios"))
 ```
+
+## The Final Data
+
+Utilizing this standardized dataset, the breakdown of claims by party and rating is found here.
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v10_wapo_cleantextRating %>%
