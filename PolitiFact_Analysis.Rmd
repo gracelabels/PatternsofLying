@@ -125,7 +125,9 @@ textRatingcounts <- full_join(dems, reps, by = "textualRating") %>%
 
 textRatingcounts %>%
   select(textualRating, Democratic, Republican, Total) %>%
-  kable(digits = 1, caption = "Percentage of Claims by Textual Rating")
+  kable(digits = 1, 
+        caption = "Percentage of Claims by Textual Rating", 
+        format = "pipe")
 ```
 
 \pagebreak
