@@ -32,7 +32,7 @@ pf_mega$`Government Operations`[pf_mega$...1 == "3990"] <- "TRUE"
 #This was a mistagged claim that we manually changed. 
 ```
 
-Having cleaning, sorted, and tagged all of our data, we conducted some initial data analysis to answer some of our research questions.
+Having cleaning, sorted, and tagged all of our data, we embarked on our mission to understand political lying! This document contains our initial data analysis that we used to answer some of our research questions. Exploration of where politicians lie is featured in the Location of Lie Analysis.Rmd. 
 
 ### Which Party Lies More?
 
@@ -437,11 +437,18 @@ year_tibble_icky <- year_tibble %>%
 
 year_tibble_icky %>%
   ggplot(aes(x = claimYear, y = Count, color = Tag)) +
-  geom_line() +
+  geom_line(size = 1) +
   xlim(2016, 2021) +
   labs(x = "Claim Year", 
        y = "Count", 
        color = "Micro Subject Tag",
        title = "Top 15 Micro Subject Counts",
-       subtitle = "Distribution by Year")
+       subtitle = "Distribution by Year") +
+  theme_bw()
 ```
+
+There are some interesting trends to observe in the graph above.The most notable is the spike in Health (non-care) falsehoods in 2020. This was likely due to the COVID-19 pandemic and the large number of coronavirus fact-checks. The second highest category in 2020 was Law Crime and Policing. A summer of racial reckoning and backlash against protest likely fueled many of those falsehoods. 
+The third most populous category in 2020 was Voting/Elections falsehoods. Falsehoods about stolen elections. voter fraud, and mail-in voting dominated the 2020 political news resulting in this spike. 
+Looking farther back, we see lots of Government Operations checks - many of which concern government spending. These fact-checks decline in 2019 and 2020, perhaps as fact-checkers focused energy on more urgent topics like COVID.
+
+Feel free to explore the graphic to find new trends! 
