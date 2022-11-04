@@ -9,6 +9,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(knitr)
+library(kableExtra)
 ```
 
 ```{r echo = FALSE}
@@ -25,11 +26,11 @@ loc_tags$textualRating <- factor(loc_tags$textualRating,
 truenesscolors = c("#FF0000", "#FF872C", "#FAB733", "#FDE64B", "#ACB334", "#69B34C")
 ```
 
-Data: The data used in this analysis is the compilation of claims fact checked by PolitiFact made by Republican or Democratic political figures between Jan 1st 2016 and June 30th 2021, excluding all statements made by Donald Trump.
+## Introduction
+
+**Data**: The data used in this analysis is the compilation of claims fact checked by PolitiFact made by Republican or Democratic political figures between Jan 1st 2016 and June 30th 2021, excluding all statements made by Donald Trump. Further details on how this data was collected and cleaned can be found in the PolitiFact Clean Up RMD and PDF.
 
 We tagged location and location.extra by the following definitions.
-
-Advertisement, Debate, Interview, Public Event, Social Media, Speech/Remarks, TV Appearance, Written Statement
 
 **Advertisement:** campaign ads including video, television, radio and attack ads
 
@@ -47,38 +48,42 @@ Advertisement, Debate, Interview, Public Event, Social Media, Speech/Remarks, TV
 
 **Written Statement:** own website, emails, fliers, own writing/blog posts, letters, mailers, press releases, written policy proposals by candidates. *Location.extra:* campaign/election related material, press releases
 
-Methodology:
+## **Methodology:**
 
-If the tag given by PolitiFact reasonably falls within one of these categories, I tag as-is.
+In the fact check, often PolitiFact will add a comment or tag about where the claim was made. For example, a fact check may say: "Amy Klobuchar stated on October 30, 2022 in an interview on Meet the Press..." If the tag given by PolitiFact reasonably falls within one of these categories, it was tagged as-is.
 
-If the tag is unclear or additional information is missing, I will read the article to determine more details. This is often the case with TV interviews, with general "statements" etc.
+If the tag was unclear or additional information is missing, the tagger read the article to determine more details. This is often the case with TV interviews, with general "statements" etc.
 
-Only in extremely confusing circumstances will I go beyond the article, this usually involves looking up the TV channel on which a particular show is broadcast, or using the links cited by PolitiFact to find the original location of the lie. If tagged as something in the header and something else in the text I will be biased towards the original tag that PolitiFact gives, unless the article presents convincing evidence that the location of the lie is not explained accurately by the header (for our purposes).
+Only in extremely confusing circumstances taggers went beyond the article, this usually involved looking up the TV channel on which a particular show is broadcasted, or using the links cited by PolitiFact to find the original location of the lie. If tagged as something in the header and something else in the text, taggers were biased towards the original tag that PolitiFact gave, unless the article presents significant evidence that the location of the lie is not explained accurately by the header (for our purposes).
 
-In an effort to reduce the number of judgment calls I make, I recorded potential areas of confusion or gray areas to explain my tagging logic, which are noted below.
+In an effort to reduce the number of judgment calls made, we recorded potential areas of confusion or gray areas to explain tagging logic, which are noted below.
 
 Debate Election Debate: refers to any debate between competing candidates. If the type of debate is unspecified (no other candidate mentioned), then it is not tagged as Election Debate, which may mean that some data is omitted from our set.
 
 TV Appearance If a televised event is also something else (a town hall, a debate, a speech, etc), the other claim takes precedence. For example: A televised town hall will be tagged as a town hall, because the context in which the lie was said was the Town Hall, the fact that it was televised does not change that situation. On the contrary, if a TV channel hosts a casual roundtable discussion that is exclusively displayed on that channel, that will be tagged as a TV Appearance on that channel. Regional Channel tag: Unaffiliated local TV stations are tagged as Regional Channel, whereas local programs on national news networks are tagged by the parent organization. For example: WISN-TV, a channel that only plays in Milwaukee, Wisconsin, will be tagged as Regional Channel whereas CBS Miami's "Facing South Florida" will be tagged as CBS. In cases where it was not explicitly stated whether the interview was conducted on TV or not, I used contextual clues to make determinations. If the interview was with a major news anchor or TV personality, it is tagged as TV appearance.
 
-Interview Facebook live interviews get tagged as interviews over social media, to reflect the type of speech in which the statement was made---I consider that in determining the context of the lie, the Interview tag is more representative than the Social Media tag. This is the same for YouTube interview videos.
+Interview Facebook live interviews get tagged as interviews over social media, to reflect the type of speech in which the statement was made---having the purpose of determining the context of the lie, the Interview tag is more representative than the Social Media tag. This is the same for YouTube interview videos.
 
 Advertisement Campaign videos are tagged as Advertisements.
 
-Speech/Remarks "Campaign" tag in the Location Extra: I recognize the inherent complexity to this tag, as the line is blurred significantly for all comments made by a candidate during a campaign, regardless of whether it is an official campaign or not. I tried to tag consistently, but there is a certain amount of unavoidable subjectivity to the PolitiFact tags and they amount of information that they provide that is compounded by my own biases and subjectivity. All speeches or remarks made at the RNC and DNC are tagged as "Campaign" regardless of whether the speaker is a candidate or not. Tagging for the location of the lie and not the speaker, this is a campaign event and the tag reflects that. Speeches made by people that were expected to/eventually did run for office were not tagged as campaigns if the person had not yet officially announced their candidature. If a speech is not explicitly listed as a campaign event but the fact check begins with person X, candidate for/running for then it is tagged as Campaign unless there is a specified alternative purpose for the event. Despite being spoken on the radio, Rob Swearingen's weekly radio address was tagged as Speech/Remarks over Interview, despite radio interview being in the description to better reflect the type of speech within which the lie was contained.
+Speech/Remarks "Campaign" tag in the Location Extra: we recognize the inherent complexity to this tag, as the line is blurred significantly for all comments made by a candidate during a campaign, regardless of whether it is an official campaign or not. Taggers made every attempt to tag consistently, but there is a certain amount of unavoidable subjectivity to the PolitiFact tags and they amount of information that they provide that is compounded by my own biases and subjectivity. All speeches or remarks made at the RNC and DNC are tagged as "Campaign" regardless of whether the speaker is a candidate or not. Tagging for the location of the lie and not the speaker, this is a campaign event and the tag reflects that. Speeches made by people that were expected to/eventually did run for office were not tagged as campaigns if the person had not yet officially announced their candidature. If a speech was not explicitly listed as a campaign event but the fact check begins with person X, candidate for/running for then it is tagged as Campaign unless there is a specified alternative purpose for the event. For example, despite being spoken on the radio, Rob Swearingen's weekly radio address was tagged as Speech/Remarks over Interview, despite radio interview being in the description to better reflect the type of speech within which the lie was contained.
 
-Social Media Video of commentary on a certain issue posted by the candidate on Facebook was tagged as a Social Media lie because the candidate created, reviewed, and decided to post it on social media. In my opinion, this is different from the true definition of Speech/Remarks, and TV Appearance, which were the other potential tags for this claim.
+Social Media Video of commentary on a certain issue posted by the candidate on Facebook was tagged as a Social Media lie because the candidate created, reviewed, and decided to post it on social media. IWe found this to be intentionally different from the definition of Speech/Remarks, and TV Appearance, which were the other potential tags for this claim.
 
 Written Statement Campaign tag: Policy proposals written by candidates in advance of an election will be tagged as Campaign material. Endorsement announcements tagged as Campaign. Websites made by a candidate to attack their opponent in an election are tagged as Campaign material. Fact sheets are tagged as Press Releases. Things that were reported as having been repeated via various platforms, where at least some of the recorded versions of the lie are in written form are tagged as "Written Statement" and then "Various Statements" because that represents the highest level of vetting the statement may have gone through. Talking points written by the campaign and given to staff to be read on behalf of the candidate's campaign are tagged as Written Statement.
 
-Exploratory Data Analysis
+\pagebreak
+
+## **Exploratory Data Analysis**
 
 ```{r, echo = FALSE}
 loc_tags %>%
   group_by(location) %>%
   summarise(count = n(), percentage = (n()*100)/nrow(loc_tags)) %>%
   arrange(desc(count)) %>%
-  kable(caption = "Distribution of All Claims by Location", digits = 1)
+  kable(caption = "Distribution of All Claims by Location", 
+        digits = 1,
+        format = "pipe")
 ```
 
 The three largest categories of claims, in the PolitiFact database, are Speech/Remarks, TV Appearance, and Social Media. The smallest categories were Public Event, Advertisement, and Interview.
@@ -100,7 +105,18 @@ loc_relevel %>%
     x = "Location",
     y = "Rating Distribution",
     fill = "PolitiFact Rating",
-    title = "Claim Ratings by Location"
+    title = "Claim Ratings, Proportionally by Location"
+  ) +
+  scale_fill_manual(values = truenesscolors) +
+  theme(axis.text.x = element_text(size = 5))  
+loc_relevel %>%
+  ggplot(aes(x = location, fill = textualRating)) +
+  geom_bar() +
+  labs(
+    x = "Location",
+    y = "Rating Distribution",
+    fill = "PolitiFact Rating",
+    title = "Claim Ratings, Count by Location"
   ) +
   scale_fill_manual(values = truenesscolors) +
   theme(axis.text.x = element_text(size = 5))  
@@ -163,7 +179,9 @@ all_wri$location <- "Written Statement"
 all_loc <- rbind(all_ad, all_deb, all_int, all_pub, all_soc, all_spe, all_tv, all_wri)
 all_loc %>%
   pivot_wider(names_from = textualRating, values_from = percentage) %>%
-  kable(caption = "Proportion of Ratings in Percent, by Location", digits = 1)
+  kable(caption = "Proportion of Ratings in Percent, by Location", 
+        digits = 1, 
+        format = "pipe")
 ```
 
 The highest proportion of True-ish (True, Mostly True, Half True) claims are made in Speech/Remarks (62.4%). The lowest proportion of True-ish claims are made in Advertisements (44.2%). The highest proportion of Pants on Fire claims appear in Interviews (8.7%). The highest proportion of True statements are made at Public Events (18.8%).
@@ -172,10 +190,12 @@ The highest proportion of True-ish (True, Mostly True, Half True) claims are mad
 loc_tags %>%
   group_by(claimant_party) %>%
   summarise(count = n(), percentage = (100*count)/nrow(loc_tags)) %>%
-  kable(caption = "Claims Count by Party", digits = 2)
+  kable(caption = "Claims Count by Party", 
+        digits = 2,
+        format = "pipe")
 ```
 
-As we know, there are approximately 100 more claims made by Democrats versus Republicans. Given the overall size of the dataset, though, I can say they are about equivalent, as the ratio of Democrat's claims to Republican's is $1.09:1$.
+In this dataset, there were approximately 100 more claims made by Democrats versus Republicans. Nevertheless, given the overall n, he ratio of Democrat's claims to Republican's is $1.09:1$, allowing us to compare the two.
 
 ```{r, echo = FALSE, fig.height = 4}
 loc_tags %>%
@@ -195,7 +215,8 @@ loc_tags %>%
   group_by(location, claimant_party) %>%
   summarise(count = n()) %>%
   pivot_wider(names_from = location, values_from = count) %>%
-  kable(caption = "Distribution of Claims by Party and Location")
+  kable(caption = "Distribution of Claims by Party and Location") %>%
+  kable_styling(full_width = TRUE, font_size = 7)
 ```
 
 Comparing the ratio of claim counts by Party and Location, Interview, Advertisement, and Social Media have nearly a $1:1$ ratio of Democratic to Republican claims. Public Event has the most egregious difference, with a ratio of $2.48:1$ Democratic to Republican claims. Debate, Speech/Remarks, TV Appearance, and Written Statements have no greater than a $1.5:1$ ratio.
@@ -218,17 +239,18 @@ loc_relevel %>%
 
 \newpage
 
-Social Media
+## **Social Media**
 
 ```{r, echo = FALSE}
 loc_tags %>%
   filter(location == "Social Media") %>%
   group_by(location.extra) %>%
   summarise(count = n()) %>%
-  kable(caption = "Distribution of Claims by Social Media App")
+  kable(caption = "Distribution of Claims by Social Media App",
+        format = "pipe")
 ```
 
-Seeing that the vast majority of claims originate on Twitter and Facebook, lets center in on those.
+Seeing that the vast majority of claims originate on Twitter and Facebook, we focused on those. The other platforms did not have sufficient claims to justify analysis.
 
 ```{r, echo = FALSE, fig.height = 4}
 loc_tags %>%
@@ -270,7 +292,9 @@ social_twit$platform <- "Twitter"
 social_prop <- rbind(social_fac, social_twit)
 social_prop %>%
   pivot_wider(names_from = textualRating, values_from = percentage) %>%
-  kable(caption = "Percentage of Ratings by Platform", digits = 1)
+  kable(caption = "Percentage of Ratings by Platform", 
+        digits = 1,
+        format = "pipe")
 ```
 
 This data appears to indicate that Facebook has a higher proportion of falsehoods than Twitter, among all checked statements on PolitiFact. Of all statements on Facebook, 50.1% of statements were found to be Mostly False, False, or Pants on Fire, compared to 39.7% of the same on Twitter. Twitter also had a higher proportion of True statements checked, 16.4% to Facebook's 12.9%, about 1.27x higher. There are 2.08x as many Pants on Fire claims on Facebook when compared to Twitter.
@@ -295,7 +319,8 @@ loc_tags %>%
   group_by(claimant_party) %>%
   summarise(count = n()) %>%
   pivot_wider(names_from = claimant_party, values_from = count) %>%
-  kable(caption = "Twitter Claims by Party")
+  kable(caption = "Twitter Claims by Party",
+        format = "pipe")
 ```
 
 ```{r, echo = FALSE}
@@ -326,7 +351,8 @@ twit_props <- rbind(twit_dems, twit_reps)
 twit_props %>%
   pivot_wider(names_from = textualRating, values_from = percentage) %>%
   kable(caption = "Percentage of Claims by Rating and Party",
-        digits = 1)
+        digits = 1,
+        format = "pipe")
 
 twit_dems_count <- loc_tags %>%
   filter(location == "Social Media",
@@ -348,22 +374,24 @@ twit_count <- rbind(twit_dems_count, twit_reps_count)
 twit_count %>%
   pivot_wider(names_from = textualRating, values_from = count, values_fill = 0) %>%
   kable(caption = "Count of Claims by Rating and Party",
-        digits = 1)
+        digits = 1,
+        format = "pipe")
 ```
 
 \newpage
 
-TV Appearance
+## **TV Appearance**
 
 ```{r, echo = FALSE}
 loc_tags %>%
   filter(location == "TV Appearance") %>%
   group_by(location.extra) %>%
   summarise(count = n()) %>%
-  kable(caption = "Distribution of TV Appearances")
+  kable(caption = "Distribution of TV Appearances",
+        format = "pipe")
 ```
 
-To continue analytics, we will focus on all TV channels on which at least 30 claims were made. This leaves: ABC, CBS, CNN, FOX, MSNBC, NBC, and the Regional Station tag.
+For the analysis on this tag, we focused on all TV channels on which at least 30 claims were made. This leaves: ABC, CBS, CNN, FOX, MSNBC, NBC, and the Regional Station tag.
 
 ```{r, echo = FALSE, fig.height = 4}
 tv_cleaned <- loc_tags %>%
@@ -455,12 +483,14 @@ tv_props <- rbind(abc_prop, cbs_prop, cnn_prop, fox_prop, msnbc_prop, nbc_prop, 
 
 tv_props %>%
   pivot_wider(names_from = textualRating, values_from = percentage) %>%
-  kable(caption = "Claim Rating Proportions by TV Channel", digits = 1)
+  kable(caption = "Claim Rating Percentages by TV Channel", 
+        digits = 1,
+        format = "pipe")
 ```
 
 Basing trueness on Half True, Mostly True, and True statements, the descending order of trueness by TV Channel goes as follows: CBS (62.8%), MSNBC (61.6% True-ish), CNN (57.4% True-ish), Regional Stations (56.2% True-ish), NBC (45.2% True-ish), ABC (42.6% True-ish and finally FOX (38.9% True-ish).
 
-Among the major national news channels, CNN, MSNBC, and NBC had nearly identical proportions of Pants on Fire claims, 0.059, 0.050, and 0.055 respectively.
+Among these news channels, CNN, MSNBC, and NBC had nearly identical proportions of Pants on Fire claims, 5.9%, 5.0%, and 5.5% respectively.
 
 ```{r, echo = FALSE, fig.height = 8}
 tv_relevel %>%
@@ -475,6 +505,8 @@ tv_relevel %>%
   ) +
   scale_fill_manual(values = truenesscolors)
 ```
+
+\newpage
 
 ```{r, echo = FALSE, message = FALSE}
 abc_count <- loc_tags %>%
@@ -539,7 +571,8 @@ count <- rbind(abc_count,
 
 count %>%
   pivot_wider(names_from = textualRating, values_from = count, values_fill = 0) %>%
-  kable(caption = "Claim Count by Party and TV Channel")
+  kable(caption = "Claim Count by Party and TV Channel",
+        format = "pipe")
 ```
 
 ```{r, echo = FALSE, message = FALSE}
@@ -690,5 +723,7 @@ tv_props_byparty <- rbind(tv_props_dems, tv_props_reps)
 tv_props_byparty %>%
   arrange(channel) %>%
   pivot_wider(names_from = textualRating, values_from = percentage, values_fill = 0) %>%
-  kable(caption = "Claim Rating Proportions by Party and TV Channel", digits = 1)
+  kable(caption = "Claim Rating Proportions by Party and TV Channel", 
+        digits = 1,
+        format = "pipe")
 ```
