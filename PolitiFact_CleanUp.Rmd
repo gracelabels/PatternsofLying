@@ -213,7 +213,7 @@ However, since they were designed to tag policy platforms and not political spee
 \
 We defined tags by supplying a list of topics that fell underneath that subject area. We identified these by buzzwords that may be seen in a claim, or general concepts that could help a tagger tag the claims correctly. Despite every effort to be comprehensive, we acknowledge there may be some gaps in our definitions.\
 \
-Words in italics signify modifications/clarifications to the definition after tagging had begun.\
+Words in parentheses signify modifications/clarifications to the definition after tagging had begun.\
 \
 People may disagree with category grouping. We acknowledge the subjective nature of these categories.
 
