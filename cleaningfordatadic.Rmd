@@ -17,3 +17,13 @@ v1 <- read_csv("all_us_pol_claims_updated_sep15.csv") %>%
 write_csv(v1, file = "all_US_politician_claims.csv")
 ```
 
+```{r}
+v8wapo_cleantextrating <- read_csv("v8wapo-cleantextrating.csv") %>%
+  select(- reason)
+v8wapo_cleantextrating <- v8wapo_cleantextrating %>%
+  rename("claimant_original" = "claimant") %>%
+  rename("claimant" = "claimant_clean") 
+write_csv(v8wapo_cleantextrating, file = "v8wapo_adj_textRating_claimant.csv")
+```
+
+

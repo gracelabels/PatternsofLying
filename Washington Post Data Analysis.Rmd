@@ -19,7 +19,7 @@ v8_wapo <- read.csv("v8wapo.csv")
 
 ## Claimant Name Cleaning
 
-In a program called OpenRefine, we created a new column called 'claimant_clean' and manually sorted the names of all claimants in our dataset to determine when there were different spellings of the same name. This was done via the cluster function embedded in the application. When varying iterations were found of the same name, we selected a single name to refer to each person by. For example Charles Schumer was changed to Chuck Schumer. For the claimant column, this cleaning process resulted in a reduction of claimants from 188 individual names to 169. This did not reduce the number of claims, just streamlined claimant names so the same political figure was not listed under several different names. The original claimant names are stored under the variable "claimant"
+In a program called OpenRefine, we created a new column called 'claimant_original' to track changes and manually sorted the names of all claimants in our dataset in the 'claimant' column to determine when there were different spellings of the same name. This was done via the cluster function embedded in the application. When varying iterations were found of the same name, we selected a single name to refer to each person by. For example Charles Schumer was changed to Chuck Schumer. For the claimant column, this cleaning process resulted in a reduction of claimants from 188 individual names to 169. This did not reduce the number of claims, just streamlined claimant names so the same political figure was not listed under several different names.
 
 ## Standardization of Textual Rating
 
@@ -77,7 +77,7 @@ This amounted to 62 total ratings, 58 of which he assigned new ratings to. The r
 **In total, we were left with 526 claims of the original 554 now ranked by the standard Washington Post system, these are the ones we will use for continued analysis.**
 
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
-v9_wapo <- read.csv("v8wapo-cleantextrating.csv")
+v9_wapo <- read.csv("v8wapo_adj_textRating_claimant.csv")
 #this csv represents all changes made in OpenRefine, the earlier version of the dataset prior to these steps is above.
 
 #reassigning glennclaims
