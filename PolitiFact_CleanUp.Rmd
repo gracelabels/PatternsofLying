@@ -221,7 +221,7 @@ Micro tags were traditional subject tags that describe the substance of the clai
 Macro tags take a more big picture approach describing the directive of the claim (Opponent/Self/Legislation) and the use of Fear within a claim.
 
 ```{r loading subject tag table, message=FALSE, warning=FALSE, echo=FALSE}
-subjecttags <- read_csv("SubjectTagDef.csv")
+subjecttags <- read_csv("SubjectTagDefinitions.csv")
 
 ```
 
