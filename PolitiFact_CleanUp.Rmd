@@ -255,8 +255,15 @@ Understanding the confounding factors that come with our method of tagging, we f
 ```{r createmetadata, warning=FALSE, message=FALSE, echo = FALSE}
 taggedclaims <- read_csv("tagged_claims_limited.csv")
 
-pf_mega_withdupes <- left_join(v11_pf, taggedclaims, by = c("...1", "url", "languageCode", "publisher.name",
-"publisher.site", "reviewDate", "text", "claimDate", "claimant_party"))
+pf_mega_withdupes <- left_join(v11_pf, taggedclaims, by = c("...1", 
+                                                            "url", 
+                                                            "languageCode", 
+                                                            "publisher.name", 
+                                                            "publisher.site", 
+                                                            "reviewDate", 
+                                                            "text", 
+                                                            "claimDate", 
+                                                            "claimant_party"))
 ```
 
 ```{r rename columns, warning=FALSE, message=FALSE, echo = FALSE}
@@ -325,17 +332,9 @@ pf_mega_nodupes <- pf_mega_withdupes %>%
 In addition to the Micro and Macro tags, we also tagged by the location of the lie, meaning the medium and format of the statement containing the lie. This tracked attributes such as whether it was said on TV, in an interview, on social media, etc. We had several overarching categories called `location` tags, and then more specific subcategories tagged `location.extra`. When loading this data into R, we made a select number of changes to make it compatible with the existing data.
 
 ```{r locoflie, warning=FALSE, message=FALSE, echo = FALSE}
-loc_of_lie <- read.csv("locationoflietagging.csv")
-loc_of_lie$...1 <- loc_of_lie$X.1
+loc_of_lie <- read.csv("locationoflie.csv")
 loc_of_lie <- loc_of_lie %>%
-  select(-claimant, 
-         -X.1, 
-         -claimant_canonical_name, 
-         -reason, 
-         -ratingsimp, 
-         -`T.F.RQ1`, 
-         -X, -rand_num, 
-         -is_politician_strict, 
+  select(-claimant,
          -textualRating, 
          -reviewDate)
 loc_of_lie <- loc_of_lie %>%

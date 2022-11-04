@@ -26,4 +26,19 @@ v8wapo_cleantextrating <- v8wapo_cleantextrating %>%
 write_csv(v8wapo_cleantextrating, file = "v8wapo_adj_textRating_claimant.csv")
 ```
 
+```{r}
+locoflie <- read_csv("locationoflietagging.csv") %>%
+  select(-...1,
+         -reason, 
+         -ratingsimp, 
+         -`T/F RQ1`, 
+         -rand_num, 
+         -is_politician_strict,
+         -claimant_canonical_name)
+locoflie <- locoflie %>%
+  rename("...1" = "...2")
+write_csv(locoflie, file = "locationoflie.csv")
+```
+
+
 
