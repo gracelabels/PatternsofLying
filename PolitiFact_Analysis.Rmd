@@ -32,13 +32,13 @@ pf_mega$`Government Operations`[pf_mega$...1 == "3990"] <- "TRUE"
 #This was a mistagged claim that we manually changed. 
 ```
 
-Having cleaning, sorted, and tagged all of our data, we embarked on our mission to understand political lying! This document contains our initial data analysis that we used to answer some of our research questions. Exploration of where politicians lie is featured in the Location of Lie Analysis.Rmd. 
+Having cleaning, sorted, and tagged all of our PolitiFact data, we embarked on our mission to understand political lying! This document contains our initial data analysis that we used to answer some of our research questions. Exploration of where politicians lie is featured in the Location of Lie Analysis.Rmd.
 
 ### Which Party Lies More?
 
 Our first research question was relatively simple. Which party lies more? While it is an impossible question to answer definitively, we decided to look at each rating tier and see the breakdown by party to get a sense of which party receives more false ratings.
 
-```{r pivot table for textual rating,  warning=FALSE, message=FALSE, echo = FALSE}
+```{r pivot-table-textuaRating, warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega %>%
   count(claimant_party, textualRating) %>%
     pivot_wider(id_cols = c(textualRating),
@@ -51,7 +51,7 @@ pf_mega %>%
   kable(caption = "Claims by Party and Rating", format = "pipe")
 ```
 
-```{r plot of party counts,  warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 4.5}
+```{r plot-party-counts, warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 3}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
  geom_bar() +
   scale_fill_manual(values = c("blue2", "red3")) +
@@ -62,9 +62,11 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
   theme_bw()
 ```
 
+\newpage
+
 We also viewed the data proportionally. Here we can see that Republican claimants are responsible for over 76.9% of the Pants on Fire claims, 66% of False claims, and 55.2% of Mostly False claims. Democrats have a majority of truthful claims responsible for 57% of the Half True claims, 67.6% of the Mostly True claims, and 66.7% of True claims.
 
-```{r plot of party counts with fill,  warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 4.5}
+```{r plot-party-counts-fill, warning=FALSE, message=FALSE, echo = FALSE, fig.width= 6, fig.height= 3}
 ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
  geom_bar(position = "fill") +
   scale_fill_manual( values = c("blue2", "red3")) +
@@ -73,12 +75,72 @@ ggplot(pf_mega, aes(x = textualRating, fill = claimant_party)) +
        y = "Proportion",
        fill = "Party of Claimant") +
   theme_bw()
+```
 
+```{r proptextrating, warning = FALSE, message = FALSE, echo = FALSE}
+pantsonfire <- pf_mega %>%
+  filter(textualRating == "Pants on Fire")
+pantsonfire <- pantsonfire %>%
+  group_by(claimant_party) %>%
+  summarize(count = n()) %>%
+  mutate('Pants on Fire' = 100*(count/nrow(pantsonfire))) %>%
+  select(claimant_party, 'Pants on Fire')
+
+false <- pf_mega %>%
+  filter(textualRating == "False")
+false <- false %>%
+  group_by(claimant_party) %>%
+  summarize(count = n()) %>%
+  mutate(False = 100*(count/nrow(false))) %>%
+  select(claimant_party, False)
+
+mostlyfalse <- pf_mega %>%
+  filter(textualRating == "Mostly False")
+mostlyfalse <- mostlyfalse %>%
+  group_by(claimant_party) %>%
+  summarize(count = n()) %>%
+  mutate('Mostly False' = 100*(count/nrow(mostlyfalse))) %>%
+  select(claimant_party, 'Mostly False')
+
+halftrue <- pf_mega %>%
+  filter(textualRating == "Half True")
+halftrue <- halftrue %>%
+  group_by(claimant_party) %>%
+  summarize(count = n()) %>%
+  mutate('Half True' = 100*(count/nrow(halftrue))) %>%
+  select(claimant_party, 'Half True')
+
+mostlytrue <- pf_mega %>%
+  filter(textualRating == "Mostly True")
+mostlytrue <- mostlytrue %>%
+  group_by(claimant_party) %>%
+  summarize(count = n()) %>%
+  mutate('Mostly True' = 100*(count/nrow(mostlytrue))) %>%
+  select(claimant_party, 'Mostly True')
+
+true <- pf_mega %>%
+  filter(textualRating == "True")
+true <- true %>%
+  group_by(claimant_party) %>%
+  summarize(count = n()) %>%
+  mutate('True' = 100*(count/nrow(true))) %>%
+  select(claimant_party, 'True')
+
+textRatingcounts <- full_join(pantsonfire, false, by = "claimant_party")  %>%
+  full_join(mostlyfalse, by = "claimant_party") %>%
+  full_join(halftrue, by = "claimant_party")  %>%
+  full_join(mostlytrue, by = "claimant_party") %>%
+  full_join(true, by = "claimant_party")
+
+textRatingcounts %>%
+  kable(digits = 1,
+        caption = "Proption of Textual Rating Assignments, by Party",
+        format = "pipe")
 ```
 
 \pagebreak
 
-### Severity of Claims -- by Party
+### Severity of Claims by Party
 
 Our second research question was also simple: does one party lie worse? For this, we looked within each party's claims and reviewed the severity of ratings they received.
 
@@ -93,7 +155,7 @@ ggplot(pf_mega, aes(x = claimant_party, fill = textualRating)) +
 
 ```
 
-By this table, it seems that Republicans have a higher proportion of false-ish statements. Here we can see that 7.9% of all Republican claims are rated Pants on Fire as opposed to 2.2% of Democratic claims. 26.2 % and 22.6% of Republican claims are rated False and Mostly False respectively. 12.4% and 16.9% of Democratic claims are rated False and Mostly False.
+According to this breakdown, Republicans have a higher proportion of false-ish statements in the data. We can see that 7.9% of all Republican claims are rated Pants on Fire as opposed to 2.2% of Democratic claims. 26.2 % and 22.6% of Republican claims are rated False and Mostly False respectively. 12.4% and 16.9% of Democratic claims are rated False and Mostly False.
 
 Democrats also have a greater proportion of their claims rated True and Mostly True. To see a full percentage breakdown, review the table below.
 
@@ -212,7 +274,9 @@ macro_tibble %>%
 
 We created a similar table to review each of the 32 micro subject tags. For each of the tags (rows), the table shows the number of Democratic claims tagged with that subject tag, the number of Republican claims tagged with that subject tag, and the total number of claims tagged with that subject tag. Again the third and fourth columns show what percentage of a given parties' claims were assigned that tag. For example, 11.88 % of Democratic falsehoods were tagged as Labor and Employment compared to only 5.66% of Republican falsehoods receiving that tag.
 
-Table 4 has an additional column called "Percent Disparity." This column is the difference between DemocraticPercentage and Republican Percentage. This is the variable used to order the table. The lower the value (negative) signifies that falsehoods about that subject make up a greater proportion of Democrat lies than Republicans. The greater the value in Percent Disparity means that falsehoods about that subject make up a greater proportion of Republican lies than Democrats, allowing us to see where the parties diverge in subject.\
+Table 4 has an additional column called "Percent Disparity." This column is the difference between DemocraticPercentage and Republican Percentage. This is the variable used to order the table. The lower the value (negative) signifies that falsehoods about that subject make up a greater proportion of Democrat lies than Republicans. The greater the value in Percent Disparity means that falsehoods about that subject make up a greater proportion of Republican lies than Democrats, allowing us to see where the parties diverge in subject.
+
+**Across these tables, we identified the following trends:**
 
 Democrats are more likely than Republicans to have their falsehoods be about Labor and Employment, Economic Well-Being and Domestic Commerce, Education, Guns and Race.
 
@@ -405,7 +469,9 @@ pf_mega$year <- as.numeric(format(pf_mega$claimDate,'%Y'))
 
 \pagebreak
 
-We determined the top 15 most common subject tags by count, excluding \`Record/Candidate Biography/ Campaigns and Personal Behavior\`. We knew from experience that during specific time periods, certain subjects would be lied about at a disproportionate rate. For example, the spike in lies relating to Health at the ouset of the pandemic. To visualize this phenomenon, we made the following graph displaying these 15 tags and how the frequency of lies progressed over time. It is of note that we only have six months of data in 2021, which is why counts are disproportionately lower.
+### Mapping Lies Over Time
+
+Lastly, we wanted to see if the trends in the subject of lies changed over time. We determined the top 15 most common subject tags by count, excluding \`Record/Candidate Biography/ Campaigns and Personal Behavior\`. We knew from experience that during specific time periods, certain subjects would be lied about at a disproportionate rate. For example, the spike in lies relating to Health at the ouset of the pandemic. To visualize this phenomenon, we made the following graph displaying these 15 tags and how the frequency of lies progressed over time. It is of note that we only have six months of data in 2021, which is why counts are disproportionately lower.
 
 ```{r, message= FALSE, warning= FALSE, echo= FALSE}
 year_tibble <- binarymicro %>%
@@ -447,8 +513,6 @@ year_tibble_icky %>%
   theme_bw()
 ```
 
-There are some interesting trends to observe in the graph above.The most notable is the spike in Health (non-care) falsehoods in 2020. This was likely due to the COVID-19 pandemic and the large number of coronavirus fact-checks. The second highest category in 2020 was Law Crime and Policing. A summer of racial reckoning and backlash against protest likely fueled many of those falsehoods. 
-The third most populous category in 2020 was Voting/Elections falsehoods. Falsehoods about stolen elections. voter fraud, and mail-in voting dominated the 2020 political news resulting in this spike. 
-Looking farther back, we see lots of Government Operations checks - many of which concern government spending. These fact-checks decline in 2019 and 2020, perhaps as fact-checkers focused energy on more urgent topics like COVID.
+There are some interesting trends to observe in the graph above.The most notable is the spike in Health (non-care) falsehoods in 2020. This was likely due to the COVID-19 pandemic and the large number of coronavirus fact-checks. The second highest category in 2020 was Law Crime and Policing. A summer of racial reckoning and backlash against protest likely fueled many of those falsehoods. The third most populous category in 2020 was Voting/Elections falsehoods. Falsehoods about stolen elections. voter fraud, and mail-in voting dominated the 2020 political news resulting in this spike. Looking farther back, we see lots of Government Operations checks - many of which concern government spending. These fact-checks decline in 2019 and 2020, perhaps as fact-checkers focused energy on more urgent topics like COVID.
 
-Feel free to explore the graphic to find new trends! 
+Feel free to explore the graphic to find new trends!
