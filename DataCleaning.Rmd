@@ -292,9 +292,10 @@ v5_wapo %>%
 ### Version 6 - Removing Trump
 
 We made the decision to remove Donald Trump entirely from all four datasets.
-In V4, before we split the data by publisher, Trump's statements accounted for 2984 of 7337 in the data.
+In V4, before we split the data by publisher, Trump's statements accounted for 2984 of the 7337 total claims in the data, a significant proportion of which were falsehoods.
 Responsible for 40% of all claims fact-checked, he was overrepresented in the data.
-As he contributed to the party counts, his large number of Republican falsehoods threatened to skew party analyses.
+Accounting for over 1/3 of the dataset, all of Trump's claims were attributed to Republicans when we compared the two parties.
+The vastly disproportionate number of Republican falsehoods threatened to skew party analyses, solely due to his presence in the data.
 To do so, we first identified all the different iterations of "Trump" within the `claimant` column.
 We could not simply remove all claimants whose names included Trump, because by our definitions, his daughter Ivanka Trump was a political figure.
 
