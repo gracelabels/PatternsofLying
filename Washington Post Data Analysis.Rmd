@@ -19,11 +19,13 @@ v8_wapo <- read.csv("v8wapo.csv")
 
 ## Claimant Name Cleaning
 
-In a program called OpenRefine, we created a new column called 'claimant_original' to track changes and manually sorted the names of all claimants in our dataset in the 'claimant' column to determine when there were different spellings of the same name. This was done via the cluster function embedded in the application. When varying iterations were found of the same name, we selected a single name to refer to each person by. For example Charles Schumer was changed to Chuck Schumer. For the claimant column, this cleaning process resulted in a reduction of claimants from 188 individual names to 169. This did not reduce the number of claims, just streamlined claimant names so the same political figure was not listed under several different names.
+In a program called OpenRefine, we created a new column called `claimant_original` to store original claimant names which are available for review. Then, we manually sorted the names of all claimants in our dataset in the `claimant` column to determine when there were different spellings of the same name. This was done via the cluster function embedded in the application. When varying iterations were found of the same name, we selected a single name to refer to each person by. For example Charles Schumer was changed to Chuck Schumer. For the `claimant` column, this cleaning process resulted in a reduction of claimants from 188 individual names to 169. This did not reduce the number of claims, just streamlined claimant names so the same political figure was not listed under several different names.
 
 ## Standardization of Textual Rating
 
-Next we had to address the issue in textualRating. The Washington Post is not entirely consistent in its determinations of claim ratings. In theory, it has a standard ranking system ordered as follows: Geppetto Checkmark, One Pinocchio, Two Pinocchios, Three Pinocchios, Four Pinocchios. Of the 554 claims we pulled from the Washington Post, only 335 were originally ranked on the WaPo's five scale ratings system. These definitions go as follows, sourced from <https://www.washingtonpost.com/politics/2019/01/07/about-fact-checker/>:
+Next we had to address the issues in `textualRating`. The Washington Post is not entirely consistent in its determinations of claim ratings. In theory, it has a standard ranking system ordered as follows: Geppetto Checkmark, One Pinocchio, Two Pinocchios, Three Pinocchios, Four Pinocchios. Of the 554 claims we pulled from the Washington Post, only 335 were originally ranked on the WaPo's five scale ratings system.
+
+These definitions go as follows, sourced from <https://www.washingtonpost.com/politics/2019/01/07/about-fact-checker/>:
 
 **The Geppetto Checkmark:** Statements and claims that contain "the truth, the whole truth, and nothing but the truth" will be recognized with our prized Geppetto checkmark. We tend to reserve this for claims that are unexpectedly true, so it is not awarded very often.
 
@@ -51,20 +53,20 @@ Having the aim to analyze a body of claims all on the standardized rating scale,
 4 **half true** ratings were reassigned to **Two Pinocchios**.\
 7 **true**, **correct**, and **accurate** ratings were reassigned the **Geppetto Checkmark**
 
-353 claims were then rated on the standard ranking system.
+After this change, 353 claims were then rated on the standard ranking system.
 
-201 claims remained tagged with anomaly ratings, meaning we could not reliably compare them to the rest of our data. To address this, we reached out to Glenn Kessler, the singular fact-checker at the Washington Post and brains behind the operation. He knows their scale inside and out. We sent over the remaining anomaly tags (sometimes grouping similar ones together) with more than 2 occurrences and received two instructions. First, he identified several tags that could be reassigned without further review. Second, he indicated several tags that he preferred to review and reassign himself. To not overburden Glenn during the manual review process, we removed all claims tagged with an anomaly rating that appeared only once or twice. For the first step, we turned to OpenRefine to make the changes he outlined. This was done to speed up the recoding process, though it could have been done in RStudio if necessary.
+201 claims remained tagged with anomaly ratings, meaning we could not reliably compare them to the rest of our data. To address this, we reached out to Glenn Kessler, the singular fact-checker at the Washington Post and brains behind the operation. He knows their scale inside and out. We sent over the remaining anomaly tags (sometimes grouping similar ones together) and received two instructions. First, he identified several tags that could be reassigned without further review. Second, he indicated several tags that he preferred to review and reassign himself. To not overburden Glenn during the manual review process, we removed all claims tagged with an anomaly rating that appeared only once or twice. For the first step, we turned to OpenRefine to make the changes he outlined. This was done to speed up the recoding process, though it could have been done in RStudio if necessary.
 
 **Reassignments are the following:**\
-Not the whole story ---\> Two Pinocchio\
-Depends on math or on stats ---\> Two Pinocchio\
-Wrong or incorrect ---\> Four Pinocchio\
-Spins or twists the facts ---\> Three Pinocchio\
-Exaggerated ---\> Three Pinocchio\
-Cherry-picked number ---\> Two Pinocchio\
-False ---\> Four Pinocchio
+Not the whole story ---> Two Pinocchio\
+Depends on math or on stats ---> Two Pinocchio\
+Wrong or incorrect ---> Four Pinocchio\
+Spins or twists the facts ---> Three Pinocchio\
+Exaggerated ---> Three Pinocchio\
+Cherry-picked number ---> Two Pinocchio\
+False ---> Four Pinocchio
 
-This reassigned 115 claims onto the standardized rating scale, leaving us with 468 claims.
+This reassigned 115 claims onto the standardized rating scale, leaving us with 468 claims on the 5-ranking scale.
 
 Then for the claims that he preferred to self identify we gave him a list of all the claims tagged with the following ratings:\
 Needs or lacks context\
@@ -201,16 +203,6 @@ Likely due to selection bias towards correcting falsehoods and/or an extremely h
 ```{r, warning=FALSE, message=FALSE, echo = FALSE}
 v10_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
-  geom_bar(position = "fill") +
-  scale_fill_manual(values = c("blue2", "red3")) +
-  labs(title = "Rating Proportions by Party",
-       x = "Rating",
-       y = "Proportion",
-       fill = "Party of Claimant") + 
-  theme(axis.text.x = element_text(size = 7))    
-
-v10_wapo_cleantextRating %>%
-  ggplot(aes(x = textualRating, fill = claimant_party)) +
   geom_bar() +
   scale_fill_manual(values = c("blue2", "red3")) +
   labs(title = "Rating Counts by Party",
@@ -218,6 +210,16 @@ v10_wapo_cleantextRating %>%
        y = "Counts",
        fill = "Party of Claimant") + 
   theme(axis.text.x = element_text(size = 7))  
+
+v10_wapo_cleantextRating %>%
+  ggplot(aes(x = textualRating, fill = claimant_party)) +
+  geom_bar(position = "fill") +
+  scale_fill_manual(values = c("blue2", "red3")) +
+  labs(title = "Rating Proportions by Party",
+       x = "Rating",
+       y = "Proportion",
+       fill = "Party of Claimant") + 
+  theme(axis.text.x = element_text(size = 7))    
 ```
 
 By proportion of total claims alone, and keeping in mind the limitations of any conclusion due to sample size, it appears that Democrats are fact-checked on more truthful claims, whereas Republicans account for a higher share of the egregious falsehoods checked by the Washington Post.
@@ -229,4 +231,37 @@ ggplot(v10_wapo_cleantextRating, aes(x = claimant_party, fill = textualRating)) 
        x = "Claims by Party",
        fill = "Rating", y = "Proportion") +
   scale_fill_manual(values = truenesscolors)
+```
+
+```{r, warning=FALSE, message=FALSE, echo = FALSE}
+dems <- v10_wapo_cleantextRating %>%
+  filter(claimant_party == "Democratic")
+dems <- dems %>%
+  group_by(textualRating) %>%
+  summarize(count = n()) %>%
+  mutate(Democratic = 100*(count/nrow(dems))) %>%
+  select(textualRating, Democratic)
+
+reps <- v10_wapo_cleantextRating %>%
+  filter(claimant_party == "Republican")
+reps <- reps %>%
+  group_by(textualRating) %>%
+  summarize(count = n()) %>%
+  mutate(Republican = 100*(count/nrow(reps))) %>%
+  select(textualRating, Republican)
+
+total <- v10_wapo_cleantextRating %>%
+  group_by(textualRating) %>%
+  summarize(count = n()) %>%
+  mutate(Total = 100*(count/nrow(v10_wapo_cleantextRating))) %>%
+  select(textualRating, Total)
+
+textRatingcounts <- full_join(dems, reps, by = "textualRating") %>%
+  full_join(total, by = "textualRating")
+
+textRatingcounts %>%
+  select(textualRating, Democratic, Republican, Total) %>%
+  kable(digits = 1, 
+        caption = "Percentage of Claims by Textual Rating", 
+        format = "pipe")
 ```
