@@ -20,7 +20,7 @@ v8_pf <- read_csv("v8pf.csv")
 
 ### Version 9 - Removal of PolitiFact anomalous claims
 
-At this stage in the process, we were working with four publisher datasets from which we had sorted out all claims that did not fit our criteria of claims by U.S politician. We had also eliminated Independent and Libertarian claims. Now within each publisher we pivoted to focus on textualRating, which denotes the rating that the claim was given by the fact-checker. Some publishers have standardized scales with a ranking system, others do not. Here we defined the existing rating scale, identified how many claims fit into that scale, and how many anomaly claims remained.
+At this stage in the process, we had narrowed out data down to four publisher datasets from which we had sorted out all claims that did not fit our criteria of claims by U.S politician. We had also selected to eliminate Independent and Libertarian claims, as well as all claims by Donald Trump. Now within each publisher, we pivoted to focus on `textualRating`, which denotes the rating that the claim was assigned by the fact-checker. Some publishers have standardized scales with a ranking system, others do not. For each publisher we defined the existing rating scale, identified how many claims fit into that scale, and how many anomaly claims remained. First, we began working with PolitiFact.
 
 PolitiFact has an established six tier rating scale called the Truth-O-Meter used to categorize claims.
 
@@ -44,7 +44,7 @@ The burden of proof is on the speaker, and they rate statements based on the inf
 
 Below is a breakdown of all the ratings in the PolitiFact dataset's textualRating column.
 
-There are: 2,527 normal claims (those rated with one of the six standardized ratings) and 354 anomalous claims (those with a non-standardized text based rating).
+There are: 2,527 standardized claims (those rated with one of the six standardized ratings) and 354 anomalous claims (those with a non-standardized text based rating).
 
 Below the breakdown of the 20 most numerous ratings. It is not a complete list, but we place it below to show some examples.
 
@@ -54,10 +54,10 @@ v8_pf %>%
   count() %>%
   arrange(desc(n)) %>%
   head(20) %>%
-  kable(format = "pipe", caption = "Textual Ratings")
+  kable(format = "pipe", caption = "V8, Sorted by Textual Rating")
 ```
 
-When we reviewed the list of anomaly claims, we noticed that they all came from PolitiFact articles, not fact checks. PolitiFact only uses Truth-O-Meter ratings when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not sufficient evidence to do a full scale fact-check, the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since PolitiFact did not feel comfortable enough to deliver a full Truth-O-Meter rating, we were unwilling to attribute a different level of certainty to the rating. Thus all claims that were not given one the 6 standard ratings in textualRating were removed from the dataset. This resulted in a remaining dataset of 2,527 claims.
+When we reviewed the list of anomaly claims, we noticed that they all came from PolitiFact articles, not fact checks. PolitiFact only uses Truth-O-Meter ratings when they feel they can convey some level of certainty in the rating given. Truth-O-Meter ratings require a high threshold of proof. When that is lacking or there is not sufficient evidence to do a full scale fact-check, the existing facts are published in an article. Fact-checks of debates and speeches are frequently written up in articles. Since these claims represented instances where PolitiFact did not feel comfortable enough to deliver a standard Truth-O-Meter rating, we were unwilling to attribute a different level of certainty to the rating. Thus all claims that were not given one the 6 standard ratings in `textualRating` were removed from the dataset. This resulted in a remaining dataset of 2,527 claims.
 
 ```{r use pF ratings, warning=FALSE, message=FALSE, echo = FALSE}
 v9_pf <- v8_pf %>%
@@ -87,7 +87,7 @@ v9_pf$textualRating <- factor(v9_pf$textualRating,
 v9_pf %>%
   group_by(textualRating) %>%
   count() %>%
-  kable(format = "pipe", caption = "Truth-O-Meter Rating Distribution")
+  kable(format = "pipe", caption = "V9, Truth-O-Meter Rating Distribution")
 ```
 
 ### Version 10 - Condensing claimant names
@@ -100,10 +100,10 @@ v9_pf %>%
   count() %>%
   arrange(desc(n)) %>%
   head(20) %>%
-  kable(format = "pipe", caption = "Claimant Names by Number of Occurences")
+  kable(format = "pipe", caption = "V9, Claimant Names by Occurences")
 ```
 
-At this stage we noticed that some claimants were listed under several separate names despite referring to the same person, like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this redundancy so that we could see the true number of claims made by each claimant. To do so, we moved our data into a program called OpenRefine. Here, we clustered claimant names to identify where multiple names were used to refer to the same person. We used this to identify all duplicate forms of claimant names and then manually recoded the data accordingly.
+We noticed that some claimants were listed under several separate names despite referring to the same person, like Speaker Nancy Pelosi, Nancy Pelosi, Speaker Pelosi. We wanted to eliminate this redundancy so that we could see the true number of claims made by each claimant. To do so, we moved our data into a program called OpenRefine. Here, we clustered claimant names to identify where multiple names were used to refer to the same person. We used this to identify all duplicate forms of claimant names and then manually recoded the data accordingly in RStudio.
 
 This processed combined several names making the list 27 names shorter. 697 unique claimants resulted. The 20 most numerous claimants are listed below.
 
@@ -148,12 +148,12 @@ v10_pf %>%
   count() %>%
   arrange(desc(n)) %>%
   head(20) %>%
-  kable(format = "pipe", caption = "Claimant Names by Number of Occurences, no duplicate names")
+  kable(format = "pipe", caption = "V10, Claimant Names without Duplicates")
 ```
 
 ### Version 11 -- Final Claimant Cleaning
 
-During this process we also noticed that some claimants who did not fit our defintion of politician, yet had not been identified as such by our code. To ensure that we had only the data we desired in our dataset, we ran the list of claimant names through a stricter version of the politician filter. 58 names were marked as potentially not being politicial figures. Each name was manually reviewed and we identified 6 names that did not belong in the dataset: Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Right, and Marco Rubio's heckler.
+During this process we also noticed that some claimants in the data who did not fit our defintion of politician, yet had not been identified as such by our code. To ensure that the claimants fit the specified definition of politician, we ran the list of claimant names through a stricter version of the politician filter. 58 names were marked as potentially not being politicial figures. Each name was manually reviewed and we identified 6 names that did not belong in the dataset: Tucker Carlson, Laura Ingraham, Jacob Wohl, State representatives, Reagan was Right, and Marco Rubio's heckler.
 
 21 claims were removed as a result.
 
@@ -182,7 +182,7 @@ v11_pf %>%
   group_by(claimant_party, textualRating) %>%
   count() %>%
   pivot_wider(names_from = claimant_party, id_cols = textualRating, values_from = n) %>%
-  kable(format = "pipe", caption = "Claim Rating by Party for Final Dataset")
+  kable(format = "pipe", caption = "V11, Ratings by Party")
 ```
 
 ```{r date error fixed,  warning=FALSE, message=FALSE, echo = FALSE}
@@ -190,11 +190,11 @@ v11_pf$claimDate[v11_pf$claimDate == (as.Date("2106-11-08"))] <- as.Date("2016-1
 #During this process an erroneous claim came to our attention, dated 2106 instead of 2016. We manually recoded this.
 ```
 
-### Tagged Claims
+### Tagging Claims
 
 Now that we had a workable dataset, we wanted to learn more about what politicians were lying about. We subject tagged each claim in the data set with relevant and comprehensive tags to categorize the topics of lies and identify patterns in lying.\
 \
-We decided to only tag False(ish) claims (Mostly False, False, and Pants on Fire) because our aim was to study what politicians are lying about, not what they are telling the truth about. We acknowledge this choice could limit our inquiry, but since claims were going to be tagged manually we decided to focus on our primary research question. This left 1,085 False(ish) claims to be subject tagged.
+We decided to only tag False(ish) claims (Mostly False, False, and Pants on Fire) because our aim was to study what politicians are lying about, not what they are telling the truth about. We acknowledge that this choice limits our inquiry, but since claims were going to be tagged manually we decided to focus on our primary research question. This left 1,085 False(ish) claims to be subject tagged.
 
 ```{r count of falseish pf, message=FALSE, warning=FALSE, echo=FALSE}
 v11_pf %>%
@@ -207,17 +207,17 @@ v11_pf %>%
   kable(format = "pipe", caption = "False(ish) Claims to be Tagged")
 ```
 
-We then had to construct a method for tagging claims. To not start from scratch, we decided to ground our project in established tagging framework drawing from Frank Baumagrtner's well established subject tags used for the [Comparative Agendas Project](https://www.comparativeagendas.net/pages/master-codebook).\
+We then had to construct a method for tagging claims. To not start from scratch, we decided to ground our project in an established tagging framework drawing from Frank Baumagrtner's well established subject tags used for the [Comparative Agendas Project](https://www.comparativeagendas.net/pages/master-codebook).\
 \
-However, since they were designed to tag policy platforms and not political speech, there were some categories missing from Baumagrtner's tags that were common among the claims we analyzed. To address this, our research team conducted a series of practice tagging sessions in which 100 randomly selected claims were subject tagged. Through this process we discovered which categories we felt were relevant but missing, allowing us to establish categories that best encompassed the types of claims found in the dataset. The tagging system and tags themselves were built based on the data we were tagging.\
+However, since these were designed to tag policy platforms and not political speech, there were some categories missing from Baumagrtner's tags that were common among the claims we analyzed. To address this, our research team conducted a series of practice tagging sessions in which 100 randomly selected claims were subject tagged. Through this process we discovered which categories we felt were relevant but missing, allowing us to establish categories that best encompassed the types of claims found in the dataset. The tagging system and tags themselves were built based on the data we were tagging.\
 \
-We defined tags by supplying a list of topics that fell underneath that subject area. We identified these by buzzwords that may be seen in a claim, or general concepts that could help a tagger tag the claims correctly. Despite every effort to be comprehensive, we acknowledge there may be some gaps in our definitions.\
+We defined tags by supplying a list of topics that fell underneath that subject area. We identified these with buzzwords that could be seen in a claim, or general concepts that could help a tagger tag the claims correctly. Despite every effort to be comprehensive, we recognize there may be some remaining gaps in our definitions.\
 \
 Words in parentheses signify modifications/clarifications to the definition after tagging had begun.\
 \
-People may disagree with category grouping. We acknowledge the subjective nature of these categories.
+People may disagree with our category grouping. We acknowledge the subjective nature of these categories.
 
-Micro tags were traditional subject tags that describe the substance of the claim and the political issues or policy issues it is discussing.\
+Micro tags were traditional subject tags that describe the substance of the claim and the political issues or policy issues discussed in it.\
 Macro tags take a more big picture approach describing the directive of the claim (Opponent/Self/Legislation) and the use of Fear within a claim.
 
 ```{r loading subject tag table, message=FALSE, warning=FALSE, echo=FALSE}
@@ -242,13 +242,15 @@ subjecttags %>%
 
 \pagebreak
 
-Through tagging, we wanted to be able to describe as many attributes of a claim as possible. First, we allowed a claim to be assigned multiple tags, and we had different types of tags-- Macro and Micro.
+Through tagging, we wanted to be able to describe as many relevant attributes of a claim as possible. First, we allowed a claim to be assigned multiple tags, and we had different types of tags-- Macro and Micro.
 
 Four coders were trained on how to tag claims based on the subject tag definitions. Taggers did practice rounds on randomly selected claims and we talked through instances where they disagreed and worked to standardize our definitions.
 
 We were actively seeking consensus between our taggers. However, because each claim could receive multiple tags, one different tag would mean a mismatch and high inter-coder reliability would be hard to achieve.\
 \
-Asa Royal created an online tagging interface for our coders to use. A coder was presented with only the text of a claim, and a link the fact-check if they needed more information. They were not shown the claimant's name or party affiliation unless they reviewed the URL. They would then select all the tags they felt applied to that claim. All claims were tagged by at least two coders. If the two coders agreed on the tags, that claim 's tag were not reviewed. But, if there was disagreement between the two coders, as was the case for 776 of the claims, lead researcher Grace Abels manually reviewed each claim and the two different sets of tags that had been assigned. Grace Abels then determined the final tags for each claim.
+Asa Royal, a software engineer in the Duke Reporters Lab, created an online tagging interface for our coders to use. A coder was presented with only the text of a claim, and a link the fact-check if they needed more information. They were not shown the claimant's name or party affiliation unless they reviewed the URL. They would then select all the tags they felt applied to that claim. All claims were tagged by at least two coders. If the two coders agreed on the tags, that claim's tag were not reviewed. But, if there was disagreement between the two coders, as was the case for 776 of the claims, lead researcher Grace Abels manually reviewed each claim and the two different sets of tags that had been assigned. Grace Abels then determined the final tags for each claim.
+
+In retrospect, we found two of our categories to be ineffective in practice: the Fear macro tag and the Record/Candidate Biography/Campaigns and Personal Behavior micro tag.
 
 Understanding the confounding factors that come with our method of tagging, we feel confident in our system. The tagged data is available for review. After tagging, the dataset was joined with the larger version 11.
 
@@ -278,7 +280,7 @@ pf_mega_withdupes <- pf_mega_withdupes %>%
 
 ### Manual Removal of Duplicate Claims
 
-During tagging, 31 more claims were identified as duplicates, shown below. These were claims with differing urls but identical text. These were not captured earlier because we searched for duplicates with identical urls. Most often these duplicates were fact-checks that had already been published and were included again in an article round-up of fact-checks.
+As mentioned earlier, 31 more claims were identified as duplicates during tagging. These were claims with differing urls but identical texts. These were not captured earlier because we searched for duplicates with identical urls. Most often these duplicates were fact-checks that had already been published and were included again in an article round-up of fact-checks.
 
 ```{r finddupes, warning=FALSE, message=FALSE, echo = FALSE}
 pf_mega_withdupes %>%
@@ -328,11 +330,11 @@ pf_mega_nodupes <- pf_mega_withdupes %>%
 
 ### Location of Lie
 
-\
-In addition to the Micro and Macro tags, we also tagged by the location of the lie, meaning the medium and format of the statement containing the lie. This tracked attributes such as whether it was said on TV, in an interview, on social media, etc. We had several overarching categories called `location` tags, and then more specific subcategories tagged `location.extra`. When loading this data into R, we made a select number of changes to make it compatible with the existing data.
+In addition to the Micro and Macro tags, we also tagged the entire dataset, not just False(ish) claims, by the location of the lie, meaning the medium and format of the statement containing the lie. This tracked attributes such as whether it was said on TV, in an interview, on social media, etc. We had several overarching categories called `location` tags, and then more specific subcategories tagged `location.extra`.
 
 ```{r locoflie, warning=FALSE, message=FALSE, echo = FALSE}
 loc_of_lie <- read.csv("locationoflie.csv")
+#When loading this data into R, we made a select number of changes to make it compatible with the existing data. We selected to join the location of lie data to the larger dataset by the claim identifier column, ...1, and by url, languageCode, publisher.name, publisher.site, text, claimDate, and claimant_party. We chose not to merge by title or text of claim due to a small number of claims that were encoded oddly with incorrect symbols. This error likely occured during exportation and importation of the dataset. The correct title and text were pulled from the megadata, and we are certain these are still joined correctly thanks to the claim identifier column. We found one more incorrect claim that was missing the correct text, we sourced the accurate claim from the URL and overwrote it in our data. There was one claim that was erroneously untagged with location information, this was fixed. 
 loc_of_lie <- loc_of_lie %>%
   select(-claimant,
          -textualRating, 
@@ -344,7 +346,7 @@ loc_of_lie$claimDate[loc_of_lie$claimDate ==
 #We matched the name of the claim identifier column in the location of lie data to be identical to the mega data and selected only half the variables leaving only new information and the variables needed to join the two datasets correctly. We also found that one of the variables had not loaded in correctly, so we informed R that the claimDate column was, in fact, containing time/date data and fixed one erroneous claim where the year was misstyped 2106 instead of 2016.
 ```
 
-We selected to join the location of lie data to the larger dataset by the claim identifier column, `...1`, and by `url`, `languageCode`, `publisher.name`, `publisher.site`, `text`, `claimDate`, and `claimant_party`. We chose not to merge by title or text of claim due to a small number of claims that were encoded oddly with incorrect symbols. This error likely occured during exportation and importation of the dataset. The correct title and text were pulled from the megadata, and we are certain these are still joined correctly thanks to the claim identifier column. We found one more incorrect claim that was missing the correct text, we sourced the accurate claim from the URL and overwrote it in our data. There was one claim that was erroneously untagged with location information, this was fixed. Then, we exported the final dataset into a viewable and downloadable csv, called `pf_mega_location.csv`.
+Finally, we exported the final dataset into a viewable and downloadable csv, called `pf_mega_location.csv`.
 
 Further analysis of this data can be found in the Location of Lie Analysis, available in both accessible RMD and PDF form.
 
