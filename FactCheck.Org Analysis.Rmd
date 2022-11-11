@@ -1,0 +1,32 @@
+---
+title: "FactCheck.Org Analysis"
+output:
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r load packages, warning = FALSE, message = FALSE, echo = FALSE}
+library(tidyverse)
+library(knitr)
+```
+
+```{r read v8fc csv, warning = FALSE, message = FALSE, echo = FALSE}
+v8_fc <- read.csv("v8fc.csv")
+```
+
+After the initial data cleaning, there were 511 fact-checks published by  FactCheck.Org between January 1st 2016 and June 30th, 2021. The dataset only includes fact-checks by Republican or Democratic political figures, excluding Donald Trump.
+
+We began with some exploratory data analysis to understand the specifics of the data we were working with. Knowing the challenges of previous data, we first analyzed the `textualRating` category.
+
+```{r warning = FALSE, message = FALSE, echo = FALSE}
+v8_fc %>%
+  group_by(textualRating) %>%
+  count() %>%
+  arrange(desc(n)) %>%
+  kable(caption = "TextualRating Distribution")
+```
+
+There were some common ratings: Unsupported, Spins the Facts, Out of Context, Not the Whole Story, No Evidence, Misleading, FALSE, Exaggerates, Distorts the Facts, and Cherry Picks. Calling these "normal" assignments, there were 391 normal claims and 120 anomoly claims. However, there were no definitions for these common claims that would allow us to utilize the data.
+
+At the point, we concluded that FactCheck.Org does not have a sufficiently ordered tier rating system like PolitiFact and the Washington Post. Rather they have list of descriptive ratings they more commonly assign to claims. FactCheck.Org only publishes claims they find to have some level of false information. Their assessments are descriptive of the nature of the falsehood rather than assessing the level of false information. Because of the wide variation of textualRatings assigned, there was no structure for standardizing and comparing claims. Thus, we decided not to proceed with granular analysis of the FactCheck.Org data.

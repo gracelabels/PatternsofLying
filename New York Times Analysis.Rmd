@@ -1,0 +1,30 @@
+---
+title: "New York Times Analysis"
+output:
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r load packages, warning = FALSE, message = FALSE, echo = FALSE}
+library(tidyverse)
+library(knitr)
+```
+
+```{r read v8nyt csv, warning = FALSE, message = FALSE, echo = FALSE}
+v8_nyt <- read.csv("v8nyt.csv")
+```
+
+After the initial data cleaning, there were 180 fact-checks published by the New York Times between January 1st 2016 and June 30th, 2021. The dataset only includes fact-checks by Republican or Democratic political figures, excluding Donald Trump.
+
+We began with some exploratory data analysis to understand the specifics of the data we were working with. We analyzed the `textualRating` category.
+
+```{r, warning = FALSE, message = FALSE, echo = FALSE}
+v8_nyt %>%
+  group_by(textualRating) %>%
+  count() %>%
+  arrange(desc(n)) %>%
+  kable(caption = "Distribution of Textual Rating Assignments")
+```
+
+As shown, the New York Times has no published methodology for how they select or rate fact-checks. They use text based ratings that fall do not fall on a discernible scale. All ratings can be considered anomaly ratings and we had no way to compare between them, so we ended our analysis of the New York Times here.
