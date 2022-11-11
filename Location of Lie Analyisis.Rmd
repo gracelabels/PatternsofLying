@@ -28,29 +28,39 @@ truenesscolors = c("#FF0000", "#FF872C", "#FAB733", "#FDE64B", "#ACB334", "#69B3
 
 ## Introduction
 
-**Data**: The data used in this analysis is the compilation of claims fact checked by PolitiFact made by Republican or Democratic political figures between Jan 1st 2016 and June 30th 2021, excluding all statements made by Donald Trump. Further details on how this data was collected and cleaned can be found in the PolitiFact Clean Up RMD and PDF.
+**Data**: The data used in this analysis is the body of claims fact checked by PolitiFact made by Republican or Democratic political figures between Jan 1st 2016 and June 30th 2021, excluding all statements made by Donald Trump. Further details on how this data was collected and cleaned can be found in the Data Clean Up and PolitiFact Clean Up RMDs and PDFs.
 
-We tagged location and location.extra by the following definitions.
+We tagged for two new variables, `location` and `location.extra` by the following definitions. Not all claims were tagged by `location.extra`.
 
 **Advertisement:** campaign ads including video, television, radio and attack ads
 
-**Debate:** campaign debates, panel/roundtable discussion with legislators/tv anchors/etc, back and forth between legislators, debates over legslation. *Location.extra:* election debate vs unspecified debate
+**Debate:** campaign debates, panel/roundtable discussion with legislators/tv anchors/etc, back and forth between legislators, debates over legslation.
+
+-   *Location.extra:* [Election Debate]{.ul} or [Unspecified Debate]{.ul}
 
 **Interview:** general interview tag not affiliated with a TV station, radio interview, conversation with reporters, and podcasts that are not their own, general "statement to media" tags by PolitiFact
 
-**Public event:** town hall, forum, answering questions from the public, roundtable discussions with voters/the public
+**Public Event:** town hall, forum, answering questions from the public, roundtable discussions with voters/the public
 
-**Social Media**: posts made on social media. *Location.extra:* particular platform
+**Social Media**: posts made on social media.
 
-**Speech/Remarks:** catchall definition for prepared speeches, remarks, and statements, unless clearly indicated that the speaker is responding to an audience or reporter question; will include a televised address as that is more speech than tv statement; include press briefings/conferences. *Location.extra* Campaign events (does not necessarily have to be by someone campaigning for themselves, campaigning on the behalf of others will also be tagged as a campaign event), hearings, press events, and unspecified speeches or remarks.
+-   *Location.extra:* platform on which the statement was made ([Facebook]{.ul}, [Instagram]{.ul}, [LinkedIn]{.ul}, [Twitter]{.ul}, [Youtube]{.ul})
 
-**TV Appearance:** any televised interview, pre-prepared video remarks. *Location.extra*: TV channel
+**Speech/Remarks:** catchall definition for prepared speeches, remarks, and statements, unless clearly indicated that the speaker is responding to an audience or reporter question; will include a televised address as that is more speech than tv statement; include press briefings/conferences.
 
-**Written Statement:** own website, emails, fliers, own writing/blog posts, letters, mailers, press releases, written policy proposals by candidates. *Location.extra:* campaign/election related material, press releases
+-   *Location.extra:* [Campaign Events]{.ul} (which does not necessarily have to be by someone campaigning for themselves, campaigning on the behalf of others will also be tagged as a campaign event), [Hearings]{.ul}, [Press Events]{.ul}, and [Unspecified]{.ul} speeches or remarks.
 
-## **Methodology:**
+**TV Appearance:** any televised interview, pre-prepared video remarks.
 
-In the fact check, often PolitiFact will add a comment or tag about where the claim was made. For example, a fact check may say: "Amy Klobuchar stated on October 30, 2022 in an interview on Meet the Press..." If the tag given by PolitiFact reasonably falls within one of these categories, it was tagged as-is.
+-   *Location.extra*: the TV channel the claim was made on
+
+**Written Statement:** own website, emails, fliers, own writing/blog posts, letters, mailers, press releases, written policy proposals by candidates.
+
+-   *Location.extra:* [Campaign]{.ul} related material, [Press Releases]{.ul}
+
+## **Methodology**
+
+In the fact check itself, viewed by the URL included in the ClaimReview dataset, PolitiFact will often provide a comment or tag about where the claim was made. For example, a fact check may say: "Amy Klobuchar stated on October 30, 2022 in an interview on Meet the Press..." If the tag given by PolitiFact reasonably falls within one of the aforementioned categories, it was tagged as-is.
 
 If the tag was unclear or additional information is missing, the tagger read the article to determine more details. This is often the case with TV interviews, with general "statements" etc.
 
@@ -60,7 +70,7 @@ In an effort to reduce the number of judgment calls made, we recorded potential 
 
 Debate Election Debate: refers to any debate between competing candidates. If the type of debate is unspecified (no other candidate mentioned), then it is not tagged as Election Debate, which may mean that some data is omitted from our set.
 
-TV Appearance If a televised event is also something else (a town hall, a debate, a speech, etc), the other claim takes precedence. For example: A televised town hall will be tagged as a town hall, because the context in which the lie was said was the Town Hall, the fact that it was televised does not change that situation. On the contrary, if a TV channel hosts a casual roundtable discussion that is exclusively displayed on that channel, that will be tagged as a TV Appearance on that channel. Regional Channel tag: Unaffiliated local TV stations are tagged as Regional Channel, whereas local programs on national news networks are tagged by the parent organization. For example: WISN-TV, a channel that only plays in Milwaukee, Wisconsin, will be tagged as Regional Channel whereas CBS Miami's "Facing South Florida" will be tagged as CBS. In cases where it was not explicitly stated whether the interview was conducted on TV or not, I used contextual clues to make determinations. If the interview was with a major news anchor or TV personality, it is tagged as TV appearance.
+TV Appearance If a televised event is also something else (a town hall, a debate, a speech, etc), the other claim takes precedence. For example: A televised town hall will be tagged as a town hall, because the context in which the lie was said was the Town Hall, the fact that it was televised does not change that situation. On the contrary, if a TV channel hosts a casual round-table discussion that is exclusively displayed on that channel, that will be tagged as a TV Appearance on that channel. Regional Channel tag: Unaffiliated local TV stations are tagged as Regional Channel, whereas local programs on national news networks are tagged by the parent organization. For example: WISN-TV, a channel that only plays in Milwaukee, Wisconsin, will be tagged as Regional Channel whereas CBS Miami's "Facing South Florida" will be tagged as CBS. In cases where it was not explicitly stated whether the interview was conducted on TV or not, I used contextual clues to make determinations. If the interview was with a major news anchor or TV personality, it is tagged as TV appearance.
 
 Interview Facebook live interviews get tagged as interviews over social media, to reflect the type of speech in which the statement was made---having the purpose of determining the context of the lie, the Interview tag is more representative than the Social Media tag. This is the same for YouTube interview videos.
 
