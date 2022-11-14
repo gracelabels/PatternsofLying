@@ -471,7 +471,7 @@ pf_mega$year <- as.numeric(format(pf_mega$claimDate,'%Y'))
 
 ### Mapping Lies Over Time
 
-Lastly, we wanted to see if the trends in the subject of lies changed over time. We determined the top 15 most common subject tags by count, excluding \`Record/Candidate Biography/ Campaigns and Personal Behavior\`. We knew from experience that during specific time periods, certain subjects would be lied about at a disproportionate rate. For example, the spike in lies relating to Health at the ouset of the pandemic. To visualize this phenomenon, we made the following graph displaying these 15 tags and how the frequency of lies progressed over time. It is of note that we only have six months of data in 2021, which is why counts are disproportionately lower.
+Lastly, we wanted to see if the trends in the subject of lies changed over time. We determined the top 15 most common subject tags by count, excluding \`Record/Candidate Biography/ Campaigns and Personal Behavior\`. The rationale for this exclusion is outlined in the PolitiFact Clean Up document, where we introduce and explain our tagging system. We knew from experience that during specific time periods, certain subjects would be lied about at a disproportionate rate. For example, the spike in lies relating to Health at the ouset of the pandemic. To visualize this phenomenon, we made the following graph displaying these 15 tags and how the frequency of lies progressed over time. It is of note that we only have six months of data in 2021, which is why counts are disproportionately lower.
 
 ```{r, message= FALSE, warning= FALSE, echo= FALSE}
 year_tibble <- binarymicro %>%
