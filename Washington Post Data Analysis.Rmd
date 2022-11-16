@@ -159,8 +159,8 @@ v10_wapo_cleantextRating <- v9_wapo %>%
            textualRating == "Geppetto Checkmark")
 
 truenesscolors = c("#69B34C",
+                   "#ACB334",
                    "#FDE64B",
-                   "#FAB733",
                    "#FF872C",
                    "#FF0000")
 
