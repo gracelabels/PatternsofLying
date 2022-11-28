@@ -39,7 +39,7 @@ These definitions go as follows, sourced from <https://www.washingtonpost.com/po
 
 Our original data had these textual ratings:
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
+```{r textratingdistribution, warning=FALSE, message=FALSE, echo = FALSE}
 v8_wapo %>%
   group_by(textualRating) %>%
   count() %>%
@@ -78,7 +78,7 @@ This amounted to 62 total ratings, 58 of which he assigned new ratings to. The r
 
 **In total, we were left with 526 claims of the original 554 now ranked by the standard Washington Post system, these are the ones we will use for continued analysis.**
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
+```{r reassignments, warning=FALSE, message=FALSE, echo = FALSE}
 v9_wapo <- read.csv("v8wapo_adj_textRating_claimant.csv")
 #this csv represents all changes made in OpenRefine, the earlier version of the dataset prior to these steps is above.
 
@@ -150,7 +150,7 @@ v9_wapo <- v9_wapo %>%
          ...1 != "14264")
 ```
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
+```{r standardizeratings, warning=FALSE, message=FALSE, echo = FALSE}
 v10_wapo_cleantextRating <- v9_wapo %>%
   filter(textualRating == "One Pinocchio" |
            textualRating == "Two Pinocchios" |
@@ -172,12 +172,13 @@ v10_wapo_cleantextRating$textualRating <-
                                          "Three Pinocchios", 
                                          "Four Pinocchios"))
 ```
+\newpage
 
 ## The Final Data
 
 Utilizing this standardized dataset, the breakdown of claims by party and rating is found here.
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
+```{r numericbreakdown, warning=FALSE, message=FALSE, echo = FALSE}
 v10_wapo_cleantextRating %>%
   group_by(claimant_party) %>%
   count() %>%
@@ -200,7 +201,7 @@ v10_wapo_cleantextRating %>%
 
 Likely due to selection bias towards correcting falsehoods and/or an extremely high threshold of proof for truth, there are very few claims rated Geppetto Checkmark or One Pinocchio. As such, its hard to draw any significant conclusions from the limited data. The little information we have does appear to superficially indicate a higher ratio of Democratic truths to their Republican counterparts. There are dozens more datapoints under the Two, Three, and Four Pinocchios rating, both for Democratic and Republican politicians. By count, Democrat falsehoods exceed Republican's in the Two Pinocchios category, but they account for a lower proportion of claims rated Three and Four Pinocchios.
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
+```{r countgraphs, warning=FALSE, message=FALSE, echo = FALSE}
 v10_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
   geom_bar() +
@@ -210,7 +211,11 @@ v10_wapo_cleantextRating %>%
        y = "Counts",
        fill = "Party of Claimant") + 
   theme(axis.text.x = element_text(size = 7))  
+```
 
+This graph illustrates the difference in claim counts to put the remaining analysis into perspective. There are significantly more claims tagged between Two and Four Pinocchios than those given the Geppetto Checkmark or One Pinocchio rating. This likely reveals a selection bias towards more egregious falsehoods.
+
+```{r propgraphs, warning=FALSE, message=FALSE, echo = FALSE}
 v10_wapo_cleantextRating %>%
   ggplot(aes(x = textualRating, fill = claimant_party)) +
   geom_bar(position = "fill") +
@@ -224,7 +229,7 @@ v10_wapo_cleantextRating %>%
 
 By proportion of total claims alone, and keeping in mind the limitations of any conclusion due to sample size, it appears that Democrats are fact-checked on more truthful claims, whereas Republicans account for a higher share of the egregious falsehoods checked by the Washington Post.
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
+```{r comparingtruthtogether, warning=FALSE, message=FALSE, echo = FALSE}
 ggplot(v10_wapo_cleantextRating, aes(x = claimant_party, fill = textualRating)) +
          geom_bar(position = "fill") +
   labs(title = "Proportion of Rating by Party",
@@ -233,7 +238,7 @@ ggplot(v10_wapo_cleantextRating, aes(x = claimant_party, fill = textualRating)) 
   scale_fill_manual(values = truenesscolors)
 ```
 
-```{r, warning=FALSE, message=FALSE, echo = FALSE}
+```{r countoftruthfulness, warning=FALSE, message=FALSE, echo = FALSE}
 dems <- v10_wapo_cleantextRating %>%
   filter(claimant_party == "Democratic")
 dems <- dems %>%
@@ -265,3 +270,4 @@ textRatingcounts %>%
         caption = "Percentage of Claims by Textual Rating", 
         format = "pipe")
 ```
+By this analysis, 69.6% of Republican statements were identified to be Three and Four Pinocchios, whereas only 54.1% of Democratic claims were checked the same. The widest difference in false statements was identified by the Four Pinocchios category. 31.2% of Democratic claims received this rating, compared to 42.9% of Republican claims. Democrats also had a much larger proportion of statements rated with Geppetto Checkmarks, 3.2% compared to only 0.8%. When comparing the distribution of textualRatings by party this data indicates that Democrats receive a higher proportion of truthful rankings than their Republican counterparts.
