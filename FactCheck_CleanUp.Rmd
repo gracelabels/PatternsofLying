@@ -1,8 +1,6 @@
 ---
 title: "FactCheck_CleanUp"
-author: "Grace Abels"
-date: "2022-10-12"
-output: html_document
+output: pdf_document
 ---
 
 ```{r load packages, warning=FALSE, message=FALSE, echo = FALSE}
