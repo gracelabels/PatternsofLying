@@ -238,6 +238,8 @@ all_loc %>%
 
 The highest proportion of True-ish (True, Mostly True, Half True) claims are made in Speech/Remarks (62.4%). The lowest proportion of True-ish claims are made in Advertisements (44.2%). The highest proportion of Pants on Fire claims appear in Interviews (8.7%). The highest proportion of True statements are made at Public Events (18.8%).
 
+\pagebreak
+
 ```{r, echo = FALSE, message = FALSE}
 loc_tags %>%
   group_by(location, claimant_party) %>%
