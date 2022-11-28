@@ -787,7 +787,7 @@ v8_wapo <- v7_wapo %>%
 
 v8_wapo %>%
   count(claimant_party) %>%
-  kable(caption = "v8, Washington Post, Sorted by Claimant Party")
+  kable(caption = "V8, Washington Post, Sorted by Claimant Party")
 ```
 
 At this stage we moved forward with cleaning publisher datasets individually.

@@ -375,3 +375,5 @@ pf_mega_location$location.extra[pf_mega_location$...1 == 7539] <-
 
 write_csv(pf_mega_location, file = "pf_mega_location.csv")
 ```
+
+We continue to analyze this data in the PolitiFact Analysis document.
