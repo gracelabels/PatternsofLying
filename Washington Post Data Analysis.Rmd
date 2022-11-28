@@ -58,13 +58,13 @@ After this change, 353 claims were then rated on the standard ranking system.
 201 claims remained tagged with anomaly ratings, meaning we could not reliably compare them to the rest of our data. To address this, we reached out to Glenn Kessler, the singular fact-checker at the Washington Post and brains behind the operation. He knows their scale inside and out. We sent over the remaining anomaly tags (sometimes grouping similar ones together) and received two instructions. First, he identified several tags that could be reassigned without further review. Second, he indicated several tags that he preferred to review and reassign himself. To not overburden Glenn during the manual review process, we removed all claims tagged with an anomaly rating that appeared only once or twice. For the first step, we turned to OpenRefine to make the changes he outlined. This was done to speed up the recoding process, though it could have been done in RStudio if necessary.
 
 **Reassignments are the following:**\
-Not the whole story ---> Two Pinocchio\
-Depends on math or on stats ---> Two Pinocchio\
-Wrong or incorrect ---> Four Pinocchio\
-Spins or twists the facts ---> Three Pinocchio\
-Exaggerated ---> Three Pinocchio\
-Cherry-picked number ---> Two Pinocchio\
-False ---> Four Pinocchio
+Not the whole story ---\> Two Pinocchio\
+Depends on math or on stats ---\> Two Pinocchio\
+Wrong or incorrect ---\> Four Pinocchio\
+Spins or twists the facts ---\> Three Pinocchio\
+Exaggerated ---\> Three Pinocchio\
+Cherry-picked number ---\> Two Pinocchio\
+False ---\> Four Pinocchio
 
 This reassigned 115 claims onto the standardized rating scale, leaving us with 468 claims on the 5-ranking scale.
 
