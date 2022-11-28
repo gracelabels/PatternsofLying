@@ -27,4 +27,4 @@ v8_nyt %>%
   kable(caption = "Distribution of Textual Rating Assignments")
 ```
 
-As shown, the New York Times has no published methodology for how they select or rate fact-checks. They use text based ratings that fall do not fall on a discernible scale. All ratings can be considered anomaly ratings and we had no way to compare between them, so we ended our analysis of the New York Times here.
+The New York Times has no published methodology for how they select or rate fact-checks. As shown, the text-based ratings that they use do do not fall on a discernible scale. All ratings can be considered anomaly ratings and we had no way to compare between them, so we ended our analysis of the New York Times here.
